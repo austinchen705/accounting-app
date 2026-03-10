@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AccountingApp.Views.SettingsPage"
+             Title="設定">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="8">
+
+            <!-- 主幣別 -->
+            <Label Text="主幣別" FontSize="16" FontAttributes="Bold" Margin="0,8,0,4" />
+            <Picker ItemsSource="{Binding Currencies}"
+                    SelectedItem="{Binding SelectedCurrency}"
+                    Title="選擇主幣別" />
+
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,12" />
+
+            <!-- 分類管理 -->
+            <Label Text="分類" FontSize="16" FontAttributes="Bold" Margin="0,0,0,4" />
+            <Button Text="管理分類" Command="{Binding ManageCategoriesCommand}"
+                    HorizontalOptions="Fill" />
+
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,12" />
+
+            <!-- 資料匯出 -->
+            <Label Text="資料匯出" FontSize="16" FontAttributes="Bold" Margin="0,0,0,4" />
+            <Button Text="匯出 CSV" Command="{Binding ExportCsvCommand}"
+                    HorizontalOptions="Fill" />
+            <Button Text="匯出 Excel" Command="{Binding ExportExcelCommand}"
+                    HorizontalOptions="Fill" />
+
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,12" />
+
+            <!-- iCloud 備份 -->
+            <Label Text="iCloud 備份" FontSize="16" FontAttributes="Bold" Margin="0,0,0,4" />
+            <Button Text="立即備份至 iCloud" Command="{Binding BackupNowCommand}"
+                    HorizontalOptions="Fill" />
+            <Button Text="從 iCloud 還原" Command="{Binding RestoreFromICloudCommand}"
+                    BackgroundColor="Orange" HorizontalOptions="Fill" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

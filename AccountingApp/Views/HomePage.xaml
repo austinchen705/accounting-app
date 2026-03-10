@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AccountingApp.Views.HomePage"
+             Title="首頁">
+
+    <Grid RowDefinitions="Auto,*" Padding="16">
+
+        <!-- 本月總覽 -->
+        <Frame Grid.Row="0" BackgroundColor="#F5F5F5" CornerRadius="12" Margin="0,0,0,16">
+            <Grid ColumnDefinitions="*,*,*">
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="收入" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                    <Label Text="{Binding TotalIncome, StringFormat='{0:N0}'}"
+                           FontSize="16" FontAttributes="Bold" TextColor="Green" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="支出" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                    <Label Text="{Binding TotalExpense, StringFormat='{0:N0}'}"
+                           FontSize="16" FontAttributes="Bold" TextColor="Red" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                    <Label Text="結餘" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                    <Label Text="{Binding Balance, StringFormat='{0:N0}'}"
+                           FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- 最近記錄 -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding RecentTransactions}">
+            <CollectionView.Header>
+                <Label Text="最近記錄" FontSize="16" FontAttributes="Bold" Margin="0,0,0,8" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,8" ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding Note}" FontSize="14" />
+                            <Label Text="{Binding Date, StringFormat='{0:MM/dd}'}"
+                                   FontSize="12" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1"
+                               Text="{Binding Amount, StringFormat='{0:N0}'}"
+                               FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+    <!-- FAB 快速新增 -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddTransactionCommand}" />
+    </ContentPage.ToolbarItems>
+
+</ContentPage>

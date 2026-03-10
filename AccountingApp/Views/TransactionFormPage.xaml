@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AccountingApp.Views.TransactionFormPage"
+             Title="新增記錄">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label Text="類型" />
+            <HorizontalStackLayout Spacing="8">
+                <RadioButton Content="支出" Value="expense" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=expense}" />
+                <RadioButton Content="收入" Value="income" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=income}" />
+            </HorizontalStackLayout>
+
+            <Label Text="金額" />
+            <Entry Text="{Binding Amount}" Placeholder="0" Keyboard="Numeric" />
+
+            <Label Text="幣別" />
+            <Picker ItemsSource="{Binding Currencies}" SelectedItem="{Binding Currency}" />
+
+            <Label Text="分類" />
+            <Picker ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategory}"
+                    ItemDisplayBinding="{Binding Name}" />
+
+            <Label Text="日期" />
+            <DatePicker Date="{Binding Date}" />
+
+            <Label Text="備註" />
+            <Entry Text="{Binding Note}" Placeholder="選填" />
+
+            <Label Text="{Binding ErrorMessage}" TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <Button Text="儲存" Command="{Binding SaveCommand}" Margin="0,8,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AccountingApp.Core/AccountingApp.Core.csproj" />
+  <Project Path="AccountingApp.Tests/AccountingApp.Tests.csproj" />
+  <Project Path="AccountingApp/AccountingApp.csproj" />
+</Solution>

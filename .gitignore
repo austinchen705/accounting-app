@@ -1,0 +1,80 @@
+# .NET build outputs
+bin/
+obj/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# iOS / Xcode
+*.ipa
+*.dSYM/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+
+# MAUI / Android
+*.apk
+*.aab
+*.keystore
+local.properties
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+logs/
+
+# Temp / Cache
+*.tmp
+*.temp
+.cache/
+
+# Secrets (never commit)
+appsettings.*.json
+!appsettings.json
+secrets.json
+*.pfx
+*.p12

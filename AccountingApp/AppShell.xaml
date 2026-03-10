@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:AccountingApp.Views"
+       x:Class="AccountingApp.AppShell"
+       Shell.TabBarIsVisible="True">
+
+    <TabBar>
+        <ShellContent Title="首頁"
+                      ContentTemplate="{DataTemplate views:HomePage}"
+                      Route="HomePage" />
+        <ShellContent Title="記錄"
+                      ContentTemplate="{DataTemplate views:TransactionListPage}"
+                      Route="TransactionListPage" />
+        <ShellContent Title="統計"
+                      ContentTemplate="{DataTemplate views:StatisticsPage}"
+                      Route="StatisticsPage" />
+        <ShellContent Title="預算"
+                      ContentTemplate="{DataTemplate views:BudgetPage}"
+                      Route="BudgetPage" />
+        <ShellContent Title="設定"
+                      ContentTemplate="{DataTemplate views:SettingsPage}"
+                      Route="SettingsPage" />
+    </TabBar>
+
+</Shell>

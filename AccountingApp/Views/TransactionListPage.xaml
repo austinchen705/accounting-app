@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AccountingApp.Views.TransactionListPage"
+             Title="收支記錄">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*" Padding="16,8">
+
+        <!-- 月份篩選 -->
+        <DatePicker Grid.Row="0"
+                    Format="yyyy-MM"
+                    Date="{Binding FilterDate}"
+                    Margin="0,0,0,8" />
+
+        <!-- 記錄列表 -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Transactions}">
+            <CollectionView.EmptyView>
+                <Label Text="本月尚無記錄" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gray" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="刪除" BackgroundColor="Red"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <SwipeView.LeftItems>
+                            <SwipeItems>
+                                <SwipeItem Text="編輯" BackgroundColor="Blue"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                        <Grid Padding="0,12" ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding Note}" FontSize="14" />
+                                <Label Text="{Binding Date, StringFormat='{0:yyyy/MM/dd}'}"
+                                       FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="{Binding Amount, StringFormat='{0:N0}'}"
+                                   FontSize="16" FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
