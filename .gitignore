@@ -78,3 +78,6 @@ appsettings.*.json
 secrets.json
 *.pfx
 *.p12
+
+# OpenSpec markdown artifacts
+openspec/**/*.md

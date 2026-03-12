@@ -21,19 +21,34 @@ public class TransactionService
 
     public async Task<List<Transaction>> GetByMonthAsync(string month)
     {
-        var all = await _db.Db.Table<Transaction>().ToListAsync();
-        return all.Where(t => t.Date.ToString("yyyy-MM") == month)
-                  .OrderByDescending(t => t.Date).ToList();
+        if (!DateTime.TryParseExact($"{month}-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var start))
+            return [];
+
+        var end = start.AddMonths(1);
+        return await _db.Db.Table<Transaction>()
+            .Where(t => t.Date >= start && t.Date < end)
+            .OrderByDescending(t => t.Date)
+            .ToListAsync();
     }
 
     public async Task<List<Transaction>> GetFilteredAsync(string? month, int? categoryId, string? currency)
     {
-        var all = await _db.Db.Table<Transaction>().ToListAsync();
-        return all.Where(t =>
-            (month == null || t.Date.ToString("yyyy-MM") == month) &&
-            (categoryId == null || t.CategoryId == categoryId) &&
-            (currency == null || t.Currency == currency))
-            .OrderByDescending(t => t.Date).ToList();
+        var query = _db.Db.Table<Transaction>();
+
+        if (!string.IsNullOrWhiteSpace(month) &&
+            DateTime.TryParseExact($"{month}-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var start))
+        {
+            var end = start.AddMonths(1);
+            query = query.Where(t => t.Date >= start && t.Date < end);
+        }
+
+        if (categoryId is not null)
+            query = query.Where(t => t.CategoryId == categoryId.Value);
+
+        if (!string.IsNullOrWhiteSpace(currency))
+            query = query.Where(t => t.Currency == currency);
+
+        return await query.OrderByDescending(t => t.Date).ToListAsync();
     }
 
     public async Task AddAsync(Transaction transaction) =>
@@ -44,6 +59,9 @@ public class TransactionService
 
     public async Task DeleteAsync(int id) =>
         await _db.Db.DeleteAsync<Transaction>(id);
+
+    public async Task DeleteAllAsync() =>
+        await _db.Db.DeleteAllAsync<Transaction>();
 
     public async Task<(decimal Income, decimal Expense)> GetMonthSummaryAsync(string month)
     {

@@ -5,36 +5,50 @@
              Title="新增記錄">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
+        <VerticalStackLayout Padding="16,16,16,24" Spacing="10">
+            <Label Text="新增記錄" Style="{StaticResource PageTitleStyle}" />
 
-            <Label Text="類型" />
-            <HorizontalStackLayout Spacing="8">
-                <RadioButton Content="支出" Value="expense" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=expense}" />
-                <RadioButton Content="收入" Value="income" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=income}" />
-            </HorizontalStackLayout>
+            <Frame Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="類型" Style="{StaticResource CaptionStyle}" />
+                    <HorizontalStackLayout Spacing="16">
+                        <RadioButton Content="支出" Value="expense" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=expense}" />
+                        <RadioButton Content="收入" Value="income" IsChecked="{Binding Type, Converter={StaticResource StringEqualConverter}, ConverterParameter=income}" />
+                    </HorizontalStackLayout>
 
-            <Label Text="金額" />
-            <Entry Text="{Binding Amount}" Placeholder="0" Keyboard="Numeric" />
+                    <Label Text="金額" Style="{StaticResource CaptionStyle}" />
+                    <Frame Style="{StaticResource InputContainerStyle}">
+                        <Entry Text="{Binding Amount}" Placeholder="0" Keyboard="Numeric" />
+                    </Frame>
 
-            <Label Text="幣別" />
-            <Picker ItemsSource="{Binding Currencies}" SelectedItem="{Binding Currency}" />
+                    <Label Text="幣別" Style="{StaticResource CaptionStyle}" />
+                    <Frame Style="{StaticResource InputContainerStyle}">
+                        <Picker ItemsSource="{Binding Currencies}" SelectedItem="{Binding Currency}" />
+                    </Frame>
 
-            <Label Text="分類" />
-            <Picker ItemsSource="{Binding Categories}"
-                    SelectedItem="{Binding SelectedCategory}"
-                    ItemDisplayBinding="{Binding Name}" />
+                    <Label Text="分類" Style="{StaticResource CaptionStyle}" />
+                    <Frame Style="{StaticResource InputContainerStyle}">
+                        <Picker ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                ItemDisplayBinding="{Binding Name}" />
+                    </Frame>
 
-            <Label Text="日期" />
-            <DatePicker Date="{Binding Date}" />
+                    <Label Text="日期" Style="{StaticResource CaptionStyle}" />
+                    <Frame Style="{StaticResource InputContainerStyle}">
+                        <DatePicker Date="{Binding Date}" />
+                    </Frame>
 
-            <Label Text="備註" />
-            <Entry Text="{Binding Note}" Placeholder="選填" />
+                    <Label Text="備註" Style="{StaticResource CaptionStyle}" />
+                    <Frame Style="{StaticResource InputContainerStyle}">
+                        <Entry Text="{Binding Note}" Placeholder="選填" />
+                    </Frame>
 
-            <Label Text="{Binding ErrorMessage}" TextColor="Red"
-                   IsVisible="{Binding HasError}" />
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           IsVisible="{Binding HasError}" />
 
-            <Button Text="儲存" Command="{Binding SaveCommand}" Margin="0,8,0,0" />
-
+                    <Button Text="儲存記錄" Command="{Binding SaveCommand}" Margin="0,8,0,0" />
+                </VerticalStackLayout>
+            </Frame>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

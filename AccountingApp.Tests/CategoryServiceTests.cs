@@ -37,28 +37,32 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task Add_duplicate_name_returns_false()
+    public async Task Add_same_name_different_type_returns_true()
     {
         await using var db = await TestDb.CreateAsync();
         var svc = new CategoryService(db.Service);
 
-        await svc.AddAsync(new Category { Name = "旅遊", Type = "expense" });
-        var result = await svc.AddAsync(new Category { Name = "旅遊", Type = "income" });
+        var first = await svc.AddAsync(new Category { Name = "旅遊", Type = "expense" });
+        var second = await svc.AddAsync(new Category { Name = "旅遊", Type = "income" });
+        var all = await svc.GetAllAsync();
 
-        Assert.False(result);
+        Assert.True(first);
+        Assert.True(second);
+        Assert.Equal(2, all.Count(c => c.Name == "旅遊"));
     }
 
     [Fact]
-    public async Task Add_duplicate_does_not_create_extra_entry()
+    public async Task Add_same_name_same_type_returns_false()
     {
         await using var db = await TestDb.CreateAsync();
         var svc = new CategoryService(db.Service);
 
         await svc.AddAsync(new Category { Name = "旅遊", Type = "expense" });
-        await svc.AddAsync(new Category { Name = "旅遊", Type = "income" });
+        var duplicate = await svc.AddAsync(new Category { Name = "旅遊", Type = "expense" });
         var all = await svc.GetAllAsync();
 
-        Assert.Equal(1, all.Count(c => c.Name == "旅遊"));
+        Assert.False(duplicate);
+        Assert.Equal(1, all.Count(c => c.Name == "旅遊" && c.Type == "expense"));
     }
 
     // ── GetByType ──────────────────────────────────────────────────────────

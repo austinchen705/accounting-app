@@ -24,8 +24,42 @@ public class DatabaseService
         await _db.CreateTableAsync<Category>();
         await _db.CreateTableAsync<Budget>();
         await _db.CreateTableAsync<ExchangeRateCache>();
+        await EnsureIndexesAsync();
 
         await SeedDefaultCategoriesAsync();
+    }
+
+    /// <summary>
+    /// Legacy data patch to normalize old type values. Trigger this when import is explicitly requested.
+    /// </summary>
+    public async Task ApplyImportPatchAsync()
+    {
+        if (_db is null) await InitializeAsync();
+        await NormalizeLegacyTypeValuesAsync();
+    }
+
+    private async Task NormalizeLegacyTypeValuesAsync()
+    {
+        // Backward compatibility: old data may store type as Chinese text.
+        await _db!.ExecuteAsync("UPDATE Categories SET Type = 'expense' WHERE Type IN ('支出', 'Expense', 'EXPENSE');");
+        await _db.ExecuteAsync("UPDATE Categories SET Type = 'income' WHERE Type IN ('收入', 'Income', 'INCOME');");
+        await _db.ExecuteAsync("UPDATE Transactions SET Type = 'expense' WHERE Type IN ('支出', 'Expense', 'EXPENSE');");
+        await _db.ExecuteAsync("UPDATE Transactions SET Type = 'income' WHERE Type IN ('收入', 'Income', 'INCOME');");
+    }
+
+    private async Task EnsureIndexesAsync()
+    {
+        // Transaction query hotspots: month/date range + category/currency filters.
+        await _db!.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Date ON Transactions(Date);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_CategoryId ON Transactions(CategoryId);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Currency ON Transactions(Currency);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Type ON Transactions(Type);");
+
+        // Category and budget lookups.
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Categories_Type ON Categories(Type);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Categories_Name_Type ON Categories(Name, Type);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Budgets_Month ON Budgets(Month);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Budgets_CategoryId_Month ON Budgets(CategoryId, Month);");
     }
 
     private async Task SeedDefaultCategoriesAsync()

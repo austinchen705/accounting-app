@@ -14,36 +14,85 @@ public class TransactionService
         _currency = currency;
     }
 
-    public async Task<List<Transaction>> GetAllAsync() =>
-        await _db.Db.Table<Transaction>().OrderByDescending(t => t.Date).ToListAsync();
+    private async Task EnsureInitializedAsync()
+    {
+        await _db.InitializeAsync();
+    }
+
+    public async Task<List<Transaction>> GetAllAsync()
+    {
+        await EnsureInitializedAsync();
+        return await _db.Db.Table<Transaction>().OrderByDescending(t => t.Date).ToListAsync();
+    }
 
     public async Task<List<Transaction>> GetByMonthAsync(string month)
     {
-        var all = await _db.Db.Table<Transaction>().ToListAsync();
-        return all.Where(t => t.Date.ToString("yyyy-MM") == month)
-                  .OrderByDescending(t => t.Date).ToList();
+        await EnsureInitializedAsync();
+        if (!DateTime.TryParseExact($"{month}-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var start))
+            return [];
+
+        var end = start.AddMonths(1);
+        return await _db.Db.Table<Transaction>()
+            .Where(t => t.Date >= start && t.Date < end)
+            .OrderByDescending(t => t.Date)
+            .ToListAsync();
+    }
+
+    public async Task<List<Transaction>> GetByDateAsync(DateTime date)
+    {
+        await EnsureInitializedAsync();
+        var start = date.Date;
+        var end = start.AddDays(1);
+        return await _db.Db.Table<Transaction>()
+            .Where(t => t.Date >= start && t.Date < end)
+            .OrderByDescending(t => t.Date)
+            .ToListAsync();
     }
 
     public async Task<List<Transaction>> GetFilteredAsync(string? month, int? categoryId, string? currency)
     {
+        await EnsureInitializedAsync();
         var query = _db.Db.Table<Transaction>();
-        var all = await query.ToListAsync();
 
-        return all.Where(t =>
-            (month == null || t.Date.ToString("yyyy-MM") == month) &&
-            (categoryId == null || t.CategoryId == categoryId) &&
-            (currency == null || t.Currency == currency))
-            .OrderByDescending(t => t.Date).ToList();
+        if (!string.IsNullOrWhiteSpace(month) &&
+            DateTime.TryParseExact($"{month}-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var start))
+        {
+            var end = start.AddMonths(1);
+            query = query.Where(t => t.Date >= start && t.Date < end);
+        }
+
+        if (categoryId is not null)
+            query = query.Where(t => t.CategoryId == categoryId.Value);
+
+        if (!string.IsNullOrWhiteSpace(currency))
+            query = query.Where(t => t.Currency == currency);
+
+        return await query.OrderByDescending(t => t.Date).ToListAsync();
     }
 
-    public async Task AddAsync(Transaction transaction) =>
+    public async Task AddAsync(Transaction transaction)
+    {
+        await EnsureInitializedAsync();
         await _db.Db.InsertAsync(transaction);
+    }
 
-    public async Task UpdateAsync(Transaction transaction) =>
+    public async Task UpdateAsync(Transaction transaction)
+    {
+        await EnsureInitializedAsync();
         await _db.Db.UpdateAsync(transaction);
+    }
 
-    public async Task DeleteAsync(int id) =>
+    public async Task DeleteAsync(int id)
+    {
+        await EnsureInitializedAsync();
         await _db.Db.DeleteAsync<Transaction>(id);
+    }
+
+    public async Task DeleteAllAsync()
+    {
+        await EnsureInitializedAsync();
+        await _db.Db.DeleteAllAsync<Transaction>();
+    }
 
     /// <summary>Returns (totalIncome, totalExpense) for a month in base currency.</summary>
     public async Task<(decimal Income, decimal Expense)> GetMonthSummaryAsync(string month)
@@ -64,6 +113,7 @@ public class TransactionService
 
     public async Task<List<Transaction>> GetRecentAsync(int count = 10)
     {
+        await EnsureInitializedAsync();
         var all = await _db.Db.Table<Transaction>().OrderByDescending(t => t.Date).ToListAsync();
         return all.Take(count).ToList();
     }

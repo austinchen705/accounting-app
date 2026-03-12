@@ -1,0 +1,76 @@
+{
+  "transactions": [
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 10,
+      "note": "seed from Image (1).jpeg",
+      "sourceImage": "Image (1).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 20,
+      "note": "seed from Image (2).jpeg",
+      "sourceImage": "Image (2).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 30,
+      "note": "seed from Image (3).jpeg",
+      "sourceImage": "Image (3).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 40,
+      "note": "seed from Image (4).jpeg",
+      "sourceImage": "Image (4).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 50,
+      "note": "seed from Image (5).jpeg",
+      "sourceImage": "Image (5).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 60,
+      "note": "seed from Image (6).jpeg",
+      "sourceImage": "Image (6).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 70,
+      "note": "seed from Image (7).jpeg",
+      "sourceImage": "Image (7).jpeg"
+    },
+    {
+      "date": "2026-03-11",
+      "type": "expense",
+      "category": "其他支出",
+      "currency": "TWD",
+      "amount": 80,
+      "note": "seed from Image.jpeg",
+      "sourceImage": "Image.jpeg"
+    }
+  ]
+}

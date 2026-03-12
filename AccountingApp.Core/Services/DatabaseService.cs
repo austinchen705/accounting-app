@@ -21,7 +21,21 @@ public class DatabaseService
         await _db.CreateTableAsync<Category>();
         await _db.CreateTableAsync<Budget>();
         await _db.CreateTableAsync<ExchangeRateCache>();
+        await EnsureIndexesAsync();
         await SeedDefaultCategoriesAsync();
+    }
+
+    private async Task EnsureIndexesAsync()
+    {
+        await _db!.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Date ON Transactions(Date);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_CategoryId ON Transactions(CategoryId);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Currency ON Transactions(Currency);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Transactions_Type ON Transactions(Type);");
+
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Categories_Type ON Categories(Type);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Categories_Name_Type ON Categories(Name, Type);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Budgets_Month ON Budgets(Month);");
+        await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS IX_Budgets_CategoryId_Month ON Budgets(CategoryId, Month);");
     }
 
     private async Task SeedDefaultCategoriesAsync()

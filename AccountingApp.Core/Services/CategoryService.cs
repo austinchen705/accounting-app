@@ -17,11 +17,11 @@ public class CategoryService
     public async Task<Category?> GetByIdAsync(int id) =>
         await _db.Db.Table<Category>().Where(c => c.Id == id).FirstOrDefaultAsync();
 
-    /// <returns>true if added; false if name already exists.</returns>
+    /// <returns>true if added; false if same (name,type) already exists.</returns>
     public async Task<bool> AddAsync(Category category)
     {
         var existing = await _db.Db.Table<Category>()
-            .Where(c => c.Name == category.Name).FirstOrDefaultAsync();
+            .Where(c => c.Name == category.Name && c.Type == category.Type).FirstOrDefaultAsync();
         if (existing is not null) return false;
         await _db.Db.InsertAsync(category);
         return true;

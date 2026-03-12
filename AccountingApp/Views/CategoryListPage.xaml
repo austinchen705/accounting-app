@@ -11,6 +11,14 @@
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <SwipeView>
+                    <SwipeView.LeftItems>
+                        <SwipeItems>
+                            <SwipeItem Text="編輯"
+                                       BackgroundColor="#3B82F6"
+                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                       CommandParameter="{Binding .}" />
+                        </SwipeItems>
+                    </SwipeView.LeftItems>
                     <SwipeView.RightItems>
                         <SwipeItems>
                             <SwipeItem Text="刪除"
@@ -20,8 +28,12 @@
                         </SwipeItems>
                     </SwipeView.RightItems>
                     <Grid Padding="16,8" ColumnDefinitions="*,Auto">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
                         <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="{Binding Type}" TextColor="Gray" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding TypeText}" TextColor="Gray" VerticalOptions="Center" />
                     </Grid>
                 </SwipeView>
             </DataTemplate>

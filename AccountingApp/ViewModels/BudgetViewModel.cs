@@ -20,9 +20,15 @@ public class BudgetViewModel : BindableObject
     private readonly BudgetService _budgetService;
     private readonly CategoryService _categoryService;
     private string _currentMonth;
+    private bool _hasBudgetItems;
 
     public ObservableCollection<BudgetItemViewModel> BudgetItems { get; } = new();
     public ICommand SetBudgetCommand { get; }
+    public bool HasBudgetItems
+    {
+        get => _hasBudgetItems;
+        set { _hasBudgetItems = value; OnPropertyChanged(); }
+    }
 
     public BudgetViewModel(BudgetService budgetService, CategoryService categoryService)
     {
@@ -49,6 +55,8 @@ public class BudgetViewModel : BindableObject
                 Ratio = u.Ratio
             });
         }
+
+        HasBudgetItems = BudgetItems.Count > 0;
     }
 
     private async Task SetBudgetAsync(BudgetItemViewModel item)
