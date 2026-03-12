@@ -71,6 +71,7 @@ logs/
 *.tmp
 *.temp
 .cache/
+.worktrees/
 
 # Secrets (never commit)
 appsettings.*.json
