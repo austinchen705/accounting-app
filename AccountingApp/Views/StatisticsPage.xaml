@@ -66,7 +66,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}" Margin="0,0,0,0">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="截至所選月份的近 6 個月收支趨勢" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="截至所選月份的近 12 個月收支趨勢" Style="{StaticResource SectionTitleStyle}" />
                     <lvc:CartesianChart Series="{Binding TrendSeries}"
                                         XAxes="{Binding TrendXAxes}"
                                         YAxes="{Binding TrendYAxes}"
@@ -101,6 +101,22 @@
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasBarData, Converter={StaticResource InverseBoolConverter}}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrameStyle}" Margin="0,0,0,0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="前 5 大支出分類近 12 個月趨勢" Style="{StaticResource SectionTitleStyle}" />
+                    <lvc:CartesianChart Series="{Binding CategoryTrendSeries}"
+                                        XAxes="{Binding CategoryTrendXAxes}"
+                                        YAxes="{Binding CategoryTrendYAxes}"
+                                        LegendPosition="Bottom"
+                                        HeightRequest="260"
+                                        IsVisible="{Binding HasCategoryTrendData}" />
+                    <Label Text="所選月份區間尚無足夠分類資料產生趨勢圖"
+                           Style="{StaticResource CaptionStyle}"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding HasCategoryTrendData, Converter={StaticResource InverseBoolConverter}}" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

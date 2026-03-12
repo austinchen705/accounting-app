@@ -26,8 +26,12 @@ public class StatisticsViewModel : BindableObject
     private ISeries[] _trendSeries = Array.Empty<ISeries>();
     private Axis[] _trendXAxes = Array.Empty<Axis>();
     private Axis[] _trendYAxes = Array.Empty<Axis>();
+    private ISeries[] _categoryTrendSeries = Array.Empty<ISeries>();
+    private Axis[] _categoryTrendXAxes = Array.Empty<Axis>();
+    private Axis[] _categoryTrendYAxes = Array.Empty<Axis>();
     private bool _hasPieData;
     private bool _hasBarData;
+    private bool _hasCategoryTrendData;
     private int _loadVersion;
     private string _barChartUnitText = "單位：TWD";
     private string _incomeMoMText = "--";
@@ -66,6 +70,24 @@ public class StatisticsViewModel : BindableObject
         set { _trendYAxes = value; OnPropertyChanged(); }
     }
 
+    public ISeries[] CategoryTrendSeries
+    {
+        get => _categoryTrendSeries;
+        set { _categoryTrendSeries = value; OnPropertyChanged(); }
+    }
+
+    public Axis[] CategoryTrendXAxes
+    {
+        get => _categoryTrendXAxes;
+        set { _categoryTrendXAxes = value; OnPropertyChanged(); }
+    }
+
+    public Axis[] CategoryTrendYAxes
+    {
+        get => _categoryTrendYAxes;
+        set { _categoryTrendYAxes = value; OnPropertyChanged(); }
+    }
+
     public bool HasPieData
     {
         get => _hasPieData;
@@ -76,6 +98,12 @@ public class StatisticsViewModel : BindableObject
     {
         get => _hasBarData;
         set { _hasBarData = value; OnPropertyChanged(); }
+    }
+
+    public bool HasCategoryTrendData
+    {
+        get => _hasCategoryTrendData;
+        set { _hasCategoryTrendData = value; OnPropertyChanged(); }
     }
 
     public string BarChartUnitText
@@ -131,6 +159,7 @@ public class StatisticsViewModel : BindableObject
         var selectedMonth = SelectedMonth;
         await LoadPieChartAsync(selectedMonth, version);
         await LoadTrendChartAsync(selectedMonth, version);
+        await LoadCategoryTrendChartAsync(selectedMonth, version);
     }
 
     private async Task LoadPieChartAsync(DateTime monthDate, int loadVersion)
@@ -178,7 +207,7 @@ public class StatisticsViewModel : BindableObject
 
     private async Task LoadTrendChartAsync(DateTime monthDate, int loadVersion)
     {
-        var stats = await _statisticsService.GetLast6MonthsStatsAsync(monthDate);
+        var stats = await _statisticsService.GetLast12MonthsStatsAsync(monthDate);
         if (loadVersion != _loadVersion) return;
         var baseCurrency = Preferences.Get("base_currency", "TWD");
         BarChartUnitText = $"單位：{baseCurrency}";
@@ -227,6 +256,8 @@ public class StatisticsViewModel : BindableObject
             new Axis
             {
                 MinLimit = 0,
+                MinStep = 50_000,
+                ForceStepToMin = true,
                 TextSize = 12,
                 Name = baseCurrency,
                 Labeler = value => FormatAxisValue(value),
@@ -235,6 +266,66 @@ public class StatisticsViewModel : BindableObject
         ];
 
         ApplyTrendInsights(stats);
+    }
+
+    private async Task LoadCategoryTrendChartAsync(DateTime monthDate, int loadVersion)
+    {
+        var stats = await _statisticsService.GetTopExpenseCategoryTrendAsync(monthDate);
+        if (loadVersion != _loadVersion) return;
+
+        HasCategoryTrendData = stats.Count > 0;
+        if (!HasCategoryTrendData)
+        {
+            CategoryTrendSeries = Array.Empty<ISeries>();
+            CategoryTrendXAxes = Array.Empty<Axis>();
+            CategoryTrendYAxes = Array.Empty<Axis>();
+            return;
+        }
+
+        var months = StatisticsTrendWindow.GetTwelveMonthWindow(monthDate)
+            .Select(date => date.ToString("MM"))
+            .ToArray();
+
+        CategoryTrendSeries = stats
+            .Select((stat, index) =>
+            {
+                var color = ChartColors[index % ChartColors.Length];
+                return (ISeries)new LineSeries<double>
+                {
+                    Name = stat.CategoryName,
+                    Values = stat.Values.Select(value => (double)value).ToArray(),
+                    Fill = null,
+                    GeometrySize = 7,
+                    LineSmoothness = 0,
+                    Stroke = new SolidColorPaint(color) { StrokeThickness = 3 },
+                    GeometryFill = new SolidColorPaint(color),
+                    GeometryStroke = new SolidColorPaint(color) { StrokeThickness = 3 }
+                };
+            })
+            .ToArray();
+
+        CategoryTrendXAxes =
+        [
+            new Axis
+            {
+                Labels = months,
+                TextSize = 12
+            }
+        ];
+
+        CategoryTrendYAxes =
+        [
+            new Axis
+            {
+                MinLimit = 0,
+                MinStep = 50_000,
+                ForceStepToMin = true,
+                TextSize = 12,
+                Name = Preferences.Get("base_currency", "TWD"),
+                Labeler = value => FormatAxisValue(value),
+                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
+            }
+        ];
     }
 
     private void ApplyTrendInsights(IReadOnlyList<MonthStat> stats)
