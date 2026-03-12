@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Input;
+using AccountingApp.Core.Services;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -129,7 +130,7 @@ public class StatisticsViewModel : BindableObject
         var version = Interlocked.Increment(ref _loadVersion);
         var selectedMonth = SelectedMonth;
         await LoadPieChartAsync(selectedMonth, version);
-        await LoadTrendChartAsync(version);
+        await LoadTrendChartAsync(selectedMonth, version);
     }
 
     private async Task LoadPieChartAsync(DateTime monthDate, int loadVersion)
@@ -175,9 +176,9 @@ public class StatisticsViewModel : BindableObject
         PieSeries = series.ToArray();
     }
 
-    private async Task LoadTrendChartAsync(int loadVersion)
+    private async Task LoadTrendChartAsync(DateTime monthDate, int loadVersion)
     {
-        var stats = await _statisticsService.GetLast6MonthsStatsAsync();
+        var stats = await _statisticsService.GetLast6MonthsStatsAsync(monthDate);
         if (loadVersion != _loadVersion) return;
         var baseCurrency = Preferences.Get("base_currency", "TWD");
         BarChartUnitText = $"單位：{baseCurrency}";
@@ -197,7 +198,8 @@ public class StatisticsViewModel : BindableObject
                 GeometrySize = 8,
                 LineSmoothness = 0,
                 Stroke = new SolidColorPaint(SKColor.Parse("#4CAF50")) { StrokeThickness = 3 },
-                GeometryFill = new SolidColorPaint(SKColor.Parse("#4CAF50"))
+                GeometryFill = new SolidColorPaint(SKColor.Parse("#4CAF50")),
+                GeometryStroke = new SolidColorPaint(SKColor.Parse("#4CAF50")) { StrokeThickness = 3 }
             },
             new LineSeries<double>
             {
@@ -237,41 +239,12 @@ public class StatisticsViewModel : BindableObject
 
     private void ApplyTrendInsights(IReadOnlyList<MonthStat> stats)
     {
-        if (stats.Count == 0)
-        {
-            IncomeMoMText = "--";
-            ExpenseMoMText = "--";
-            MaxExpenseText = "--";
-            MinNetText = "--";
-            return;
-        }
-
-        var latest = stats[^1];
-        if (stats.Count >= 2)
-        {
-            var prev = stats[^2];
-            IncomeMoMText = FormatMoM(prev.Income, latest.Income);
-            ExpenseMoMText = FormatMoM(prev.Expense, latest.Expense);
-        }
-        else
-        {
-            IncomeMoMText = "--";
-            ExpenseMoMText = "--";
-        }
-
-        var maxExpense = stats.MaxBy(s => s.Expense)!;
-        MaxExpenseText = $"最高支出月：{maxExpense.Month} ({maxExpense.Expense:N0})";
-
-        var minNet = stats.MinBy(s => s.Income - s.Expense)!;
-        var net = minNet.Income - minNet.Expense;
-        MinNetText = $"最低淨額月：{minNet.Month} ({net:N0})";
-    }
-
-    private static string FormatMoM(decimal previous, decimal current)
-    {
-        if (previous == 0) return "--";
-        var ratio = (current - previous) / previous;
-        return ratio >= 0 ? $"+{ratio:P1}" : $"{ratio:P1}";
+        var summary = StatisticsTrendInsights.Build(
+            stats.Select(s => (s.Month, s.Income, s.Expense)).ToArray());
+        IncomeMoMText = summary.IncomeMoMText;
+        ExpenseMoMText = summary.ExpenseMoMText;
+        MaxExpenseText = summary.MaxExpenseText;
+        MinNetText = summary.MinNetText;
     }
 
     private static string FormatAxisValue(double value)

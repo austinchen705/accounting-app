@@ -118,4 +118,28 @@ public class CategoryServiceTests
         Assert.False(result);
         Assert.Contains(await svc.GetAllAsync(), c => c.Id == cat.Id);
     }
+
+    [Fact]
+    public async Task Update_category_type_updates_linked_transaction_types()
+    {
+        await using var db = await TestDb.CreateAsync();
+        var svc = new CategoryService(db.Service);
+        await svc.AddAsync(new Category { Name = "收入", Type = "expense" });
+        var category = (await svc.GetAllAsync()).Single(c => c.Name == "收入" && c.Type == "expense");
+
+        await db.Service.Db.InsertAsync(new Transaction
+        {
+            Amount = 100,
+            Currency = "TWD",
+            CategoryId = category.Id,
+            Date = new DateTime(2026, 7, 1),
+            Type = "expense"
+        });
+
+        category.Type = "income";
+        await svc.UpdateAsync(category);
+
+        var txn = await db.Service.Db.Table<Transaction>().Where(t => t.CategoryId == category.Id).FirstAsync();
+        Assert.Equal("income", txn.Type);
+    }
 }

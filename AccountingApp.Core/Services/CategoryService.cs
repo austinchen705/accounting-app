@@ -8,11 +8,25 @@ public class CategoryService
 
     public CategoryService(DatabaseService db) => _db = db;
 
+    private static string NormalizeType(string? type)
+    {
+        var value = (type ?? "expense").Trim();
+        return value switch
+        {
+            "收入" => "income",
+            "支出" => "expense",
+            _ => value.ToLowerInvariant()
+        };
+    }
+
     public async Task<List<Category>> GetAllAsync() =>
         await _db.Db.Table<Category>().ToListAsync();
 
-    public async Task<List<Category>> GetByTypeAsync(string type) =>
-        await _db.Db.Table<Category>().Where(c => c.Type == type).ToListAsync();
+    public async Task<List<Category>> GetByTypeAsync(string type)
+    {
+        var normalized = NormalizeType(type);
+        return await _db.Db.Table<Category>().Where(c => c.Type == normalized).ToListAsync();
+    }
 
     public async Task<Category?> GetByIdAsync(int id) =>
         await _db.Db.Table<Category>().Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -20,6 +34,7 @@ public class CategoryService
     /// <returns>true if added; false if same (name,type) already exists.</returns>
     public async Task<bool> AddAsync(Category category)
     {
+        category.Type = NormalizeType(category.Type);
         var existing = await _db.Db.Table<Category>()
             .Where(c => c.Name == category.Name && c.Type == category.Type).FirstOrDefaultAsync();
         if (existing is not null) return false;
@@ -27,8 +42,15 @@ public class CategoryService
         return true;
     }
 
-    public async Task UpdateAsync(Category category) =>
+    public async Task UpdateAsync(Category category)
+    {
+        category.Type = NormalizeType(category.Type);
         await _db.Db.UpdateAsync(category);
+        await _db.Db.ExecuteAsync(
+            "UPDATE Transactions SET Type = ? WHERE CategoryId = ?",
+            category.Type,
+            category.Id);
+    }
 
     /// <returns>true if deleted; false if category has transactions.</returns>
     public async Task<bool> DeleteAsync(int id)

@@ -25,6 +25,7 @@ public class DatabaseService
         await _db.CreateTableAsync<Budget>();
         await _db.CreateTableAsync<ExchangeRateCache>();
         await EnsureIndexesAsync();
+        await NormalizeLegacyTypeValuesAsync();
 
         await SeedDefaultCategoriesAsync();
     }

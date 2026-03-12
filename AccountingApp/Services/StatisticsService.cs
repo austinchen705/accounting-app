@@ -1,4 +1,5 @@
 using AccountingApp.Models;
+using AccountingApp.Core.Services;
 
 namespace AccountingApp.Services;
 
@@ -40,14 +41,13 @@ public class StatisticsService
             .ToList();
     }
 
-    public async Task<List<MonthStat>> GetLast6MonthsStatsAsync()
+    public async Task<List<MonthStat>> GetLast6MonthsStatsAsync(DateTime anchorMonth)
     {
         var baseCurrency = Preferences.Get("base_currency", "TWD");
         var result = new List<MonthStat>();
 
-        for (int i = 5; i >= 0; i--)
+        foreach (var date in StatisticsTrendWindow.GetSixMonthWindow(anchorMonth))
         {
-            var date = DateTime.Today.AddMonths(-i);
             var month = date.ToString("yyyy-MM");
             var (income, expense) = await _transactionService.GetMonthSummaryAsync(month);
             result.Add(new MonthStat(date.ToString("MM月"), income, expense));

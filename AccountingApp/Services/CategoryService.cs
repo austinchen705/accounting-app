@@ -75,6 +75,10 @@ public class CategoryService
         await EnsureInitializedAsync();
         category.Type = NormalizeType(category.Type);
         await _db.Db.UpdateAsync(category);
+        await _db.Db.ExecuteAsync(
+            "UPDATE Transactions SET Type = ? WHERE CategoryId = ?",
+            category.Type,
+            category.Id);
     }
 
     public async Task<bool> DeleteAsync(int id)
