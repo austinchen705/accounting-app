@@ -6,6 +6,8 @@ namespace AccountingApp.Services;
 public record CategoryStat(string CategoryName, decimal Amount);
 public record MonthStat(string Month, decimal Income, decimal Expense);
 public record ExpenseCategoryTrendStat(string CategoryName, decimal[] Values);
+public record ExpenseCategoryReportItemStat(string CategoryName, int TransactionCount, decimal Amount);
+public record ExpenseCategoryReportStat(decimal TotalExpense, IReadOnlyList<ExpenseCategoryReportItemStat> Categories);
 
 public class StatisticsService
 {
@@ -88,5 +90,36 @@ public class StatisticsService
         return StatisticsCategoryTrend.BuildTopExpenseCategorySeries(months, values, topCount)
             .Select(series => new ExpenseCategoryTrendStat(series.CategoryName, series.Values))
             .ToList();
+    }
+
+    public async Task<ExpenseCategoryReportStat> GetExpenseCategoryReportAsync(
+        ExpenseCategoryReportRange range,
+        DateTime anchorDate)
+    {
+        var baseCurrency = Preferences.Get("base_currency", "TWD");
+        var transactions = await _transactionService.GetAllAsync();
+        var categories = await _categoryService.GetAllAsync();
+
+        var summary = await ExpenseCategoryReport.BuildAsync(
+            transactions.Select(transaction => new ExpenseCategoryReportSourceTransaction(
+                transaction.CategoryId,
+                transaction.Currency,
+                transaction.Amount,
+                transaction.Date,
+                transaction.Type)),
+            categories.Select(category => new ExpenseCategoryReportCategory(category.Id, category.Name)),
+            range,
+            anchorDate,
+            baseCurrency,
+            _currencyService.GetRateAsync);
+
+        return new ExpenseCategoryReportStat(
+            summary.TotalExpense,
+            summary.Categories
+                .Select(category => new ExpenseCategoryReportItemStat(
+                    category.CategoryName,
+                    category.TransactionCount,
+                    category.Amount))
+                .ToList());
     }
 }

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             x:Class="AccountingApp.Views.CategoryReportPage"
+             Shell.NavBarIsVisible="False"
+             Title="分類報告">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12,16,24" Spacing="0">
+            <Label Text="分類報告"
+                   Style="{StaticResource SectionTitleStyle}"
+                   Margin="0,0,0,12" />
+
+            <Frame Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="Week"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Week"
+                                BackgroundColor="{Binding WeekButtonBackgroundColor}"
+                                TextColor="{Binding WeekButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="1"
+                                Text="Month"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Month"
+                                BackgroundColor="{Binding MonthButtonBackgroundColor}"
+                                TextColor="{Binding MonthButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="2"
+                                Text="Year"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Year"
+                                BackgroundColor="{Binding YearButtonBackgroundColor}"
+                                TextColor="{Binding YearButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="3"
+                                Text="All"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="All"
+                                BackgroundColor="{Binding AllButtonBackgroundColor}"
+                                TextColor="{Binding AllButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Button Text="‹"
+                                Command="{Binding PreviousPeriodCommand}"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                Padding="0"
+                                IsVisible="{Binding CanNavigatePeriods}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding PeriodLabel}"
+                               Style="{StaticResource SectionTitleStyle}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                        <Button Grid.Column="2"
+                                Text="›"
+                                Command="{Binding NextPeriodCommand}"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                Padding="0"
+                                IsVisible="{Binding CanNavigatePeriods}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid HeightRequest="260"
+                          IsVisible="{Binding HasCategoryData}">
+                        <lvc:PieChart Series="{Binding PieSeries}"
+                                      InitialRotation="-90"
+                                      MaxAngle="360"
+                                      LegendPosition="Hidden"
+                                      HeightRequest="240"
+                                      HorizontalOptions="Fill"
+                                      VerticalOptions="Fill" />
+                        <VerticalStackLayout HorizontalOptions="Center"
+                                             VerticalOptions="Center"
+                                             Spacing="4">
+                            <Label Text="支出"
+                                   HorizontalOptions="Center"
+                                   Style="{StaticResource CaptionStyle}" />
+                            <Label Text="{Binding TotalExpenseText}"
+                                   HorizontalOptions="Center"
+                                   FontAttributes="Bold"
+                                   FontSize="28"
+                                   TextColor="{StaticResource Danger}" />
+                            <Label Text="{Binding CurrencyText}"
+                                   HorizontalOptions="Center"
+                                   Style="{StaticResource CaptionStyle}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="此期間沒有支出紀錄"
+                           Style="{StaticResource CaptionStyle}"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding HasCategoryData, Converter={StaticResource InverseBoolConverter}}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                          ColumnSpacing="8"
+                          IsVisible="{Binding HasCategoryData}">
+                        <Label Text="分類資訊" Style="{StaticResource SectionTitleStyle}" />
+                        <Label Grid.Column="1" Text="筆數" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                        <Label Grid.Column="2" Text="金額" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                        <Label Grid.Column="3" Text="佔比" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                    </Grid>
+
+                    <Label Text="此期間沒有支出紀錄"
+                           Style="{StaticResource CaptionStyle}"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding HasCategoryData, Converter={StaticResource InverseBoolConverter}}" />
+
+                    <CollectionView ItemsSource="{Binding CategoryItems}"
+                                    SelectionMode="None"
+                                    IsVisible="{Binding HasCategoryData}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                                      ColumnSpacing="8"
+                                      Padding="0,8">
+                                    <BoxView WidthRequest="12"
+                                             HeightRequest="12"
+                                             CornerRadius="6"
+                                             Color="{Binding DotColor}"
+                                             VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding CategoryName}"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="2"
+                                           Text="{Binding TransactionCountText}"
+                                           Style="{StaticResource CaptionStyle}"
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="End" />
+                                    <Label Grid.Column="3"
+                                           Text="{Binding AmountText}"
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="End" />
+                                    <Label Grid.Column="4"
+                                           Text="{Binding PercentageText}"
+                                           Style="{StaticResource CaptionStyle}"
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="End" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
