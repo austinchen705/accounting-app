@@ -5,54 +5,86 @@
              Title="收支記錄">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding AddCommand}" />
+        <ToolbarItem Text="新增" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*" Padding="16,8">
+    <Grid RowDefinitions="Auto,*" Padding="16,16,16,8" RowSpacing="8">
 
-        <!-- 月份篩選 -->
-        <DatePicker Grid.Row="0"
-                    Format="yyyy-MM"
-                    Date="{Binding FilterDate}"
-                    Margin="0,0,0,8" />
+        <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}" Padding="12,8">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="日期篩選" Style="{StaticResource CaptionStyle}" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <DatePicker Date="{Binding FilterDate}"
+                                Format="yyyy/MM/dd" />
+                    <Button Grid.Column="1"
+                            Text="今天"
+                            Command="{Binding ResetToTodayCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            FontSize="13"
+                            Padding="10,6"
+                            HeightRequest="36" />
+                </Grid>
+            </VerticalStackLayout>
+        </Frame>
 
-        <!-- 記錄列表 -->
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Transactions}">
-            <CollectionView.EmptyView>
-                <Label Text="本月尚無記錄" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gray" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="刪除" BackgroundColor="Red"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <SwipeView.LeftItems>
-                            <SwipeItems>
-                                <SwipeItem Text="編輯" BackgroundColor="Blue"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.LeftItems>
-                        <Grid Padding="0,12" ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout Grid.Column="0">
-                                <Label Text="{Binding Note}" FontSize="14" />
-                                <Label Text="{Binding Date, StringFormat='{0:yyyy/MM/dd}'}"
-                                       FontSize="12" TextColor="Gray" />
-                            </VerticalStackLayout>
-                            <Label Grid.Column="1"
-                                   Text="{Binding Amount, StringFormat='{0:N0}'}"
-                                   FontSize="16" FontAttributes="Bold"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <Grid Grid.Row="1">
+            <Frame Style="{StaticResource CardFrameStyle}"
+                   IsVisible="{Binding HasTransactions, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="本月尚無記錄"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Style="{StaticResource CaptionStyle}" />
+            </Frame>
+
+            <ScrollView IsVisible="{Binding HasTransactions}">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Transactions}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource CardFrameStyle}" Padding="14,10" Margin="0">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding Note}" FontAttributes="Bold" FontSize="15" />
+                                            <Label Text="{Binding Date, StringFormat='{0:yyyy/MM/dd}'}"
+                                                   Style="{StaticResource CaptionStyle}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Amount, StringFormat='{0:N0}'}"
+                                               Style="{StaticResource ValueStyle}"
+                                               VerticalOptions="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="expense">
+                                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="income">
+                                                    <Setter Property="TextColor" Value="{StaticResource Success}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+                                    <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
+                                        <Button Text="編輯"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                                CommandParameter="{Binding .}"
+                                                Style="{StaticResource SecondaryButtonStyle}"
+                                                FontSize="13"
+                                                Padding="10,6"
+                                                HeightRequest="34" />
+                                        <Button Text="刪除"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="{StaticResource Danger}"
+                                                FontSize="13"
+                                                Padding="10,6"
+                                                HeightRequest="34" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
 
     </Grid>
 </ContentPage>

@@ -71,6 +71,7 @@ logs/
 *.tmp
 *.temp
 .cache/
+.worktrees/
 
 # Secrets (never commit)
 appsettings.*.json
@@ -78,3 +79,6 @@ appsettings.*.json
 secrets.json
 *.pfx
 *.p12
+
+# OpenSpec markdown artifacts
+openspec/**/*.md

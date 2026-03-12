@@ -111,6 +111,20 @@ public class TransactionServiceTests
         Assert.Empty(await svc.GetAllAsync());
     }
 
+    [Fact]
+    public async Task DeleteAll_removes_all_transactions()
+    {
+        await using var db = await TestDb.CreateAsync();
+        var svc = BuildSvc(db.Service);
+
+        await svc.AddAsync(new Transaction { Amount = 100, Currency = "TWD", Type = "expense", Date = DateTime.Today });
+        await svc.AddAsync(new Transaction { Amount = 200, Currency = "TWD", Type = "income", Date = DateTime.Today });
+
+        await svc.DeleteAllAsync();
+
+        Assert.Empty(await svc.GetAllAsync());
+    }
+
     // ── Monthly summary ────────────────────────────────────────────────────
 
     [Fact]

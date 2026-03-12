@@ -2,28 +2,48 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AccountingApp.Views.BudgetPage"
+             Shell.NavBarIsVisible="False"
              Title="預算管理">
 
-    <CollectionView ItemsSource="{Binding BudgetItems}" Margin="16">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Frame Margin="0,4" Padding="12" CornerRadius="8">
-                    <VerticalStackLayout Spacing="4">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Grid.Column="0" Text="{Binding CategoryName}"
-                                   FontSize="16" FontAttributes="Bold" />
-                            <Button Grid.Column="1" Text="設定"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SetBudgetCommand}"
-                                    CommandParameter="{Binding .}"
-                                    FontSize="12" Padding="8,4" />
-                        </Grid>
-                        <Label Text="{Binding RatioText}" FontSize="12" TextColor="Gray" />
-                        <ProgressBar Progress="{Binding Ratio}"
-                                     ProgressColor="{Binding BarColor}" />
-                    </VerticalStackLayout>
-                </Frame>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <Grid Padding="16,0,16,8">
+        <Label Text="尚無可設定預算的分類"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               Margin="0,12,0,0"
+               Style="{StaticResource CaptionStyle}"
+               IsVisible="{Binding HasBudgetItems, Converter={StaticResource InverseBoolConverter}}" />
+
+        <ScrollView IsVisible="{Binding HasBudgetItems}">
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding BudgetItems}"
+                                 Spacing="0">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Style="{StaticResource CardFrameStyle}" Padding="14,12" Margin="0,0,0,8">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding CategoryName}"
+                                           Style="{StaticResource SectionTitleStyle}"
+                                           VerticalOptions="Center" />
+                                    <Button Grid.Column="1"
+                                            Text="設定"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SetBudgetCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Style="{StaticResource SecondaryButtonStyle}"
+                                            FontSize="13"
+                                            Padding="10,6"
+                                            HeightRequest="34" />
+                                </Grid>
+                                <Label Text="{Binding RatioText}" Style="{StaticResource CaptionStyle}" />
+                                <ProgressBar Progress="{Binding Ratio}"
+                                             ProgressColor="{Binding BarColor}"
+                                             HeightRequest="8" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 
 </ContentPage>

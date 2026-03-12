@@ -8,10 +8,12 @@ namespace AccountingApp.ViewModels;
 public class HomeViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
+    private readonly DataRefreshService _refreshService;
     private decimal _totalIncome;
     private decimal _totalExpense;
     private decimal _balance;
     private string _currentMonth;
+    private bool _hasRecentTransactions;
 
     public decimal TotalIncome
     {
@@ -39,14 +41,22 @@ public class HomeViewModel : BindableObject
 
     public ObservableCollection<Transaction> RecentTransactions { get; } = new();
 
+    public bool HasRecentTransactions
+    {
+        get => _hasRecentTransactions;
+        set { _hasRecentTransactions = value; OnPropertyChanged(); }
+    }
+
     public ICommand AddTransactionCommand { get; }
 
-    public HomeViewModel(TransactionService transactionService)
+    public HomeViewModel(TransactionService transactionService, DataRefreshService refreshService)
     {
         _transactionService = transactionService;
+        _refreshService = refreshService;
         _currentMonth = DateTime.Today.ToString("yyyy-MM");
         AddTransactionCommand = new Command(async () =>
             await Shell.Current.GoToAsync("TransactionFormPage"));
+        _refreshService.DataChanged += OnDataChanged;
     }
 
     public async Task LoadAsync()
@@ -59,5 +69,11 @@ public class HomeViewModel : BindableObject
         var recent = await _transactionService.GetRecentAsync(10);
         RecentTransactions.Clear();
         foreach (var t in recent) RecentTransactions.Add(t);
+        HasRecentTransactions = RecentTransactions.Count > 0;
+    }
+
+    private async void OnDataChanged()
+    {
+        await LoadAsync();
     }
 }

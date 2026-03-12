@@ -8,12 +8,10 @@
         <Entry Text="{Binding Name}" Placeholder="例如：咖啡、健身" />
 
         <Label Text="類型" />
-        <Picker SelectedItem="{Binding Type}" Title="選擇類型">
-            <Picker.Items>
-                <x:String>expense</x:String>
-                <x:String>income</x:String>
-            </Picker.Items>
-        </Picker>
+        <Picker Title="選擇類型"
+                ItemsSource="{Binding TypeOptions}"
+                SelectedItem="{Binding SelectedTypeOption}"
+                ItemDisplayBinding="{Binding Label}" />
 
         <Label Text="{Binding ErrorMessage}" TextColor="Red"
                IsVisible="{Binding HasError}" />
