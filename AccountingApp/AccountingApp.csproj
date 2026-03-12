@@ -18,10 +18,10 @@
 		<Nullable>enable</Nullable>
 
 <!-- Display name -->
-		<ApplicationTitle>AccountingApp</ApplicationTitle>
+		<ApplicationTitle>Personal Accounting</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.accountingapp</ApplicationId>
+		<ApplicationId>austin-accounting.poc-account</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -31,7 +31,7 @@
 		<WindowsPackageType>None</WindowsPackageType>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-		<CodesignEntitlements Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<CodesignEntitlements Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">Platforms\iOS\Entitlements.Debug.plist</CodesignEntitlements>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -40,14 +40,19 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\images.png" Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0F766E" BaseSize="220,220" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<MauiImage Update="Resources\Images\tab_home.svg" Resize="True" BaseSize="24,24" />
+		<MauiImage Update="Resources\Images\tab_list.svg" Resize="True" BaseSize="24,24" />
+		<MauiImage Update="Resources\Images\tab_chart.svg" Resize="True" BaseSize="24,24" />
+		<MauiImage Update="Resources\Images\tab_budget.svg" Resize="True" BaseSize="24,24" />
+		<MauiImage Update="Resources\Images\tab_settings.svg" Resize="True" BaseSize="24,24" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -59,11 +64,15 @@
 	<ItemGroup>
 		<PackageReference Include="ClosedXML" Version="0.105.0" />
 		<PackageReference Include="CsvHelper" Version="33.1.0" />
-		<PackageReference Include="Microcharts.Maui" Version="1.0.1" />
+		<PackageReference Include="LiveChartsCore.SkiaSharpView.Maui" Version="2.0.0-rc6.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AccountingApp.Core\AccountingApp.Core.csproj" />
 	</ItemGroup>
 
 </Project>

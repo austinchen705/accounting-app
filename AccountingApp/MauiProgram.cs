@@ -2,7 +2,8 @@ using Microsoft.Extensions.Logging;
 using AccountingApp.Services;
 using AccountingApp.Views;
 using AccountingApp.ViewModels;
-using Microcharts.Maui;
+using LiveChartsCore.SkiaSharpView.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace AccountingApp;
 
@@ -13,7 +14,8 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMicrocharts()
+            .UseSkiaSharp()
+            .UseLiveCharts()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -25,10 +27,12 @@ public static class MauiProgram
         builder.Services.AddSingleton<CurrencyService>();
         builder.Services.AddSingleton<CategoryService>();
         builder.Services.AddSingleton<TransactionService>();
+        builder.Services.AddSingleton<DataRefreshService>();
         builder.Services.AddSingleton<BudgetService>();
         builder.Services.AddSingleton<StatisticsService>();
         builder.Services.AddSingleton<ExportService>();
-        builder.Services.AddSingleton<ICloudService>();
+        builder.Services.AddSingleton<JsonImportService>();
+        builder.Services.AddSingleton<GoogleDriveService>();
 
         // ViewModels
         builder.Services.AddTransient<HomeViewModel>();

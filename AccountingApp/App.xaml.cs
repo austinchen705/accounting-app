@@ -5,13 +5,11 @@ namespace AccountingApp;
 public partial class App : Application
 {
     private readonly DatabaseService _database;
-    private readonly ICloudService _icloud;
 
-    public App(DatabaseService database, ICloudService icloud)
+    public App(DatabaseService database)
     {
         InitializeComponent();
         _database = database;
-        _icloud = icloud;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -23,13 +21,6 @@ public partial class App : Application
     {
         base.OnStart();
         await _database.InitializeAsync();
-        await _icloud.SyncOnStartupAsync();
         await NotificationService.RequestPermissionAsync();
-    }
-
-    protected override async void OnResume()
-    {
-        base.OnResume();
-        await _icloud.FlushPendingSyncAsync();
     }
 }
