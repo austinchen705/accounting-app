@@ -139,11 +139,6 @@ public class StatisticsViewModel : BindableObject
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
 
-    private static readonly SKColor[] ChartColors = [
-        SKColor.Parse("#2196F3"), SKColor.Parse("#4CAF50"), SKColor.Parse("#FF5722"),
-        SKColor.Parse("#9C27B0"), SKColor.Parse("#FF9800"), SKColor.Parse("#00BCD4")
-    ];
-
     public StatisticsViewModel(StatisticsService statisticsService, DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
@@ -181,9 +176,9 @@ public class StatisticsViewModel : BindableObject
 
         var total = stats.Sum(s => s.Amount);
         PieLegends.Clear();
-        foreach (var (stat, i) in stats.Select((s, i) => (s, i)))
+        foreach (var stat in stats)
         {
-            var c = ChartColors[i % ChartColors.Length];
+            var c = GetChartColor(stat.CategoryName);
             var ratio = total <= 0 ? 0 : stat.Amount / total;
             series.Add(new PieSeries<double>
             {
@@ -287,9 +282,9 @@ public class StatisticsViewModel : BindableObject
             .ToArray();
 
         CategoryTrendSeries = stats
-            .Select((stat, index) =>
+            .Select(stat =>
             {
-                var color = ChartColors[index % ChartColors.Length];
+                var color = GetChartColor(stat.CategoryName);
                 return (ISeries)new LineSeries<double>
                 {
                     Name = stat.CategoryName,
@@ -327,6 +322,9 @@ public class StatisticsViewModel : BindableObject
             }
         ];
     }
+
+    private static SKColor GetChartColor(string categoryName) =>
+        SKColor.Parse(CategoryColorPalette.GetHexColorForKey(categoryName));
 
     private void ApplyTrendInsights(IReadOnlyList<MonthStat> stats)
     {

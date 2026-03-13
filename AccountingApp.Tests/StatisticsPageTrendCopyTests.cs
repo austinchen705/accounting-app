@@ -14,4 +14,16 @@ public class StatisticsPageTrendCopyTests
         Assert.Contains("前 5 大支出分類近 12 個月趨勢", xaml);
         Assert.Contains("CategoryTrendSeries", xaml);
     }
+
+    [Fact]
+    public void StatisticsViewModel_uses_shared_category_palette_for_chart_colors()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/StatisticsViewModel.cs"));
+        var code = File.ReadAllText(path);
+
+        Assert.Contains("CategoryColorPalette.GetHexColorForKey", code);
+        Assert.DoesNotContain("private static readonly SKColor[] ChartColors", code);
+    }
 }

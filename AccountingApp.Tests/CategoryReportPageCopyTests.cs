@@ -33,4 +33,15 @@ public class CategoryReportPageCopyTests
         Assert.Contains("此期間沒有支出紀錄", xaml);
         Assert.Contains("CategoryItems", xaml);
     }
+
+    [Fact]
+    public void CategoryReportViewModel_uses_shared_category_palette_by_category_name()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/CategoryReportViewModel.cs"));
+        var code = File.ReadAllText(path);
+
+        Assert.Contains("CategoryColorPalette.GetHexColorForKey(category.CategoryName)", code);
+    }
 }

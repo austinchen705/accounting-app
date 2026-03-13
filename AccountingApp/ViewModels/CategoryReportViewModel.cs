@@ -21,12 +21,6 @@ public class CategoryReportViewModel : BindableObject
         public Color DotColor { get; set; } = Colors.Gray;
     }
 
-    private static readonly SKColor[] ChartColors =
-    [
-        SKColor.Parse("#2196F3"), SKColor.Parse("#4CAF50"), SKColor.Parse("#FF5722"),
-        SKColor.Parse("#9C27B0"), SKColor.Parse("#FF9800"), SKColor.Parse("#00BCD4")
-    ];
-
     private readonly StatisticsService _statisticsService;
     private readonly DataRefreshService _refreshService;
     private DateTime _anchorDate = DateTime.Today;
@@ -172,9 +166,9 @@ public class CategoryReportViewModel : BindableObject
         var series = new List<ISeries>(summary.Categories.Count);
         CategoryItems.Clear();
 
-        foreach (var (category, index) in summary.Categories.Select((item, index) => (item, index)))
+        foreach (var category in summary.Categories)
         {
-            var color = ChartColors[index % ChartColors.Length];
+            var color = SKColor.Parse(CategoryColorPalette.GetHexColorForKey(category.CategoryName));
             var ratio = total <= 0 ? 0 : category.Amount / total;
             series.Add(new PieSeries<double>
             {
