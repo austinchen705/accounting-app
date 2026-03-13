@@ -14,7 +14,9 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new AppShell());
+        var shell = new AppShell();
+        shell.BackgroundColor = Color.FromArgb("#10B981");
+        return new Window(shell);
     }
 
     protected override async void OnStart()

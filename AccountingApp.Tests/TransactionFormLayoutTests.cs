@@ -27,8 +27,11 @@ public class TransactionFormLayoutTests
         var xaml = ReadTransactionFormXaml();
 
         Assert.DoesNotContain("<DatePicker", xaml);
-        Assert.Contains("Command=\"{Binding OpenCalendarCommand}\"", xaml);
-        Assert.Contains("ItemsSource=\"{Binding CalendarDays}\"", xaml);
+        Assert.Contains("<controls:CalendarDatePicker", xaml);
+        Assert.Contains("Date=\"{Binding Date}\"", xaml);
+        Assert.Contains("ShowTrigger=\"False\"", xaml);
+        Assert.Contains("x:Name=\"FormCalendarDatePicker\"", xaml);
+        Assert.Contains("Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand", xaml);
     }
 
     private static string ReadTransactionFormXaml()

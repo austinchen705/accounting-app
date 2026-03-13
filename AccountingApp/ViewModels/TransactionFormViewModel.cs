@@ -2,22 +2,12 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using AccountingApp.Models;
 using AccountingApp.Services;
-using CalendarMonth = AccountingApp.Core.Services.CalendarMonth;
 
 namespace AccountingApp.ViewModels;
 
 [QueryProperty(nameof(TransactionId), "id")]
 public class TransactionFormViewModel : BindableObject
 {
-    public class CalendarDayItem
-    {
-        public DateTime Date { get; init; }
-        public string Label { get; init; } = string.Empty;
-        public Color TextColor { get; init; } = Colors.Black;
-        public Color BackgroundColor { get; init; } = Colors.Transparent;
-        public Color BorderColor { get; init; } = Colors.Transparent;
-    }
-
     private readonly TransactionService _transactionService;
     private readonly CategoryService _categoryService;
     private readonly BudgetService _budgetService;
@@ -32,10 +22,6 @@ public class TransactionFormViewModel : BindableObject
     private string _errorMessage = string.Empty;
     private bool _hasError;
     private bool _isEdit;
-    private bool _isCalendarVisible;
-    private DateTime _calendarMonth = new(DateTime.Today.Year, DateTime.Today.Month, 1);
-    private string _dateDisplayText = DateTime.Today.ToString("yyyy/MM/dd");
-    private string _calendarMonthText = DateTime.Today.ToString("yyyy年MM月");
 
     public int TransactionId
     {
@@ -64,14 +50,7 @@ public class TransactionFormViewModel : BindableObject
     public DateTime Date
     {
         get => _date;
-        set
-        {
-            _date = value;
-            DateDisplayText = value.ToString("yyyy/MM/dd");
-            OnPropertyChanged();
-            SyncCalendarMonth(value);
-            RefreshCalendarDays();
-        }
+        set { _date = value.Date; OnPropertyChanged(); }
     }
 
     public string Note
@@ -98,36 +77,13 @@ public class TransactionFormViewModel : BindableObject
         set { _hasError = value; OnPropertyChanged(); }
     }
 
-    public bool IsCalendarVisible
-    {
-        get => _isCalendarVisible;
-        set { _isCalendarVisible = value; OnPropertyChanged(); }
-    }
-
-    public string DateDisplayText
-    {
-        get => _dateDisplayText;
-        private set { _dateDisplayText = value; OnPropertyChanged(); }
-    }
-
-    public string CalendarMonthText
-    {
-        get => _calendarMonthText;
-        private set { _calendarMonthText = value; OnPropertyChanged(); }
-    }
-
     public ObservableCollection<Category> Categories { get; } = new();
-    public ObservableCollection<CalendarDayItem> CalendarDays { get; } = new();
-    public IReadOnlyList<string> WeekdayHeaders { get; } = ["日", "一", "二", "三", "四", "五", "六"];
-    public ObservableCollection<string> Currencies { get; } = new()
-        { "TWD", "USD", "JPY", "EUR", "GBP", "CNY", "HKD", "AUD", "CAD", "SGD" };
+    public ObservableCollection<string> Currencies { get; } =
+    [
+        "TWD", "USD", "JPY", "EUR", "GBP", "CNY", "HKD", "AUD", "CAD", "SGD"
+    ];
 
     public ICommand SaveCommand { get; }
-    public ICommand OpenCalendarCommand { get; }
-    public ICommand CloseCalendarCommand { get; }
-    public ICommand PreviousCalendarMonthCommand { get; }
-    public ICommand NextCalendarMonthCommand { get; }
-    public ICommand SelectCalendarDateCommand { get; }
 
     public TransactionFormViewModel(TransactionService transactionService, CategoryService categoryService, BudgetService budgetService)
     {
@@ -135,18 +91,11 @@ public class TransactionFormViewModel : BindableObject
         _categoryService = categoryService;
         _budgetService = budgetService;
         SaveCommand = new Command(async () => await SaveAsync());
-        OpenCalendarCommand = new Command(OpenCalendar);
-        CloseCalendarCommand = new Command(() => IsCalendarVisible = false);
-        PreviousCalendarMonthCommand = new Command(() => ChangeCalendarMonth(-1));
-        NextCalendarMonthCommand = new Command(() => ChangeCalendarMonth(1));
-        SelectCalendarDateCommand = new Command<CalendarDayItem>(SelectCalendarDate);
-        RefreshCalendarDays();
     }
 
     public async Task InitializeAsync()
     {
         await LoadCategoriesForTypeAsync();
-        RefreshCalendarDays();
     }
 
     private async Task LoadCategoriesForTypeAsync()
@@ -202,72 +151,9 @@ public class TransactionFormViewModel : BindableObject
             await _transactionService.AddAsync(txn);
         }
 
-        // Check budget after saving expense
         if (txn.Type == "expense" && txn.CategoryId > 0)
             await _budgetService.CheckAndNotifyAsync(txn.CategoryId, txn.Date.ToString("yyyy-MM"));
 
         await Shell.Current.GoToAsync("..");
-    }
-
-    private void OpenCalendar()
-    {
-        SyncCalendarMonth(Date);
-        RefreshCalendarDays();
-        IsCalendarVisible = true;
-    }
-
-    private void ChangeCalendarMonth(int offset)
-    {
-        _calendarMonth = _calendarMonth.AddMonths(offset);
-        UpdateCalendarMonthText();
-        RefreshCalendarDays();
-    }
-
-    private void SelectCalendarDate(CalendarDayItem? day)
-    {
-        if (day is null)
-        {
-            return;
-        }
-
-        Date = day.Date;
-        IsCalendarVisible = false;
-    }
-
-    private void SyncCalendarMonth(DateTime date)
-    {
-        _calendarMonth = new DateTime(date.Year, date.Month, 1);
-        UpdateCalendarMonthText();
-    }
-
-    private void UpdateCalendarMonthText()
-    {
-        CalendarMonthText = _calendarMonth.ToString("yyyy年MM月");
-    }
-
-    private void RefreshCalendarDays()
-    {
-        var cells = CalendarMonth.BuildGrid(_calendarMonth);
-        CalendarDays.Clear();
-
-        foreach (var cell in cells)
-        {
-            var isSelected = cell.Date.Date == Date.Date;
-            var isToday = cell.Date.Date == DateTime.Today;
-            CalendarDays.Add(new CalendarDayItem
-            {
-                Date = cell.Date,
-                Label = cell.Date.Day.ToString(),
-                TextColor = isSelected
-                    ? Colors.White
-                    : cell.IsCurrentMonth ? Colors.Black : Colors.Gray,
-                BackgroundColor = isSelected
-                    ? Color.FromArgb("#0F766E")
-                    : Colors.Transparent,
-                BorderColor = isToday && !isSelected
-                    ? Color.FromArgb("#0F766E")
-                    : Colors.Transparent
-            });
-        }
     }
 }

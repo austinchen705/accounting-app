@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
              x:Class="AccountingApp.Views.TransactionFormPage"
-             x:Name="TransactionFormPageRoot"
              Title="新增記錄">
 
     <ScrollView>
@@ -33,84 +33,17 @@
                                     ItemDisplayBinding="{Binding Name}" />
                         </Frame>
                         <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource InputContainerStyle}">
-                            <Button Text="{Binding DateDisplayText}"
-                                    Command="{Binding OpenCalendarCommand}"
+                            <Button Text="{Binding Source={x:Reference FormCalendarDatePicker}, Path=DateDisplayText}"
+                                    Command="{Binding Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand}"
                                     HorizontalOptions="Fill"
                                     BackgroundColor="Transparent"
                                     TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
                         </Frame>
                     </Grid>
 
-                    <Frame Style="{StaticResource CardFrameStyle}"
-                           Padding="12"
-                           Margin="0,0,0,0"
-                           IsVisible="{Binding IsCalendarVisible}">
-                        <VerticalStackLayout Spacing="12">
-                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                                <Button Text="‹"
-                                        Command="{Binding PreviousCalendarMonthCommand}"
-                                        WidthRequest="36"
-                                        HeightRequest="36"
-                                        Padding="0"
-                                        BackgroundColor="Transparent" />
-                                <Label Grid.Column="1"
-                                       Text="{Binding CalendarMonthText}"
-                                       Style="{StaticResource SectionTitleStyle}"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center" />
-                                <Button Grid.Column="2"
-                                        Text="›"
-                                        Command="{Binding NextCalendarMonthCommand}"
-                                        WidthRequest="36"
-                                        HeightRequest="36"
-                                        Padding="0"
-                                        BackgroundColor="Transparent" />
-                            </Grid>
-
-                            <Grid ColumnDefinitions="*,*,*,*,*,*,*" ColumnSpacing="4">
-                                <Label Text="日" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="一" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="2" Text="二" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="3" Text="三" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="4" Text="四" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="5" Text="五" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                                <Label Grid.Column="6" Text="六" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                            </Grid>
-
-                            <CollectionView ItemsSource="{Binding CalendarDays}"
-                                            SelectionMode="None"
-                                            HeightRequest="288">
-                                <CollectionView.ItemsLayout>
-                                    <GridItemsLayout Orientation="Vertical" Span="7" HorizontalItemSpacing="4" VerticalItemSpacing="6" />
-                                </CollectionView.ItemsLayout>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Frame Padding="0"
-                                               Margin="0"
-                                               CornerRadius="18"
-                                               HeightRequest="36"
-                                               WidthRequest="36"
-                                               BackgroundColor="{Binding BackgroundColor}"
-                                               BorderColor="{Binding BorderColor}"
-                                               HasShadow="False"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center">
-                                            <Button Text="{Binding Label}"
-                                                    Command="{Binding Source={x:Reference TransactionFormPageRoot}, Path=BindingContext.SelectCalendarDateCommand}"
-                                                    CommandParameter="{Binding .}"
-                                                    BackgroundColor="Transparent"
-                                                    TextColor="{Binding TextColor}"
-                                                    Padding="0" />
-                                        </Frame>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-
-                            <Button Text="完成"
-                                    Command="{Binding CloseCalendarCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" />
-                        </VerticalStackLayout>
-                    </Frame>
+                    <controls:CalendarDatePicker x:Name="FormCalendarDatePicker"
+                                                 Date="{Binding Date}"
+                                                 ShowTrigger="False" />
                 </VerticalStackLayout>
             </Frame>
 

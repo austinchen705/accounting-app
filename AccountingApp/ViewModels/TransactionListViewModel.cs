@@ -31,6 +31,7 @@ public class TransactionListViewModel : BindableObject
             _ = LoadAsync();
         }
     }
+
     public string FilterDateLabel => FilterDate.ToString("yyyy/MM/dd");
 
     public ICommand DeleteCommand { get; }
