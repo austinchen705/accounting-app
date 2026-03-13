@@ -36,7 +36,7 @@ public class AssetSnapshotService
             throw new ArgumentException("Date is required.");
         }
 
-        if (snapshot.Stock < 0 || snapshot.Cash < 0 || snapshot.FirstTrade < 0 || snapshot.Fund3 < 0)
+        if (snapshot.Stock < 0 || snapshot.Cash < 0 || snapshot.FirstTrade < 0 || snapshot.Property < 0)
         {
             throw new ArgumentException("Asset values must be non-negative.");
         }

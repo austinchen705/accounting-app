@@ -7,7 +7,7 @@ public record AssetTrendSeriesResult(
     decimal[] StockValues,
     decimal[] CashValues,
     decimal[] FirstTradeValues,
-    decimal[] Fund3Values,
+    decimal[] PropertyValues,
     decimal[] Totals);
 
 public static class AssetTrendSeries
@@ -21,7 +21,7 @@ public static class AssetTrendSeries
             ordered.Select(x => x.Stock).ToArray(),
             ordered.Select(x => x.Cash).ToArray(),
             ordered.Select(x => x.FirstTrade).ToArray(),
-            ordered.Select(x => x.Fund3).ToArray(),
-            ordered.Select(x => x.Stock + x.Cash + x.FirstTrade + x.Fund3).ToArray());
+            ordered.Select(x => x.Property).ToArray(),
+            ordered.Select(x => x.Stock + x.Cash + x.FirstTrade + x.Property).ToArray());
     }
 }

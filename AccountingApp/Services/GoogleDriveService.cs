@@ -34,6 +34,8 @@ public class GoogleDriveService : IGoogleDriveFileApi
     public string? FolderId => Preferences.Get(FolderIdKey, null);
     public string? FolderName => Preferences.Get(FolderNameKey, null);
 
+    public sealed record GoogleDriveFileItem(string Id, string Name);
+
     public async Task AuthorizeAsync()
     {
         EnsureScopeConsistency();
@@ -178,6 +180,36 @@ public class GoogleDriveService : IGoogleDriveFileApi
         var bytes = await response.Content.ReadAsByteArrayAsync(cancellationToken);
         return new MemoryStream(bytes);
     }
+
+    public async Task<IReadOnlyList<GoogleDriveFileItem>> ListBackupFolderFilesAsync(CancellationToken cancellationToken = default)
+    {
+        var folderId = await EnsureConfiguredAsync();
+        await EnsureAuthorizedHeaderAsync();
+
+        var escapedFolder = folderId.Replace("'", "\\'");
+        var q = $"'{escapedFolder}' in parents and trashed=false";
+        var url = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(q)}&fields=files(id,name)&orderBy=name&pageSize=100&includeItemsFromAllDrives=true&supportsAllDrives=true";
+
+        using var response = await _httpClient.GetAsync(url, cancellationToken);
+        await EnsureSuccessAsync(response);
+
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
+        if (!doc.RootElement.TryGetProperty("files", out var files) || files.ValueKind != JsonValueKind.Array)
+        {
+            return [];
+        }
+
+        return files.EnumerateArray()
+            .Select(file => new GoogleDriveFileItem(
+                file.TryGetProperty("id", out var idValue) ? idValue.GetString() ?? string.Empty : string.Empty,
+                file.TryGetProperty("name", out var nameValue) ? nameValue.GetString() ?? string.Empty : string.Empty))
+            .Where(file => !string.IsNullOrWhiteSpace(file.Id) && !string.IsNullOrWhiteSpace(file.Name))
+            .ToList();
+    }
+
+    public static IReadOnlyList<GoogleDriveFileItem> FilterCsvFiles(IEnumerable<GoogleDriveFileItem> files) =>
+        files.Where(file => file.Name.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)).ToList();
 
     private async Task<string> EnsureConfiguredAsync()
     {

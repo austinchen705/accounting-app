@@ -15,5 +15,7 @@ public class AssetSnapshot
 
     public decimal FirstTrade { get; set; }
 
-    public decimal Fund3 { get; set; }
+    public decimal Property { get; set; }
+
+    public decimal Total => Stock + Cash + FirstTrade + Property;
 }

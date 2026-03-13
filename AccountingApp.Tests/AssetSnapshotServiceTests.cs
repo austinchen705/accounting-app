@@ -13,7 +13,7 @@ public class AssetSnapshotServiceTests
         var svc = new AssetSnapshotService(db.Service);
 
         var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
-            svc.AddAsync(new AssetSnapshot { Date = DateTime.Today, Stock = -1, Cash = 1, FirstTrade = 1, Fund3 = 1 }));
+            svc.AddAsync(new AssetSnapshot { Date = DateTime.Today, Stock = -1, Cash = 1, FirstTrade = 1, Property = 1 }));
 
         Assert.Contains("non-negative", ex.Message);
     }
@@ -24,12 +24,12 @@ public class AssetSnapshotServiceTests
         await using var db = await TestDb.CreateAsync();
         var svc = new AssetSnapshotService(db.Service);
 
-        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 2), Stock = 1, Cash = 2, FirstTrade = 3, Fund3 = 4 });
+        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 2), Stock = 1, Cash = 2, FirstTrade = 3, Property = 4 });
 
         var all = await svc.GetAllAsync();
 
         Assert.Single(all);
-        Assert.Equal(10m, all[0].Stock + all[0].Cash + all[0].FirstTrade + all[0].Fund3);
+        Assert.Equal(10m, all[0].Stock + all[0].Cash + all[0].FirstTrade + all[0].Property);
     }
 
     [Fact]
@@ -38,8 +38,8 @@ public class AssetSnapshotServiceTests
         await using var db = await TestDb.CreateAsync();
         var svc = new AssetSnapshotService(db.Service);
 
-        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 3), Stock = 1, Cash = 1, FirstTrade = 1, Fund3 = 1 });
-        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 2, Cash = 2, FirstTrade = 2, Fund3 = 2 });
+        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 3), Stock = 1, Cash = 1, FirstTrade = 1, Property = 1 });
+        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 2, Cash = 2, FirstTrade = 2, Property = 2 });
 
         var all = await svc.GetAllAsync();
 
@@ -53,7 +53,7 @@ public class AssetSnapshotServiceTests
         await using var db = await TestDb.CreateAsync();
         var svc = new AssetSnapshotService(db.Service);
 
-        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 1, Cash = 2, FirstTrade = 3, Fund3 = 4 });
+        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 1, Cash = 2, FirstTrade = 3, Property = 4 });
         var snapshot = (await svc.GetAllAsync()).Single();
         snapshot.Stock = 50;
         snapshot.Cash = 60;
@@ -71,7 +71,7 @@ public class AssetSnapshotServiceTests
         await using var db = await TestDb.CreateAsync();
         var svc = new AssetSnapshotService(db.Service);
 
-        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 1, Cash = 2, FirstTrade = 3, Fund3 = 4 });
+        await svc.AddAsync(new AssetSnapshot { Date = new DateTime(2026, 1, 1), Stock = 1, Cash = 2, FirstTrade = 3, Property = 4 });
         var snapshot = (await svc.GetAllAsync()).Single();
 
         await svc.DeleteAsync(snapshot.Id);
