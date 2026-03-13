@@ -30,6 +30,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DataRefreshService>();
         builder.Services.AddSingleton<BudgetService>();
         builder.Services.AddSingleton<StatisticsService>();
+        builder.Services.AddSingleton<AssetSnapshotService>();
         builder.Services.AddSingleton<ExportService>();
         builder.Services.AddSingleton<JsonImportService>();
         builder.Services.AddSingleton<GoogleDriveService>();
@@ -42,6 +43,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CategoryReportViewModel>();
         builder.Services.AddTransient<BudgetViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<AssetTrendViewModel>();
         builder.Services.AddTransient<CategoryListViewModel>();
         builder.Services.AddTransient<CategoryFormViewModel>();
 
@@ -50,6 +52,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TransactionListPage>();
         builder.Services.AddTransient<StatisticsPage>();
         builder.Services.AddTransient<CategoryReportPage>();
+        builder.Services.AddTransient<AssetTrendPage>();
         builder.Services.AddTransient<BudgetPage>();
         builder.Services.AddTransient<SettingsPage>();
 

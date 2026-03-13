@@ -22,6 +22,10 @@
                       Icon="tab_chart.png"
                       ContentTemplate="{DataTemplate views:CategoryReportPage}"
                       Route="CategoryReportPage" />
+        <ShellContent Title="資產趨勢"
+                      Icon="tab_chart.png"
+                      ContentTemplate="{DataTemplate views:AssetTrendPage}"
+                      Route="AssetTrendPage" />
         <ShellContent Title="預算"
                       Icon="tab_budget.png"
                       Shell.NavBarIsVisible="False"
