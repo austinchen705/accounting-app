@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows.Input;
 using AccountingApp.Models;
 using AccountingApp.Services;
@@ -36,8 +37,25 @@ public class HomeViewModel : BindableObject
     public string CurrentMonth
     {
         get => _currentMonth;
-        set { _currentMonth = value; OnPropertyChanged(); }
+        set
+        {
+            _currentMonth = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CurrentMonthLabel));
+            OnPropertyChanged(nameof(SummaryTitle));
+        }
     }
+
+    public string CurrentMonthLabel
+    {
+        get
+        {
+            var month = DateTime.ParseExact($"{_currentMonth}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            return month.ToString("yyyy/MM");
+        }
+    }
+
+    public string SummaryTitle => $"{CurrentMonthLabel} 總覽";
 
     public ObservableCollection<Transaction> RecentTransactions { get; } = new();
 
@@ -48,6 +66,8 @@ public class HomeViewModel : BindableObject
     }
 
     public ICommand AddTransactionCommand { get; }
+    public ICommand PreviousMonthCommand { get; }
+    public ICommand NextMonthCommand { get; }
 
     public HomeViewModel(TransactionService transactionService, DataRefreshService refreshService)
     {
@@ -56,6 +76,8 @@ public class HomeViewModel : BindableObject
         _currentMonth = DateTime.Today.ToString("yyyy-MM");
         AddTransactionCommand = new Command(async () =>
             await Shell.Current.GoToAsync("TransactionFormPage"));
+        PreviousMonthCommand = new Command(async () => await ChangeMonthAsync(-1));
+        NextMonthCommand = new Command(async () => await ChangeMonthAsync(1));
         _refreshService.DataChanged += OnDataChanged;
     }
 
@@ -66,10 +88,18 @@ public class HomeViewModel : BindableObject
         TotalExpense = expense;
         Balance = income - expense;
 
-        var recent = await _transactionService.GetRecentAsync(10);
+        var recent = await _transactionService.GetByMonthAsync(_currentMonth);
         RecentTransactions.Clear();
-        foreach (var t in recent) RecentTransactions.Add(t);
+        foreach (var t in recent.Take(10)) RecentTransactions.Add(t);
         HasRecentTransactions = RecentTransactions.Count > 0;
+    }
+
+    private async Task ChangeMonthAsync(int deltaMonths)
+    {
+        var month = DateTime.ParseExact($"{_currentMonth}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture)
+            .AddMonths(deltaMonths);
+        CurrentMonth = month.ToString("yyyy-MM");
+        await LoadAsync();
     }
 
     private async void OnDataChanged()
