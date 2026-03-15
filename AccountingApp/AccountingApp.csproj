@@ -75,4 +75,12 @@
 		<ProjectReference Include="..\AccountingApp.Core\AccountingApp.Core.csproj" />
 	</ItemGroup>
 
+	<Target Name="DisableCodesignForSimulator" BeforeTargets="_DetectSigningIdentity" Condition="'$(_SdkIsSimulator)' == 'True'">
+		<PropertyGroup>
+			<EnableCodeSigning>false</EnableCodeSigning>
+			<CodesignEntitlements></CodesignEntitlements>
+			<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>
+		</PropertyGroup>
+	</Target>
+
 </Project>

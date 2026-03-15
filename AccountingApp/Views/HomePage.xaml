@@ -5,69 +5,75 @@
              Shell.NavBarIsVisible="False"
              Title="首頁">
 
-    <Grid RowDefinitions="Auto,*" Padding="16,6,16,8" RowSpacing="8">
+    <Grid>
+        <Grid RowDefinitions="Auto,*" Padding="16,6,16,8" RowSpacing="8">
 
-        <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}">
-            <VerticalStackLayout Spacing="12">
-                <Label Text="本月總覽" Style="{StaticResource SectionTitleStyle}" />
-                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-                    <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
-                        <Label Text="收入" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
-                        <Label Text="{Binding TotalIncome, StringFormat='{0:N0}'}"
-                               Style="{StaticResource ValueStyle}" TextColor="{StaticResource Success}" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
-                        <Label Text="支出" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
-                        <Label Text="{Binding TotalExpense, StringFormat='{0:N0}'}"
-                               Style="{StaticResource ValueStyle}" TextColor="{StaticResource Danger}" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
-                        <Label Text="結餘" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
-                        <Label Text="{Binding Balance, StringFormat='{0:N0}'}"
-                               Style="{StaticResource ValueStyle}" HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Grid>
-            </VerticalStackLayout>
-        </Frame>
-
-        <Grid Grid.Row="1">
-            <Label Text="還沒有收支資料，點右上角新增第一筆。"
-                   Style="{StaticResource CaptionStyle}"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   IsVisible="{Binding HasRecentTransactions, Converter={StaticResource InverseBoolConverter}}" />
-
-            <ScrollView IsVisible="{Binding HasRecentTransactions}">
-                <VerticalStackLayout Spacing="0">
-                    <Label Text="最近記錄" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTransactions}" Spacing="0">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Frame Style="{StaticResource CardFrameStyle}" Padding="14,10" Margin="0,0,0,8">
-                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                            <Label Text="{Binding Note}" FontAttributes="Bold" FontSize="15" />
-                                            <Label Text="{Binding Date, StringFormat='{0:MM/dd ddd}'}"
-                                                   Style="{StaticResource CaptionStyle}" />
-                                        </VerticalStackLayout>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Amount, StringFormat='{0:N0}'}"
-                                               Style="{StaticResource ValueStyle}"
-                                               VerticalOptions="Center" />
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
+            <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="本月總覽" Style="{StaticResource SectionTitleStyle}" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="收入" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{Binding TotalIncome, StringFormat='{0:N0}'}"
+                                   Style="{StaticResource ValueStyle}" TextColor="{StaticResource Success}" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="支出" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{Binding TotalExpense, StringFormat='{0:N0}'}"
+                                   Style="{StaticResource ValueStyle}" TextColor="{StaticResource Danger}" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="結餘" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Balance, StringFormat='{0:N0}'}"
+                                   Style="{StaticResource ValueStyle}" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
-            </ScrollView>
+            </Frame>
+
+            <Grid Grid.Row="1">
+                <Label Text="還沒有收支資料，點右下角新增第一筆。"
+                       Style="{StaticResource CaptionStyle}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       IsVisible="{Binding HasRecentTransactions, Converter={StaticResource InverseBoolConverter}}" />
+
+                <ScrollView IsVisible="{Binding HasRecentTransactions}">
+                    <VerticalStackLayout Spacing="0">
+                        <Label Text="最近記錄" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTransactions}" Spacing="0">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource CardFrameStyle}" Padding="14,10" Margin="0,0,0,8">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                <Label Text="{Binding Note}" FontAttributes="Bold" FontSize="15" />
+                                                <Label Text="{Binding Date, StringFormat='{0:MM/dd ddd}'}"
+                                                       Style="{StaticResource CaptionStyle}" />
+                                            </VerticalStackLayout>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Amount, StringFormat='{0:N0}'}"
+                                                   Style="{StaticResource ValueStyle}"
+                                                   VerticalOptions="Center" />
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
         </Grid>
 
+        <Button Text="新增"
+                Command="{Binding AddTransactionCommand}"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,28"
+                Padding="20,12"
+                CornerRadius="24"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White" />
     </Grid>
-
-    <!-- FAB 快速新增 -->
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="新增" Command="{Binding AddTransactionCommand}" />
-    </ContentPage.ToolbarItems>
 
 </ContentPage>
