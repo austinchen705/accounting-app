@@ -34,6 +34,15 @@ public class TransactionFormLayoutTests
         Assert.Contains("Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand", xaml);
     }
 
+    [Fact]
+    public void TransactionForm_amount_entry_binds_to_amounttext_and_uses_numeric_keyboard()
+    {
+        var xaml = ReadTransactionFormXaml();
+
+        Assert.Contains("Text=\"{Binding AmountText}\"", xaml);
+        Assert.Contains("Keyboard=\"Numeric\"", xaml);
+    }
+
     private static string ReadTransactionFormXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows.Input;
 using AccountingApp.Models;
 using AccountingApp.Services;
+using AmountInputSanitizer = AccountingApp.Core.Services.TransactionAmountInputSanitizer;
 
 namespace AccountingApp.ViewModels;
 
@@ -13,7 +15,7 @@ public class TransactionFormViewModel : BindableObject
     private readonly BudgetService _budgetService;
 
     private int _transactionId;
-    private decimal _amount;
+    private string _amountText = string.Empty;
     private string _currency = "TWD";
     private Category? _selectedCategory;
     private DateTime _date = DateTime.Today;
@@ -29,10 +31,20 @@ public class TransactionFormViewModel : BindableObject
         set { _transactionId = value; OnPropertyChanged(); _ = LoadExistingAsync(value); }
     }
 
-    public decimal Amount
+    public string AmountText
     {
-        get => _amount;
-        set { _amount = value; OnPropertyChanged(); }
+        get => _amountText;
+        set
+        {
+            var sanitized = AmountInputSanitizer.Sanitize(value);
+            if (_amountText == sanitized)
+            {
+                return;
+            }
+
+            _amountText = sanitized;
+            OnPropertyChanged();
+        }
     }
 
     public string Currency
@@ -113,7 +125,7 @@ public class TransactionFormViewModel : BindableObject
         _isEdit = true;
         var txn = (await _transactionService.GetAllAsync()).FirstOrDefault(t => t.Id == id);
         if (txn is null) return;
-        Amount = txn.Amount;
+        AmountText = txn.Amount.ToString(CultureInfo.InvariantCulture);
         Currency = txn.Currency;
         Date = txn.Date;
         Note = txn.Note;
@@ -123,7 +135,7 @@ public class TransactionFormViewModel : BindableObject
 
     private async Task SaveAsync()
     {
-        if (Amount <= 0)
+        if (!AmountInputSanitizer.TryParsePositiveDecimal(AmountText, out var amount))
         {
             ErrorMessage = "請輸入有效金額（大於 0）";
             HasError = true;
@@ -133,7 +145,7 @@ public class TransactionFormViewModel : BindableObject
         HasError = false;
         var txn = new Transaction
         {
-            Amount = Amount,
+            Amount = amount,
             Currency = Currency,
             CategoryId = SelectedCategory?.Id ?? 0,
             Date = Date,

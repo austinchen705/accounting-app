@@ -21,7 +21,7 @@
 
                     <Label Text="金額" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
-                        <Entry Text="{Binding Amount}" Placeholder="0" Keyboard="Numeric" FontSize="28" />
+                        <Entry Text="{Binding AmountText}" Placeholder="0" Keyboard="Numeric" FontSize="28" />
                     </Frame>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
