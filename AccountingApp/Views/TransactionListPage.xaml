@@ -9,7 +9,7 @@
         <ToolbarItem Text="新增" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*" Padding="16,16,16,8" RowSpacing="8">
+    <Grid RowDefinitions="Auto,Auto,*" Padding="16,16,16,8" RowSpacing="8">
 
         <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}" Padding="12,8">
             <VerticalStackLayout Spacing="8">
@@ -27,10 +27,28 @@
             </VerticalStackLayout>
         </Frame>
 
-        <Grid Grid.Row="1">
+        <Frame Grid.Row="1" Style="{StaticResource CardFrameStyle}" Padding="12,10">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="當日總覽" Style="{StaticResource CaptionStyle}" />
+                <Grid ColumnDefinitions="*,*,*">
+                    <Label Text="{Binding DailyIncome, StringFormat='收入 {0:N0}'}"
+                           TextColor="{StaticResource Success}"
+                           HorizontalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding DailyExpense, StringFormat='支出 {0:N0}'}"
+                           TextColor="{StaticResource Danger}"
+                           HorizontalOptions="Center" />
+                    <Label Grid.Column="2"
+                           Text="{Binding DailyBalance, StringFormat='結餘 {0:N0}'}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </VerticalStackLayout>
+        </Frame>
+
+        <Grid Grid.Row="2">
             <Frame Style="{StaticResource CardFrameStyle}"
                    IsVisible="{Binding HasTransactions, Converter={StaticResource InverseBoolConverter}}">
-                <Label Text="本月尚無記錄"
+                <Label Text="當日尚無記錄"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"
                        Style="{StaticResource CaptionStyle}" />

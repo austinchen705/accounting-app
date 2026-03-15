@@ -10,11 +10,32 @@ public class TransactionListViewModel : BindableObject
     private readonly TransactionService _transactionService;
     private readonly DataRefreshService _refreshService;
     private bool _hasTransactions;
+    private decimal _dailyIncome;
+    private decimal _dailyExpense;
+    private decimal _dailyBalance;
 
     public bool HasTransactions
     {
         get => _hasTransactions;
         set { _hasTransactions = value; OnPropertyChanged(); }
+    }
+
+    public decimal DailyIncome
+    {
+        get => _dailyIncome;
+        set { _dailyIncome = value; OnPropertyChanged(); }
+    }
+
+    public decimal DailyExpense
+    {
+        get => _dailyExpense;
+        set { _dailyExpense = value; OnPropertyChanged(); }
+    }
+
+    public decimal DailyBalance
+    {
+        get => _dailyBalance;
+        set { _dailyBalance = value; OnPropertyChanged(); }
     }
 
     public ObservableCollection<Transaction> Transactions { get; } = new();
@@ -59,6 +80,10 @@ public class TransactionListViewModel : BindableObject
         Transactions.Clear();
         foreach (var t in list) Transactions.Add(t);
         HasTransactions = Transactions.Count > 0;
+
+        DailyIncome = list.Where(t => t.Type == "income").Sum(t => t.Amount);
+        DailyExpense = list.Where(t => t.Type == "expense").Sum(t => t.Amount);
+        DailyBalance = DailyIncome - DailyExpense;
     }
 
     private async Task DeleteAsync(Transaction transaction)
