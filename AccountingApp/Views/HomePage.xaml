@@ -10,15 +10,63 @@
 
             <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Text="Day"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Day"
+                                BackgroundColor="{Binding DayButtonBackgroundColor}"
+                                TextColor="{Binding DayButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="1"
+                                Text="Week"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Week"
+                                BackgroundColor="{Binding WeekButtonBackgroundColor}"
+                                TextColor="{Binding WeekButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="2"
+                                Text="Month"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Month"
+                                BackgroundColor="{Binding MonthButtonBackgroundColor}"
+                                TextColor="{Binding MonthButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="3"
+                                Text="Year"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="Year"
+                                BackgroundColor="{Binding YearButtonBackgroundColor}"
+                                TextColor="{Binding YearButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                        <Button Grid.Column="4"
+                                Text="All"
+                                Command="{Binding SetRangeCommand}"
+                                CommandParameter="All"
+                                BackgroundColor="{Binding AllButtonBackgroundColor}"
+                                TextColor="{Binding AllButtonTextColor}"
+                                CornerRadius="12"
+                                HeightRequest="38"
+                                Padding="0" />
+                    </Grid>
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
                         <Button Text="‹"
                                 Command="{Binding PreviousMonthCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 WidthRequest="40"
                                 HeightRequest="36"
-                                Padding="0" />
+                                Padding="0"
+                                IsVisible="{Binding CanNavigatePeriods}" />
                         <Label Grid.Column="1"
-                               Text="{Binding CurrentMonthLabel}"
+                               Text="{Binding PeriodLabel}"
                                Style="{StaticResource SectionTitleStyle}"
                                HorizontalTextAlignment="Center"
                                VerticalTextAlignment="Center" />
@@ -28,9 +76,11 @@
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 WidthRequest="40"
                                 HeightRequest="36"
-                                Padding="0" />
+                                Padding="0"
+                                IsVisible="{Binding CanNavigatePeriods}" />
                     </Grid>
                     <Label Text="{Binding SummaryTitle}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                    <Label Text="{Binding SummaryCurrencyText}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
                         <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
                             <Label Text="收入" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
@@ -52,7 +102,7 @@
             </Frame>
 
             <Grid Grid.Row="1">
-                <Label Text="該月份尚無收支資料，點右下角新增第一筆。"
+                <Label Text="此期間尚無收支資料"
                        Style="{StaticResource CaptionStyle}"
                        HorizontalOptions="Center"
                        VerticalOptions="Start"
@@ -60,7 +110,7 @@
 
                 <ScrollView IsVisible="{Binding HasRecentTransactions}">
                     <VerticalStackLayout Spacing="0">
-                        <Label Text="最近記錄" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                        <Label Text="期間內記錄" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTransactions}" Spacing="0">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>

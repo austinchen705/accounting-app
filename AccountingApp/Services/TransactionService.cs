@@ -1,4 +1,5 @@
 using AccountingApp.Models;
+using AccountingApp.Core.Services;
 using SQLite;
 
 namespace AccountingApp.Services;
@@ -47,6 +48,24 @@ public class TransactionService
             .Where(t => t.Date >= start && t.Date < end)
             .OrderByDescending(t => t.Date)
             .ToListAsync();
+    }
+
+    public async Task<List<Transaction>> GetByDateRangeAsync(DateTime? start, DateTime? endExclusive)
+    {
+        await EnsureInitializedAsync();
+        var query = _db.Db.Table<Transaction>();
+
+        if (start is not null)
+        {
+            query = query.Where(t => t.Date >= start.Value);
+        }
+
+        if (endExclusive is not null)
+        {
+            query = query.Where(t => t.Date < endExclusive.Value);
+        }
+
+        return await query.OrderByDescending(t => t.Date).ToListAsync();
     }
 
     public async Task<List<Transaction>> GetFilteredAsync(string? month, int? categoryId, string? currency)
@@ -108,6 +127,31 @@ public class TransactionService
             if (t.Type == "income") income += converted;
             else expense += converted;
         }
+        return (income, expense);
+    }
+
+    public async Task<(decimal Income, decimal Expense)> GetSummaryAsync(HomeDateRange range, DateTime anchorDate)
+    {
+        var window = HomeDateWindow.GetDateWindow(range, anchorDate);
+        var txns = await GetByDateRangeAsync(window.Start, window.EndExclusive);
+        var baseCurrency = Preferences.Get("base_currency", "TWD");
+
+        decimal income = 0;
+        decimal expense = 0;
+        foreach (var t in txns)
+        {
+            var rate = await _currency.GetRateAsync(t.Currency, baseCurrency);
+            var converted = t.Amount * (decimal)rate;
+            if (t.Type == "income")
+            {
+                income += converted;
+            }
+            else
+            {
+                expense += converted;
+            }
+        }
+
         return (income, expense);
     }
 

@@ -1,8 +1,9 @@
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Windows.Input;
 using AccountingApp.Models;
 using AccountingApp.Services;
+using HomeDateRange = AccountingApp.Core.Services.HomeDateRange;
+using HomeDateWindow = AccountingApp.Core.Services.HomeDateWindow;
 
 namespace AccountingApp.ViewModels;
 
@@ -14,8 +15,22 @@ public class HomeViewModel : BindableObject
     private decimal _totalIncome;
     private decimal _totalExpense;
     private decimal _balance;
-    private string _currentMonth;
     private bool _hasRecentTransactions;
+    private HomeDateRange _selectedRange = HomeDateRange.Month;
+    private DateTime _anchorDate = DateTime.Today;
+    private string _periodLabel = string.Empty;
+    private bool _canNavigatePeriods = true;
+    private Color _dayButtonBackgroundColor = Color.FromArgb("#F2F4F7");
+    private Color _dayButtonTextColor = Color.FromArgb("#007AFF");
+    private Color _weekButtonBackgroundColor = Color.FromArgb("#F2F4F7");
+    private Color _weekButtonTextColor = Color.FromArgb("#007AFF");
+    private Color _monthButtonBackgroundColor = Color.FromArgb("#007AFF");
+    private Color _monthButtonTextColor = Colors.White;
+    private Color _yearButtonBackgroundColor = Color.FromArgb("#F2F4F7");
+    private Color _yearButtonTextColor = Color.FromArgb("#007AFF");
+    private Color _allButtonBackgroundColor = Color.FromArgb("#F2F4F7");
+    private Color _allButtonTextColor = Color.FromArgb("#007AFF");
+    private string _summaryCurrencyText = "單位：TWD";
 
     public decimal TotalIncome
     {
@@ -35,28 +50,19 @@ public class HomeViewModel : BindableObject
         set { _balance = value; OnPropertyChanged(); }
     }
 
-    public string CurrentMonth
+    public string PeriodLabel
     {
-        get => _currentMonth;
-        set
-        {
-            _currentMonth = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CurrentMonthLabel));
-            OnPropertyChanged(nameof(SummaryTitle));
-        }
+        get => _periodLabel;
+        set { _periodLabel = value; OnPropertyChanged(); }
     }
 
-    public string CurrentMonthLabel
-    {
-        get
-        {
-            var month = DateTime.ParseExact($"{_currentMonth}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            return month.ToString("yyyy/MM");
-        }
-    }
+    public string SummaryTitle => $"{PeriodLabel} 總覽";
 
-    public string SummaryTitle => $"{CurrentMonthLabel} 總覽";
+    public string SummaryCurrencyText
+    {
+        get => _summaryCurrencyText;
+        set { _summaryCurrencyText = value; OnPropertyChanged(); }
+    }
 
     public class RecentTransactionItemViewModel
     {
@@ -84,9 +90,76 @@ public class HomeViewModel : BindableObject
         set { _hasRecentTransactions = value; OnPropertyChanged(); }
     }
 
+    public bool CanNavigatePeriods
+    {
+        get => _canNavigatePeriods;
+        set { _canNavigatePeriods = value; OnPropertyChanged(); }
+    }
+
+    public Color DayButtonBackgroundColor
+    {
+        get => _dayButtonBackgroundColor;
+        set { _dayButtonBackgroundColor = value; OnPropertyChanged(); }
+    }
+
+    public Color DayButtonTextColor
+    {
+        get => _dayButtonTextColor;
+        set { _dayButtonTextColor = value; OnPropertyChanged(); }
+    }
+
+    public Color WeekButtonBackgroundColor
+    {
+        get => _weekButtonBackgroundColor;
+        set { _weekButtonBackgroundColor = value; OnPropertyChanged(); }
+    }
+
+    public Color WeekButtonTextColor
+    {
+        get => _weekButtonTextColor;
+        set { _weekButtonTextColor = value; OnPropertyChanged(); }
+    }
+
+    public Color MonthButtonBackgroundColor
+    {
+        get => _monthButtonBackgroundColor;
+        set { _monthButtonBackgroundColor = value; OnPropertyChanged(); }
+    }
+
+    public Color MonthButtonTextColor
+    {
+        get => _monthButtonTextColor;
+        set { _monthButtonTextColor = value; OnPropertyChanged(); }
+    }
+
+    public Color YearButtonBackgroundColor
+    {
+        get => _yearButtonBackgroundColor;
+        set { _yearButtonBackgroundColor = value; OnPropertyChanged(); }
+    }
+
+    public Color YearButtonTextColor
+    {
+        get => _yearButtonTextColor;
+        set { _yearButtonTextColor = value; OnPropertyChanged(); }
+    }
+
+    public Color AllButtonBackgroundColor
+    {
+        get => _allButtonBackgroundColor;
+        set { _allButtonBackgroundColor = value; OnPropertyChanged(); }
+    }
+
+    public Color AllButtonTextColor
+    {
+        get => _allButtonTextColor;
+        set { _allButtonTextColor = value; OnPropertyChanged(); }
+    }
+
     public ICommand AddTransactionCommand { get; }
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
+    public ICommand SetRangeCommand { get; }
 
     public HomeViewModel(
         TransactionService transactionService,
@@ -96,23 +169,26 @@ public class HomeViewModel : BindableObject
         _transactionService = transactionService;
         _currencyService = currencyService;
         _refreshService = refreshService;
-        _currentMonth = DateTime.Today.ToString("yyyy-MM");
         AddTransactionCommand = new Command(async () =>
             await Shell.Current.GoToAsync("TransactionFormPage"));
-        PreviousMonthCommand = new Command(async () => await ChangeMonthAsync(-1));
-        NextMonthCommand = new Command(async () => await ChangeMonthAsync(1));
+        PreviousMonthCommand = new Command(async () => await ChangePeriodAsync(-1));
+        NextMonthCommand = new Command(async () => await ChangePeriodAsync(1));
+        SetRangeCommand = new Command<string>(SetRange);
+        UpdateRangeState();
         _refreshService.DataChanged += OnDataChanged;
     }
 
     public async Task LoadAsync()
     {
-        var (income, expense) = await _transactionService.GetMonthSummaryAsync(_currentMonth);
+        var (income, expense) = await _transactionService.GetSummaryAsync(_selectedRange, _anchorDate);
         TotalIncome = income;
         TotalExpense = expense;
         Balance = income - expense;
 
-        var recent = await _transactionService.GetByMonthAsync(_currentMonth);
         var baseCurrency = Preferences.Get("base_currency", "TWD");
+        SummaryCurrencyText = $"單位：{baseCurrency}";
+        var window = HomeDateWindow.GetDateWindow(_selectedRange, _anchorDate);
+        var recent = await _transactionService.GetByDateRangeAsync(window.Start, window.EndExclusive);
         RecentTransactions.Clear();
         foreach (var t in recent.Take(10))
         {
@@ -130,12 +206,73 @@ public class HomeViewModel : BindableObject
         HasRecentTransactions = RecentTransactions.Count > 0;
     }
 
-    private async Task ChangeMonthAsync(int deltaMonths)
+    private async Task ChangePeriodAsync(int delta)
     {
-        var month = DateTime.ParseExact($"{_currentMonth}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture)
-            .AddMonths(deltaMonths);
-        CurrentMonth = month.ToString("yyyy-MM");
+        if (!CanNavigatePeriods)
+        {
+            return;
+        }
+
+        _anchorDate = HomeDateWindow.MoveAnchor(_selectedRange, _anchorDate, delta);
+        UpdateRangeState();
         await LoadAsync();
+    }
+
+    private void SetRange(string? rangeText)
+    {
+        if (!Enum.TryParse<HomeDateRange>(rangeText, ignoreCase: true, out var range))
+        {
+            return;
+        }
+
+        if (_selectedRange == range)
+        {
+            return;
+        }
+
+        _selectedRange = range;
+        _anchorDate = NormalizeAnchorDate(_selectedRange, _anchorDate);
+        UpdateRangeState();
+        _ = LoadAsync();
+    }
+
+    private void UpdateRangeState()
+    {
+        CanNavigatePeriods = _selectedRange != HomeDateRange.All;
+        PeriodLabel = HomeDateWindow.GetPeriodLabel(_selectedRange, _anchorDate);
+        ApplyFilterButtonState();
+        OnPropertyChanged(nameof(SummaryTitle));
+    }
+
+    private void ApplyFilterButtonState()
+    {
+        DayButtonBackgroundColor = GetButtonBackground(HomeDateRange.Day);
+        DayButtonTextColor = GetButtonText(HomeDateRange.Day);
+        WeekButtonBackgroundColor = GetButtonBackground(HomeDateRange.Week);
+        WeekButtonTextColor = GetButtonText(HomeDateRange.Week);
+        MonthButtonBackgroundColor = GetButtonBackground(HomeDateRange.Month);
+        MonthButtonTextColor = GetButtonText(HomeDateRange.Month);
+        YearButtonBackgroundColor = GetButtonBackground(HomeDateRange.Year);
+        YearButtonTextColor = GetButtonText(HomeDateRange.Year);
+        AllButtonBackgroundColor = GetButtonBackground(HomeDateRange.All);
+        AllButtonTextColor = GetButtonText(HomeDateRange.All);
+    }
+
+    private Color GetButtonBackground(HomeDateRange range) =>
+        _selectedRange == range ? Color.FromArgb("#007AFF") : Color.FromArgb("#F2F4F7");
+
+    private Color GetButtonText(HomeDateRange range) =>
+        _selectedRange == range ? Colors.White : Color.FromArgb("#007AFF");
+
+    private static DateTime NormalizeAnchorDate(HomeDateRange range, DateTime anchorDate)
+    {
+        var date = anchorDate.Date;
+        return range switch
+        {
+            HomeDateRange.Month => new DateTime(date.Year, date.Month, 1),
+            HomeDateRange.Year => new DateTime(date.Year, 1, 1),
+            _ => date
+        };
     }
 
     private async void OnDataChanged()

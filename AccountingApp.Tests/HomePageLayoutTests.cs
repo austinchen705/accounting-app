@@ -7,19 +7,26 @@ public class HomePageLayoutTests
     {
         var xaml = ReadHomeXaml();
 
+        Assert.Contains("Command=\"{Binding SetRangeCommand}\"", xaml);
+        Assert.Contains("CommandParameter=\"Day\"", xaml);
+        Assert.Contains("CommandParameter=\"Week\"", xaml);
+        Assert.Contains("CommandParameter=\"Month\"", xaml);
+        Assert.Contains("CommandParameter=\"Year\"", xaml);
+        Assert.Contains("CommandParameter=\"All\"", xaml);
         Assert.Contains("Command=\"{Binding PreviousMonthCommand}\"", xaml);
-        Assert.Contains("Text=\"{Binding CurrentMonthLabel}\"", xaml);
+        Assert.Contains("Text=\"{Binding PeriodLabel}\"", xaml);
         Assert.Contains("Command=\"{Binding NextMonthCommand}\"", xaml);
     }
 
     [Fact]
-    public void HomePage_uses_selected_month_copy_instead_of_fixed_this_month()
+    public void HomePage_uses_selected_period_copy_instead_of_fixed_month_copy()
     {
         var xaml = ReadHomeXaml();
 
         Assert.DoesNotContain("Text=\"本月總覽\"", xaml);
         Assert.Contains("Text=\"{Binding SummaryTitle}\"", xaml);
-        Assert.Contains("Text=\"該月份尚無收支資料，點右下角新增第一筆。\"", xaml);
+        Assert.Contains("Text=\"此期間尚無收支資料\"", xaml);
+        Assert.Contains("Text=\"期間內記錄\"", xaml);
     }
 
     [Fact]

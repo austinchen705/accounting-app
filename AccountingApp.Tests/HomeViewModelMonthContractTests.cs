@@ -3,23 +3,24 @@ namespace AccountingApp.Tests;
 public class HomeViewModelMonthContractTests
 {
     [Fact]
-    public void HomeViewModel_defines_month_navigation_commands_and_label()
+    public void HomeViewModel_defines_range_navigation_commands_and_period_label()
     {
         var source = ReadHomeViewModel();
 
         Assert.Contains("public ICommand PreviousMonthCommand", source);
         Assert.Contains("public ICommand NextMonthCommand", source);
-        Assert.Contains("public string CurrentMonthLabel", source);
+        Assert.Contains("public ICommand SetRangeCommand", source);
+        Assert.Contains("public string PeriodLabel", source);
         Assert.Contains("public string SummaryTitle", source);
     }
 
     [Fact]
-    public void HomeViewModel_loads_recent_transactions_from_selected_month()
+    public void HomeViewModel_loads_summary_and_recent_transactions_from_selected_range()
     {
         var source = ReadHomeViewModel();
 
-        Assert.Contains("GetMonthSummaryAsync(_currentMonth)", source);
-        Assert.Contains("GetByMonthAsync(_currentMonth)", source);
+        Assert.Contains("GetSummaryAsync(_selectedRange, _anchorDate)", source);
+        Assert.Contains("GetByDateRangeAsync(window.Start, window.EndExclusive)", source);
     }
 
     private static string ReadHomeViewModel()
