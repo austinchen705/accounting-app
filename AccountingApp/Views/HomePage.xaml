@@ -67,12 +67,14 @@
                                     <Frame Style="{StaticResource CardFrameStyle}" Padding="14,10" Margin="0,0,0,8">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                                <Label Text="{Binding Note}" FontAttributes="Bold" FontSize="15" />
                                                 <Label Text="{Binding Date, StringFormat='{0:MM/dd ddd}'}"
                                                        Style="{StaticResource CaptionStyle}" />
+                                                <Label Text="{Binding ExchangeInfoText}"
+                                                       Style="{StaticResource CaptionStyle}"
+                                                       IsVisible="{Binding HasExchangeInfo}" />
                                             </VerticalStackLayout>
                                             <Label Grid.Column="1"
-                                                   Text="{Binding Amount, StringFormat='{0:N0}'}"
+                                                   Text="{Binding AmountDisplayText}"
                                                    Style="{StaticResource ValueStyle}"
                                                    VerticalOptions="Center" />
                                         </Grid>

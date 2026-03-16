@@ -26,6 +26,10 @@
                       Icon="tab_chart.png"
                       ContentTemplate="{DataTemplate views:AssetTrendPage}"
                       Route="AssetTrendPage" />
+        <ShellContent Title="分類管理"
+                      Icon="tab_list.png"
+                      ContentTemplate="{DataTemplate views:CategoryListPage}"
+                      Route="CategoryListPageTab" />
         <ShellContent Title="預算"
                       Icon="tab_budget.png"
                       Shell.NavBarIsVisible="False"

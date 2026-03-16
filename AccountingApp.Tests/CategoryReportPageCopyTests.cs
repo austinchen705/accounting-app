@@ -42,6 +42,7 @@ public class CategoryReportPageCopyTests
             "../../../../AccountingApp/ViewModels/CategoryReportViewModel.cs"));
         var code = File.ReadAllText(path);
 
-        Assert.Contains("CategoryColorPalette.GetHexColorForKey(category.CategoryName)", code);
+        Assert.Contains("CategoryColorPalette.BuildDistinctHexColors", code);
+        Assert.Contains("colorByCategory[category.CategoryName]", code);
     }
 }

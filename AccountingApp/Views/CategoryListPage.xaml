@@ -2,41 +2,108 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AccountingApp.Views.CategoryListPage"
+             x:Name="CategoryListPageRoot"
              Title="分類管理">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="新增" Command="{Binding AddCommand}" />
-    </ContentPage.ToolbarItems>
+    <ScrollView x:Name="CategoryScrollView">
+        <VerticalStackLayout Padding="16,16,16,24" Spacing="0">
+            <Frame x:Name="CategoryFormCard"
+                   Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="{Binding FormTitleText}"
+                           Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="查看目前分類，並直接新增、編輯或刪除未使用的分類。"
+                           Style="{StaticResource CaptionStyle}" />
 
-    <CollectionView ItemsSource="{Binding Categories}">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <SwipeView>
-                    <SwipeView.LeftItems>
-                        <SwipeItems>
-                            <SwipeItem Text="編輯"
-                                       BackgroundColor="#3B82F6"
-                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                       CommandParameter="{Binding .}" />
-                        </SwipeItems>
-                    </SwipeView.LeftItems>
-                    <SwipeView.RightItems>
-                        <SwipeItems>
-                            <SwipeItem Text="刪除"
-                                       BackgroundColor="Red"
-                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                       CommandParameter="{Binding .}" />
-                        </SwipeItems>
-                    </SwipeView.RightItems>
-                    <Grid Padding="16,8" ColumnDefinitions="*,Auto">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                                  CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
-                        <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" />
-                        <Label Grid.Column="1" Text="{Binding TypeText}" TextColor="Gray" VerticalOptions="Center" />
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="分類名稱" Style="{StaticResource CaptionStyle}" />
+                        <Frame Style="{StaticResource InputContainerStyle}">
+                            <Entry Text="{Binding Name}"
+                                   Placeholder="例如：咖啡、健身、房租" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="類型" Style="{StaticResource CaptionStyle}" />
+                        <Frame Style="{StaticResource InputContainerStyle}">
+                            <Picker Title="選擇類型"
+                                    ItemsSource="{Binding TypeOptions}"
+                                    SelectedItem="{Binding SelectedTypeOption}"
+                                    ItemDisplayBinding="{Binding Label}" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource Danger}"
+                           IsVisible="{Binding HasError}" />
+
+                    <Grid ColumnDefinitions="*,*"
+                          ColumnSpacing="10">
+                        <Button Text="{Binding SubmitButtonText}"
+                                Grid.Column="0"
+                                Command="{Binding SaveCommand}" />
+                        <Button Text="取消編輯"
+                                Grid.Column="1"
+                                Command="{Binding CancelEditCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                IsVisible="{Binding IsEditing}" />
                     </Grid>
-                </SwipeView>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="目前尚無分類"
+                   Style="{StaticResource CaptionStyle}"
+                   HorizontalOptions="Center"
+                   Margin="0,12,0,0"
+                   IsVisible="{Binding HasCategories, Converter={StaticResource InverseBoolConverter}}" />
+
+            <CollectionView ItemsSource="{Binding Categories}"
+                            SelectionMode="None"
+                            IsVisible="{Binding HasCategories}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Style="{StaticResource CardFrameStyle}"
+                               Padding="14,12">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="12">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="{Binding Name}"
+                                               FontAttributes="Bold"
+                                               FontSize="17" />
+                                        <Label Text="{Binding TypeText}"
+                                               Style="{StaticResource CaptionStyle}" />
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="1"
+                                            Padding="10,4"
+                                            BackgroundColor="{StaticResource Secondary}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="999" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding TypeText}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalTextAlignment="Center" />
+                                    </Border>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,*"
+                                      ColumnSpacing="10">
+                                    <Button Text="編輯"
+                                            Grid.Column="0"
+                                            Command="{Binding Source={x:Reference CategoryListPageRoot}, Path=BindingContext.EditCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Style="{StaticResource SecondaryButtonStyle}" />
+                                    <Button Text="刪除"
+                                            Grid.Column="1"
+                                            Command="{Binding Source={x:Reference CategoryListPageRoot}, Path=BindingContext.DeleteCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{StaticResource Danger}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

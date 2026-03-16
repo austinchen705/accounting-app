@@ -22,6 +22,16 @@ public class HomePageLayoutTests
         Assert.Contains("Text=\"該月份尚無收支資料，點右下角新增第一筆。\"", xaml);
     }
 
+    [Fact]
+    public void HomePage_shows_original_currency_and_exchange_info_for_recent_transactions()
+    {
+        var xaml = ReadHomeXaml();
+
+        Assert.Contains("Text=\"{Binding AmountDisplayText}\"", xaml);
+        Assert.Contains("Text=\"{Binding ExchangeInfoText}\"", xaml);
+        Assert.Contains("IsVisible=\"{Binding HasExchangeInfo}\"", xaml);
+    }
+
     private static string ReadHomeXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

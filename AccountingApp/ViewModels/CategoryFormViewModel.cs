@@ -3,8 +3,6 @@ using AccountingApp.Models;
 using AccountingApp.Services;
 
 namespace AccountingApp.ViewModels;
-
-[QueryProperty(nameof(CategoryId), "id")]
 public class CategoryFormViewModel : BindableObject
 {
     public class CategoryTypeOption
@@ -29,7 +27,6 @@ public class CategoryFormViewModel : BindableObject
         {
             _categoryId = value;
             OnPropertyChanged();
-            _ = LoadExistingAsync(value);
         }
     }
 
@@ -73,6 +70,10 @@ public class CategoryFormViewModel : BindableObject
         get => _hasError;
         set { _hasError = value; OnPropertyChanged(); }
     }
+
+    public string FormTitle => _isEdit ? "編輯分類" : "新增分類";
+
+    public string SubmitButtonText => _isEdit ? "更新分類" : "新增分類";
 
     public ICommand SaveCommand { get; }
 
@@ -127,13 +128,33 @@ public class CategoryFormViewModel : BindableObject
         }
 
         HasError = false;
+        if (Shell.Current?.Navigation?.NavigationStack?.Count > 1)
+        {
+            await Shell.Current.Navigation.PopAsync();
+            return;
+        }
+
         await Shell.Current.GoToAsync("..");
     }
 
-    private async Task LoadExistingAsync(int id)
+    public void PrepareForCreate()
+    {
+        _isEdit = false;
+        CategoryId = 0;
+        Name = string.Empty;
+        Type = "expense";
+        SelectedTypeOption = TypeOptions.First();
+        ErrorMessage = string.Empty;
+        HasError = false;
+        OnPropertyChanged(nameof(FormTitle));
+        OnPropertyChanged(nameof(SubmitButtonText));
+    }
+
+    public async Task PrepareForEditAsync(int id)
     {
         if (id <= 0) return;
 
+        CategoryId = id;
         var category = await _categoryService.GetByIdAsync(id);
         if (category is null) return;
 
@@ -141,5 +162,7 @@ public class CategoryFormViewModel : BindableObject
         Name = category.Name;
         Type = category.Type;
         SelectedTypeOption = TypeOptions.FirstOrDefault(x => x.Value == category.Type) ?? TypeOptions.First();
+        OnPropertyChanged(nameof(FormTitle));
+        OnPropertyChanged(nameof(SubmitButtonText));
     }
 }

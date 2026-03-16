@@ -30,6 +30,9 @@
         <Frame Grid.Row="1" Style="{StaticResource CardFrameStyle}" Padding="12,10">
             <VerticalStackLayout Spacing="8">
                 <Label Text="當日總覽" Style="{StaticResource CaptionStyle}" />
+                <Label Text="{Binding SummaryCurrencyText}"
+                       Style="{StaticResource CaptionStyle}"
+                       HorizontalOptions="Center" />
                 <Grid ColumnDefinitions="*,*,*">
                     <Label Text="{Binding DailyIncome, StringFormat='收入 {0:N0}'}"
                            TextColor="{StaticResource Success}"
@@ -62,12 +65,14 @@
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                         <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                            <Label Text="{Binding Note}" FontAttributes="Bold" FontSize="15" />
                                             <Label Text="{Binding Date, StringFormat='{0:yyyy/MM/dd}'}"
                                                    Style="{StaticResource CaptionStyle}" />
+                                            <Label Text="{Binding ExchangeInfoText}"
+                                                   Style="{StaticResource CaptionStyle}"
+                                                   IsVisible="{Binding HasExchangeInfo}" />
                                         </VerticalStackLayout>
                                         <Label Grid.Column="1"
-                                               Text="{Binding Amount, StringFormat='{0:N0}'}"
+                                               Text="{Binding AmountDisplayText}"
                                                Style="{StaticResource ValueStyle}"
                                                VerticalOptions="Center">
                                             <Label.Triggers>

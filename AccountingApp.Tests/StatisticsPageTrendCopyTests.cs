@@ -23,7 +23,8 @@ public class StatisticsPageTrendCopyTests
             "../../../../AccountingApp/ViewModels/StatisticsViewModel.cs"));
         var code = File.ReadAllText(path);
 
-        Assert.Contains("CategoryColorPalette.GetHexColorForKey", code);
+        Assert.Contains("CategoryColorPalette.BuildDistinctHexColors", code);
+        Assert.Contains("colorByCategory[stat.CategoryName]", code);
         Assert.DoesNotContain("private static readonly SKColor[] ChartColors", code);
     }
 }

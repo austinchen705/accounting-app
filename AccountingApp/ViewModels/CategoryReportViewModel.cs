@@ -164,11 +164,13 @@ public class CategoryReportViewModel : BindableObject
 
         var total = summary.TotalExpense;
         var series = new List<ISeries>(summary.Categories.Count);
+        var colorByCategory = CategoryColorPalette.BuildDistinctHexColors(
+            summary.Categories.Select(category => category.CategoryName));
         CategoryItems.Clear();
 
         foreach (var category in summary.Categories)
         {
-            var color = SKColor.Parse(CategoryColorPalette.GetHexColorForKey(category.CategoryName));
+            var color = SKColor.Parse(colorByCategory[category.CategoryName]);
             var ratio = total <= 0 ? 0 : category.Amount / total;
             series.Add(new PieSeries<double>
             {

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using AccountingApp.Services;
+using AccountingApp.Views;
 
 namespace AccountingApp.ViewModels;
 
@@ -78,8 +79,7 @@ public class SettingsViewModel : BindableObject
         BackupNowCommand = new Command(async () => await BackupAsync());
         RestoreFromGoogleDriveCommand = new Command(async () => await RestoreAsync());
         SelectGoogleDriveFolderCommand = new Command(async () => await SelectGoogleDriveFolderAsync());
-        ManageCategoriesCommand = new Command(async () =>
-            await Shell.Current.GoToAsync("CategoryListPage"));
+        ManageCategoriesCommand = new Command(async () => await NavigateToCategoryListAsync());
         ImportJsonCommand = new Command(async () => await ImportJsonAsync());
         ImportJsonFromUrlCommand = new Command(async () => await ImportJsonFromUrlAsync());
     }
@@ -229,6 +229,19 @@ public class SettingsViewModel : BindableObject
         {
             await Application.Current!.Windows[0].Page!
                 .DisplayAlert("匯入失敗", ex.Message, "確定");
+        }
+    }
+
+    private async Task NavigateToCategoryListAsync()
+    {
+        try
+        {
+            await Shell.Current.GoToAsync("//CategoryListPageTab");
+        }
+        catch (Exception ex)
+        {
+            await Application.Current!.Windows[0].Page!
+                .DisplayAlert("錯誤", $"無法開啟分類管理：{ex.Message}", "確定");
         }
     }
 

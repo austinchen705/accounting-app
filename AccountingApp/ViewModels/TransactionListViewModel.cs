@@ -8,11 +8,36 @@ namespace AccountingApp.ViewModels;
 public class TransactionListViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
+    private readonly CurrencyService _currencyService;
     private readonly DataRefreshService _refreshService;
     private bool _hasTransactions;
     private decimal _dailyIncome;
     private decimal _dailyExpense;
     private decimal _dailyBalance;
+    private string _summaryCurrencyText = "單位：TWD";
+
+    public class TransactionItemViewModel
+    {
+        public required Transaction Transaction { get; init; }
+        public string BaseCurrency { get; init; } = "TWD";
+        public decimal? ConvertedAmount { get; init; }
+        public double? ExchangeRate { get; init; }
+
+        public int Id => Transaction.Id;
+        public decimal Amount => Transaction.Amount;
+        public string Currency => Transaction.Currency;
+        public int CategoryId => Transaction.CategoryId;
+        public DateTime Date => Transaction.Date;
+        public string Note => Transaction.Note;
+        public string Type => Transaction.Type;
+        public string AmountDisplayText => $"{Transaction.Amount:N0} {Transaction.Currency}";
+        public bool HasExchangeInfo => !string.Equals(Transaction.Currency, BaseCurrency, StringComparison.OrdinalIgnoreCase)
+                                       && ConvertedAmount is not null
+                                       && ExchangeRate is not null;
+        public string ExchangeInfoText => ExchangeRate is null || ConvertedAmount is null
+            ? string.Empty
+            : $"{Transaction.Amount:N0} {Transaction.Currency} x {ExchangeRate.Value:0.####} = {ConvertedAmount.Value:N0} {BaseCurrency}";
+    }
 
     public bool HasTransactions
     {
@@ -38,7 +63,13 @@ public class TransactionListViewModel : BindableObject
         set { _dailyBalance = value; OnPropertyChanged(); }
     }
 
-    public ObservableCollection<Transaction> Transactions { get; } = new();
+    public string SummaryCurrencyText
+    {
+        get => _summaryCurrencyText;
+        set { _summaryCurrencyText = value; OnPropertyChanged(); }
+    }
+
+    public ObservableCollection<TransactionItemViewModel> Transactions { get; } = new();
 
     private DateTime _filterDate = DateTime.Today;
     public DateTime FilterDate
@@ -60,13 +91,24 @@ public class TransactionListViewModel : BindableObject
     public ICommand AddCommand { get; }
     public ICommand ResetToTodayCommand { get; }
 
-    public TransactionListViewModel(TransactionService transactionService, DataRefreshService refreshService)
+    public TransactionListViewModel(
+        TransactionService transactionService,
+        CurrencyService currencyService,
+        DataRefreshService refreshService)
     {
         _transactionService = transactionService;
+        _currencyService = currencyService;
         _refreshService = refreshService;
-        DeleteCommand = new Command<Transaction>(async t => await DeleteAsync(t));
-        EditCommand = new Command<Transaction>(async t =>
-            await Shell.Current.GoToAsync($"TransactionFormPage?id={t.Id}"));
+        DeleteCommand = new Command<TransactionItemViewModel>(async t =>
+        {
+            if (t is null) return;
+            await DeleteAsync(t.Transaction);
+        });
+        EditCommand = new Command<TransactionItemViewModel>(async t =>
+        {
+            if (t is null) return;
+            await Shell.Current.GoToAsync($"TransactionFormPage?id={t.Id}");
+        });
         AddCommand = new Command(async () =>
             await Shell.Current.GoToAsync("TransactionFormPage"));
         ResetToTodayCommand = new Command(() => FilterDate = DateTime.Today);
@@ -76,13 +118,43 @@ public class TransactionListViewModel : BindableObject
     public async Task LoadAsync()
     {
         var list = await _transactionService.GetByDateAsync(FilterDate);
+        var baseCurrency = Preferences.Get("base_currency", "TWD");
 
         Transactions.Clear();
-        foreach (var t in list) Transactions.Add(t);
+        foreach (var t in list)
+        {
+            var rate = await _currencyService.GetRateAsync(t.Currency, baseCurrency);
+            Transactions.Add(new TransactionItemViewModel
+            {
+                Transaction = t,
+                BaseCurrency = baseCurrency,
+                ExchangeRate = string.Equals(t.Currency, baseCurrency, StringComparison.OrdinalIgnoreCase) ? null : rate,
+                ConvertedAmount = string.Equals(t.Currency, baseCurrency, StringComparison.OrdinalIgnoreCase)
+                    ? null
+                    : Math.Round(t.Amount * (decimal)rate, 2)
+            });
+        }
         HasTransactions = Transactions.Count > 0;
+        SummaryCurrencyText = $"單位：{baseCurrency}";
 
-        DailyIncome = list.Where(t => t.Type == "income").Sum(t => t.Amount);
-        DailyExpense = list.Where(t => t.Type == "expense").Sum(t => t.Amount);
+        decimal income = 0;
+        decimal expense = 0;
+        foreach (var transaction in list)
+        {
+            var rate = await _currencyService.GetRateAsync(transaction.Currency, baseCurrency);
+            var converted = transaction.Amount * (decimal)rate;
+            if (transaction.Type == "income")
+            {
+                income += converted;
+            }
+            else
+            {
+                expense += converted;
+            }
+        }
+
+        DailyIncome = income;
+        DailyExpense = expense;
         DailyBalance = DailyIncome - DailyExpense;
     }
 
@@ -93,7 +165,11 @@ public class TransactionListViewModel : BindableObject
         if (!confirm) return;
 
         await _transactionService.DeleteAsync(transaction.Id);
-        Transactions.Remove(transaction);
+        var item = Transactions.FirstOrDefault(t => t.Id == transaction.Id);
+        if (item is not null)
+        {
+            Transactions.Remove(item);
+        }
         HasTransactions = Transactions.Count > 0;
         _refreshService.NotifyChanged();
     }

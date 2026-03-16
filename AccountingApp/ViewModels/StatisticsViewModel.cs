@@ -173,12 +173,14 @@ public class StatisticsViewModel : BindableObject
 
         HasPieData = true;
         var series = new List<ISeries>(stats.Count);
+        var colorByCategory = CategoryColorPalette.BuildDistinctHexColors(
+            stats.Select(stat => stat.CategoryName));
 
         var total = stats.Sum(s => s.Amount);
         PieLegends.Clear();
         foreach (var stat in stats)
         {
-            var c = GetChartColor(stat.CategoryName);
+            var c = SKColor.Parse(colorByCategory[stat.CategoryName]);
             var ratio = total <= 0 ? 0 : stat.Amount / total;
             series.Add(new PieSeries<double>
             {
@@ -280,11 +282,13 @@ public class StatisticsViewModel : BindableObject
         var months = StatisticsTrendWindow.GetTwelveMonthWindow(monthDate)
             .Select(date => date.ToString("MM"))
             .ToArray();
+        var colorByCategory = CategoryColorPalette.BuildDistinctHexColors(
+            stats.Select(stat => stat.CategoryName));
 
         CategoryTrendSeries = stats
             .Select(stat =>
             {
-                var color = GetChartColor(stat.CategoryName);
+                var color = SKColor.Parse(colorByCategory[stat.CategoryName]);
                 return (ISeries)new LineSeries<double>
                 {
                     Name = stat.CategoryName,
@@ -322,9 +326,6 @@ public class StatisticsViewModel : BindableObject
             }
         ];
     }
-
-    private static SKColor GetChartColor(string categoryName) =>
-        SKColor.Parse(CategoryColorPalette.GetHexColorForKey(categoryName));
 
     private void ApplyTrendInsights(IReadOnlyList<MonthStat> stats)
     {
