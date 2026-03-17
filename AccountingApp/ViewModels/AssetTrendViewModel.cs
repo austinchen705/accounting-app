@@ -23,6 +23,8 @@ public class AssetTrendViewModel : BindableObject
     private string _errorMessage = string.Empty;
     private bool _hasError;
     private bool _hasSnapshots;
+    private string _latestTotalCaptionText = string.Empty;
+    private string _latestTotalAmountText = string.Empty;
     private int _importedCount;
     private int _skippedCount;
     private int? _editingSnapshotId;
@@ -91,6 +93,18 @@ public class AssetTrendViewModel : BindableObject
     {
         get => _hasSnapshots;
         set { _hasSnapshots = value; OnPropertyChanged(); }
+    }
+
+    public string LatestTotalCaptionText
+    {
+        get => _latestTotalCaptionText;
+        set { _latestTotalCaptionText = value; OnPropertyChanged(); }
+    }
+
+    public string LatestTotalAmountText
+    {
+        get => _latestTotalAmountText;
+        set { _latestTotalAmountText = value; OnPropertyChanged(); }
     }
 
     public int ImportedCount
@@ -321,6 +335,7 @@ public class AssetTrendViewModel : BindableObject
     {
         var trend = _assetSnapshotService.BuildTrendSeries(snapshots);
         var condensedLabels = BuildCondensedDateLabels(trend.Labels);
+        ApplyLatestTotalSummary(snapshots, trend.Totals);
 
         TrendSeries =
         [
@@ -362,6 +377,23 @@ public class AssetTrendViewModel : BindableObject
                 SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
             }
         ];
+    }
+
+    private void ApplyLatestTotalSummary(IReadOnlyList<AssetSnapshot> snapshots, IReadOnlyList<decimal> totals)
+    {
+        if (snapshots.Count == 0 || totals.Count == 0)
+        {
+            LatestTotalCaptionText = string.Empty;
+            LatestTotalAmountText = string.Empty;
+            return;
+        }
+
+        var latestSnapshot = snapshots
+            .OrderBy(snapshot => snapshot.Date)
+            .Last();
+        var latestTotal = totals[^1];
+        LatestTotalCaptionText = $"最新總資產 ({latestSnapshot.Date:yyyy/MM/dd})";
+        LatestTotalAmountText = latestTotal.ToString("#,0.##");
     }
 
     private static string[] BuildCondensedDateLabels(string[] labels)

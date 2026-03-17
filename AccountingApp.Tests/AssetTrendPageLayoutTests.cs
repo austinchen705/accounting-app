@@ -12,6 +12,8 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("<lvc:CartesianChart", pageXaml);
         Assert.Contains("Stock", pageXaml);
         Assert.Contains("FirstTrade", pageXaml);
+        Assert.Contains("LatestTotalCaptionText", pageXaml);
+        Assert.Contains("LatestTotalAmountText", pageXaml);
         Assert.Contains("CalendarDatePicker", pageXaml);
         Assert.Contains("InputContainerStyle", pageXaml);
     }

@@ -26,6 +26,9 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("ReplaceImportCsvAsync", vmCode);
         Assert.Contains("確認匯入", vmCode);
         Assert.Contains("BuildCondensedDateLabels", vmCode);
+        Assert.Contains("LatestTotalCaptionText", vmCode);
+        Assert.Contains("LatestTotalAmountText", vmCode);
+        Assert.Contains("ApplyLatestTotalSummary", vmCode);
         Assert.Contains("MinStep = 2_500_000", vmCode);
         Assert.Contains("ForceStepToMin = true", vmCode);
         Assert.Contains("Labeler = FormatYAxisValue", vmCode);

@@ -81,6 +81,14 @@
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="資產走勢圖" Style="{StaticResource SectionTitleStyle}" />
+                    <VerticalStackLayout Spacing="2"
+                                         IsVisible="{Binding HasSnapshots}">
+                        <Label Text="{Binding LatestTotalCaptionText}"
+                               Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{Binding LatestTotalAmountText}"
+                               FontAttributes="Bold"
+                               FontSize="22" />
+                    </VerticalStackLayout>
                     <lvc:CartesianChart Series="{Binding TrendSeries}"
                                         XAxes="{Binding TrendXAxes}"
                                         YAxes="{Binding TrendYAxes}"
