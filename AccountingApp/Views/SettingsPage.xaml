@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.SettingsPage"
-             Title="設定">
+             Title="{markup:Translate SettingsPageTitle}">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,24" Spacing="2">
-            <Label Text="設定" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,8" />
+            <Label Text="{markup:Translate SettingsPageTitle}" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,8" />
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="8">
@@ -25,7 +25,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="主幣別" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate SettingsCurrencySectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <Label Text="此幣別會作為首頁與統計預設顯示。" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
                         <Picker ItemsSource="{Binding Currencies}"

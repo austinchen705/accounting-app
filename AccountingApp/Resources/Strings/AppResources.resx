@@ -45,4 +45,154 @@
   <data name="LanguageEnglish" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsCurrencySectionTitle" xml:space="preserve">
+    <value>Base Currency</value>
+  </data>
+  <data name="HomePageTitle" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="HomeIncomeLabel" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="HomeExpenseLabel" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="HomeBalanceLabel" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+  <data name="HomeEmptyStateText" xml:space="preserve">
+    <value>No transactions in this period</value>
+  </data>
+  <data name="HomeRecentTransactionsTitle" xml:space="preserve">
+    <value>Transactions in period</value>
+  </data>
+  <data name="HomeAddButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="UnitPrefix" xml:space="preserve">
+    <value>Unit: {0}</value>
+  </data>
+  <data name="SummaryTitleFormat" xml:space="preserve">
+    <value>{0} Summary</value>
+  </data>
+  <data name="TransactionListPageTitle" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
+  <data name="TransactionListAddButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="TransactionListDateFilterLabel" xml:space="preserve">
+    <value>Date Filter</value>
+  </data>
+  <data name="TransactionListTodayButton" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="TransactionListDailySummaryTitle" xml:space="preserve">
+    <value>Daily Summary</value>
+  </data>
+  <data name="TransactionListIncomeFormat" xml:space="preserve">
+    <value>Income {0:N0}</value>
+  </data>
+  <data name="TransactionListExpenseFormat" xml:space="preserve">
+    <value>Expense {0:N0}</value>
+  </data>
+  <data name="TransactionListBalanceFormat" xml:space="preserve">
+    <value>Balance {0:N0}</value>
+  </data>
+  <data name="TransactionListEmptyStateText" xml:space="preserve">
+    <value>No transactions today</value>
+  </data>
+  <data name="EditButtonText" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="DeleteButtonText" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="TransactionFormPageTitle" xml:space="preserve">
+    <value>Add Transaction</value>
+  </data>
+  <data name="TransactionFormPrimarySectionTitle" xml:space="preserve">
+    <value>Primary Info</value>
+  </data>
+  <data name="TransactionFormTypeLabel" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="TransactionFormExpenseType" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="TransactionFormIncomeType" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="TransactionFormAmountLabel" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="TransactionFormCategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="TransactionFormDateLabel" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="TransactionFormSecondarySectionTitle" xml:space="preserve">
+    <value>Additional Info</value>
+  </data>
+  <data name="TransactionFormNoteLabel" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="TransactionFormNotePlaceholder" xml:space="preserve">
+    <value>Optional</value>
+  </data>
+  <data name="TransactionFormCurrencyLabel" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="TransactionFormSaveButton" xml:space="preserve">
+    <value>Save Transaction</value>
+  </data>
+  <data name="TransactionFormInvalidAmountError" xml:space="preserve">
+    <value>Please enter a valid amount greater than 0</value>
+  </data>
+  <data name="StatisticsPageTitle" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="StatisticsPieSectionTitle" xml:space="preserve">
+    <value>Expense Share by Category</value>
+  </data>
+  <data name="StatisticsPieEmptyStateText" xml:space="preserve">
+    <value>No expense records this month</value>
+  </data>
+  <data name="StatisticsTrendSectionTitle" xml:space="preserve">
+    <value>12-Month Income and Expense Trend</value>
+  </data>
+  <data name="StatisticsIncomeMoMLabel" xml:space="preserve">
+    <value>Income MoM</value>
+  </data>
+  <data name="StatisticsExpenseMoMLabel" xml:space="preserve">
+    <value>Expense MoM</value>
+  </data>
+  <data name="StatisticsTrendEmptyStateText" xml:space="preserve">
+    <value>Not enough data to build the trend chart</value>
+  </data>
+  <data name="StatisticsCategoryTrendSectionTitle" xml:space="preserve">
+    <value>Top 5 Expense Categories 12-Month Trend</value>
+  </data>
+  <data name="StatisticsCategoryTrendEmptyStateText" xml:space="preserve">
+    <value>Not enough category data to build the trend chart</value>
+  </data>
+  <data name="StatisticsIncomeSeriesName" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="StatisticsExpenseSeriesName" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="BudgetPageTitle" xml:space="preserve">
+    <value>Budget</value>
+  </data>
+  <data name="BudgetEmptyStateText" xml:space="preserve">
+    <value>No categories available for budgeting</value>
+  </data>
+  <data name="BudgetSetButton" xml:space="preserve">
+    <value>Set</value>
+  </data>
 </root>

@@ -11,6 +11,8 @@ public class SettingsPageLayoutTests
         Assert.Contains("LanguageLabel", xaml);
         Assert.Contains("LanguageTraditionalChinese", xaml);
         Assert.Contains("LanguageEnglish", xaml);
+        Assert.Contains("SettingsPageTitle", xaml);
+        Assert.Contains("SettingsCurrencySectionTitle", xaml);
         Assert.Contains("SetTraditionalChineseCommand", xaml);
         Assert.Contains("SetEnglishCommand", xaml);
     }

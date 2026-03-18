@@ -10,7 +10,9 @@ public class CategoryReportPageCopyTests
             "../../../../AccountingApp/AppShell.xaml"));
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("Title=\"分類報告\"", xaml);
+        Assert.Contains("CategoryReportPage", xaml);
+        Assert.Contains("CategoryReportTabTitle", xaml);
+        Assert.Contains("markup:Translate", xaml);
         Assert.Contains("CategoryReportPage", xaml);
     }
 

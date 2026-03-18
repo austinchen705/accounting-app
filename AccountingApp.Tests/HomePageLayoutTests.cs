@@ -25,8 +25,9 @@ public class HomePageLayoutTests
 
         Assert.DoesNotContain("Text=\"本月總覽\"", xaml);
         Assert.Contains("Text=\"{Binding SummaryTitle}\"", xaml);
-        Assert.Contains("Text=\"此期間尚無收支資料\"", xaml);
-        Assert.Contains("Text=\"期間內記錄\"", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("HomeEmptyStateText", xaml);
+        Assert.Contains("HomeRecentTransactionsTitle", xaml);
     }
 
     [Fact]
@@ -37,6 +38,9 @@ public class HomePageLayoutTests
         Assert.Contains("Text=\"{Binding AmountDisplayText}\"", xaml);
         Assert.Contains("Text=\"{Binding ExchangeInfoText}\"", xaml);
         Assert.Contains("IsVisible=\"{Binding HasExchangeInfo}\"", xaml);
+        Assert.Contains("HomeIncomeLabel", xaml);
+        Assert.Contains("HomeExpenseLabel", xaml);
+        Assert.Contains("HomeBalanceLabel", xaml);
     }
 
     private static string ReadHomeXaml()

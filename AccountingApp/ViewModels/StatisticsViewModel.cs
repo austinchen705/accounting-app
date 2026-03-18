@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 
 public class StatisticsViewModel : BindableObject
 {
+    private readonly ILocalizationService _localizationService;
     public class ChartLegendItem
     {
         public string Name { get; set; } = string.Empty;
@@ -139,9 +140,13 @@ public class StatisticsViewModel : BindableObject
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
 
-    public StatisticsViewModel(StatisticsService statisticsService, DataRefreshService refreshService)
+    public StatisticsViewModel(
+        StatisticsService statisticsService,
+        ILocalizationService localizationService,
+        DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         PreviousMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(-1));
         NextMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(1));
@@ -207,7 +212,7 @@ public class StatisticsViewModel : BindableObject
         var stats = await _statisticsService.GetLast12MonthsStatsAsync(monthDate);
         if (loadVersion != _loadVersion) return;
         var baseCurrency = Preferences.Get("base_currency", "TWD");
-        BarChartUnitText = $"單位：{baseCurrency}";
+        BarChartUnitText = string.Format(_localizationService.GetString("UnitPrefix"), baseCurrency);
         HasBarData = stats.Any(s => s.Income > 0 || s.Expense > 0);
 
         var months = stats.Select(s => s.Month.Replace("月", "")).ToArray();
@@ -218,7 +223,7 @@ public class StatisticsViewModel : BindableObject
         [
             new LineSeries<double>
             {
-                Name = "收入",
+                Name = _localizationService.GetString("StatisticsIncomeSeriesName"),
                 Values = incomeValues,
                 Fill = null,
                 GeometrySize = 8,
@@ -229,7 +234,7 @@ public class StatisticsViewModel : BindableObject
             },
             new LineSeries<double>
             {
-                Name = "支出",
+                Name = _localizationService.GetString("StatisticsExpenseSeriesName"),
                 Values = expenseValues,
                 Fill = null,
                 GeometrySize = 8,

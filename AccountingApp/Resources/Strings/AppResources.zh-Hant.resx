@@ -45,4 +45,154 @@
   <data name="LanguageEnglish" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsCurrencySectionTitle" xml:space="preserve">
+    <value>主幣別</value>
+  </data>
+  <data name="HomePageTitle" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="HomeIncomeLabel" xml:space="preserve">
+    <value>收入</value>
+  </data>
+  <data name="HomeExpenseLabel" xml:space="preserve">
+    <value>支出</value>
+  </data>
+  <data name="HomeBalanceLabel" xml:space="preserve">
+    <value>結餘</value>
+  </data>
+  <data name="HomeEmptyStateText" xml:space="preserve">
+    <value>此期間尚無收支資料</value>
+  </data>
+  <data name="HomeRecentTransactionsTitle" xml:space="preserve">
+    <value>期間內記錄</value>
+  </data>
+  <data name="HomeAddButton" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="UnitPrefix" xml:space="preserve">
+    <value>單位：{0}</value>
+  </data>
+  <data name="SummaryTitleFormat" xml:space="preserve">
+    <value>{0} 總覽</value>
+  </data>
+  <data name="TransactionListPageTitle" xml:space="preserve">
+    <value>收支記錄</value>
+  </data>
+  <data name="TransactionListAddButton" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="TransactionListDateFilterLabel" xml:space="preserve">
+    <value>日期篩選</value>
+  </data>
+  <data name="TransactionListTodayButton" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="TransactionListDailySummaryTitle" xml:space="preserve">
+    <value>當日總覽</value>
+  </data>
+  <data name="TransactionListIncomeFormat" xml:space="preserve">
+    <value>收入 {0:N0}</value>
+  </data>
+  <data name="TransactionListExpenseFormat" xml:space="preserve">
+    <value>支出 {0:N0}</value>
+  </data>
+  <data name="TransactionListBalanceFormat" xml:space="preserve">
+    <value>結餘 {0:N0}</value>
+  </data>
+  <data name="TransactionListEmptyStateText" xml:space="preserve">
+    <value>當日尚無記錄</value>
+  </data>
+  <data name="EditButtonText" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="DeleteButtonText" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="TransactionFormPageTitle" xml:space="preserve">
+    <value>新增記錄</value>
+  </data>
+  <data name="TransactionFormPrimarySectionTitle" xml:space="preserve">
+    <value>主要資訊</value>
+  </data>
+  <data name="TransactionFormTypeLabel" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="TransactionFormExpenseType" xml:space="preserve">
+    <value>支出</value>
+  </data>
+  <data name="TransactionFormIncomeType" xml:space="preserve">
+    <value>收入</value>
+  </data>
+  <data name="TransactionFormAmountLabel" xml:space="preserve">
+    <value>金額</value>
+  </data>
+  <data name="TransactionFormCategoryLabel" xml:space="preserve">
+    <value>分類</value>
+  </data>
+  <data name="TransactionFormDateLabel" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="TransactionFormSecondarySectionTitle" xml:space="preserve">
+    <value>補充資訊</value>
+  </data>
+  <data name="TransactionFormNoteLabel" xml:space="preserve">
+    <value>備註</value>
+  </data>
+  <data name="TransactionFormNotePlaceholder" xml:space="preserve">
+    <value>選填</value>
+  </data>
+  <data name="TransactionFormCurrencyLabel" xml:space="preserve">
+    <value>幣別</value>
+  </data>
+  <data name="TransactionFormSaveButton" xml:space="preserve">
+    <value>儲存記錄</value>
+  </data>
+  <data name="TransactionFormInvalidAmountError" xml:space="preserve">
+    <value>請輸入有效金額（大於 0）</value>
+  </data>
+  <data name="StatisticsPageTitle" xml:space="preserve">
+    <value>統計</value>
+  </data>
+  <data name="StatisticsPieSectionTitle" xml:space="preserve">
+    <value>各分類支出佔比</value>
+  </data>
+  <data name="StatisticsPieEmptyStateText" xml:space="preserve">
+    <value>本月尚無支出記錄</value>
+  </data>
+  <data name="StatisticsTrendSectionTitle" xml:space="preserve">
+    <value>截至所選月份的近 12 個月收支趨勢</value>
+  </data>
+  <data name="StatisticsIncomeMoMLabel" xml:space="preserve">
+    <value>收入月增率</value>
+  </data>
+  <data name="StatisticsExpenseMoMLabel" xml:space="preserve">
+    <value>支出月增率</value>
+  </data>
+  <data name="StatisticsTrendEmptyStateText" xml:space="preserve">
+    <value>所選月份區間尚無足夠資料產生趨勢圖</value>
+  </data>
+  <data name="StatisticsCategoryTrendSectionTitle" xml:space="preserve">
+    <value>前 5 大支出分類近 12 個月趨勢</value>
+  </data>
+  <data name="StatisticsCategoryTrendEmptyStateText" xml:space="preserve">
+    <value>所選月份區間尚無足夠分類資料產生趨勢圖</value>
+  </data>
+  <data name="StatisticsIncomeSeriesName" xml:space="preserve">
+    <value>收入</value>
+  </data>
+  <data name="StatisticsExpenseSeriesName" xml:space="preserve">
+    <value>支出</value>
+  </data>
+  <data name="BudgetPageTitle" xml:space="preserve">
+    <value>預算管理</value>
+  </data>
+  <data name="BudgetEmptyStateText" xml:space="preserve">
+    <value>尚無可設定預算的分類</value>
+  </data>
+  <data name="BudgetSetButton" xml:space="preserve">
+    <value>設定</value>
+  </data>
 </root>

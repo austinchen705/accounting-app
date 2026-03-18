@@ -10,8 +10,9 @@ public class StatisticsPageTrendCopyTests
             "../../../../AccountingApp/Views/StatisticsPage.xaml"));
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("截至所選月份的近 12 個月收支趨勢", xaml);
-        Assert.Contains("前 5 大支出分類近 12 個月趨勢", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("StatisticsTrendSectionTitle", xaml);
+        Assert.Contains("StatisticsCategoryTrendSectionTitle", xaml);
         Assert.Contains("CategoryTrendSeries", xaml);
     }
 

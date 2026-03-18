@@ -2,22 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.TransactionListPage"
-             Title="收支記錄">
+             Title="{markup:Translate TransactionListPageTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="新增" Command="{Binding AddCommand}" />
+        <ToolbarItem Text="{markup:Translate TransactionListAddButton}" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,Auto,*" Padding="16,16,16,8" RowSpacing="8">
 
         <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}" Padding="12,8">
             <VerticalStackLayout Spacing="8">
-                <Label Text="日期篩選" Style="{StaticResource CaptionStyle}" />
+                <Label Text="{markup:Translate TransactionListDateFilterLabel}" Style="{StaticResource CaptionStyle}" />
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                     <controls:CalendarDatePicker Date="{Binding FilterDate}" />
                     <Button Grid.Column="1"
-                            Text="今天"
+                            Text="{markup:Translate TransactionListTodayButton}"
                             Command="{Binding ResetToTodayCommand}"
                             Style="{StaticResource SecondaryButtonStyle}"
                             FontSize="13"
@@ -29,20 +30,20 @@
 
         <Frame Grid.Row="1" Style="{StaticResource CardFrameStyle}" Padding="12,10">
             <VerticalStackLayout Spacing="8">
-                <Label Text="當日總覽" Style="{StaticResource CaptionStyle}" />
+                <Label Text="{markup:Translate TransactionListDailySummaryTitle}" Style="{StaticResource CaptionStyle}" />
                 <Label Text="{Binding SummaryCurrencyText}"
                        Style="{StaticResource CaptionStyle}"
                        HorizontalOptions="Center" />
                 <Grid ColumnDefinitions="*,*,*">
-                    <Label Text="{Binding DailyIncome, StringFormat='收入 {0:N0}'}"
+                    <Label Text="{Binding DailyIncomeText}"
                            TextColor="{StaticResource Success}"
                            HorizontalOptions="Center" />
                     <Label Grid.Column="1"
-                           Text="{Binding DailyExpense, StringFormat='支出 {0:N0}'}"
+                           Text="{Binding DailyExpenseText}"
                            TextColor="{StaticResource Danger}"
                            HorizontalOptions="Center" />
                     <Label Grid.Column="2"
-                           Text="{Binding DailyBalance, StringFormat='結餘 {0:N0}'}"
+                           Text="{Binding DailyBalanceText}"
                            HorizontalOptions="Center" />
                 </Grid>
             </VerticalStackLayout>
@@ -51,7 +52,7 @@
         <Grid Grid.Row="2">
             <Frame Style="{StaticResource CardFrameStyle}"
                    IsVisible="{Binding HasTransactions, Converter={StaticResource InverseBoolConverter}}">
-                <Label Text="當日尚無記錄"
+                <Label Text="{markup:Translate TransactionListEmptyStateText}"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"
                        Style="{StaticResource CaptionStyle}" />
@@ -94,14 +95,14 @@
                                         </Label>
                                     </Grid>
                                     <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
-                                        <Button Text="編輯"
+                                        <Button Text="{markup:Translate EditButtonText}"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
                                                 CommandParameter="{Binding .}"
                                                 Style="{StaticResource SecondaryButtonStyle}"
                                                 FontSize="13"
                                                 Padding="10,6"
                                                 HeightRequest="34" />
-                                        <Button Text="刪除"
+                                        <Button Text="{markup:Translate DeleteButtonText}"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                                                 CommandParameter="{Binding .}"
                                                 BackgroundColor="{StaticResource Danger}"

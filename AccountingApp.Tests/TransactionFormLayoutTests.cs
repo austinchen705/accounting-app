@@ -7,10 +7,10 @@ public class TransactionFormLayoutTests
     {
         var xaml = ReadTransactionFormXaml();
 
-        Assert.True(IndexOf(xaml, "Text=\"金額\"") < IndexOf(xaml, "Text=\"分類\""));
-        Assert.True(IndexOf(xaml, "Text=\"分類\"") < IndexOf(xaml, "Text=\"日期\""));
-        Assert.True(IndexOf(xaml, "Text=\"日期\"") < IndexOf(xaml, "Text=\"備註\""));
-        Assert.True(IndexOf(xaml, "Text=\"備註\"") < IndexOf(xaml, "Text=\"幣別\""));
+        Assert.True(IndexOf(xaml, "TransactionFormAmountLabel") < IndexOf(xaml, "TransactionFormCategoryLabel"));
+        Assert.True(IndexOf(xaml, "TransactionFormCategoryLabel") < IndexOf(xaml, "TransactionFormDateLabel"));
+        Assert.True(IndexOf(xaml, "TransactionFormDateLabel") < IndexOf(xaml, "TransactionFormNoteLabel"));
+        Assert.True(IndexOf(xaml, "TransactionFormNoteLabel") < IndexOf(xaml, "TransactionFormCurrencyLabel"));
     }
 
     [Fact]
@@ -41,6 +41,8 @@ public class TransactionFormLayoutTests
 
         Assert.Contains("Text=\"{Binding AmountText}\"", xaml);
         Assert.Contains("Keyboard=\"Numeric\"", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("TransactionFormSaveButton", xaml);
     }
 
     private static string ReadTransactionFormXaml()

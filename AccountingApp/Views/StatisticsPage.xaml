@@ -2,12 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.StatisticsPage"
-             Title="統計">
+             Title="{markup:Translate StatisticsPageTitle}">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,24" Spacing="2">
-            <Label Text="統計" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,8" />
+            <Label Text="{markup:Translate StatisticsPageTitle}" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,8" />
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
@@ -23,7 +24,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="各分類支出佔比" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate StatisticsPieSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <Grid ColumnDefinitions="1.35*,1*" ColumnSpacing="12" IsVisible="{Binding HasPieData}">
                         <lvc:PieChart Series="{Binding PieSeries}"
                                       InitialRotation="-90"
@@ -57,7 +58,7 @@
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </Grid>
-                    <Label Text="本月尚無支出記錄"
+                    <Label Text="{markup:Translate StatisticsPieEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasPieData, Converter={StaticResource InverseBoolConverter}}" />
@@ -66,7 +67,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}" Margin="0,0,0,0">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="截至所選月份的近 12 個月收支趨勢" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate StatisticsTrendSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <lvc:CartesianChart Series="{Binding TrendSeries}"
                                         XAxes="{Binding TrendXAxes}"
                                         YAxes="{Binding TrendYAxes}"
@@ -80,13 +81,13 @@
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" IsVisible="{Binding HasBarData}">
                         <Frame Style="{StaticResource CardFrameStyle}" Padding="10,8" Margin="0">
                             <VerticalStackLayout Spacing="2">
-                                <Label Text="收入月增率" Style="{StaticResource CaptionStyle}" />
+                                <Label Text="{markup:Translate StatisticsIncomeMoMLabel}" Style="{StaticResource CaptionStyle}" />
                                 <Label Text="{Binding IncomeMoMText}" FontAttributes="Bold" />
                             </VerticalStackLayout>
                         </Frame>
                         <Frame Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="10,8" Margin="0">
                             <VerticalStackLayout Spacing="2">
-                                <Label Text="支出月增率" Style="{StaticResource CaptionStyle}" />
+                                <Label Text="{markup:Translate StatisticsExpenseMoMLabel}" Style="{StaticResource CaptionStyle}" />
                                 <Label Text="{Binding ExpenseMoMText}" FontAttributes="Bold" />
                             </VerticalStackLayout>
                         </Frame>
@@ -97,7 +98,7 @@
                     <Label Text="{Binding MinNetText}"
                            Style="{StaticResource CaptionStyle}"
                            IsVisible="{Binding HasBarData}" />
-                    <Label Text="所選月份區間尚無足夠資料產生趨勢圖"
+                    <Label Text="{markup:Translate StatisticsTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasBarData, Converter={StaticResource InverseBoolConverter}}" />
@@ -106,14 +107,14 @@
 
             <Frame Style="{StaticResource CardFrameStyle}" Margin="0,0,0,0">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="前 5 大支出分類近 12 個月趨勢" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate StatisticsCategoryTrendSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <lvc:CartesianChart Series="{Binding CategoryTrendSeries}"
                                         XAxes="{Binding CategoryTrendXAxes}"
                                         YAxes="{Binding CategoryTrendYAxes}"
                                         LegendPosition="Bottom"
                                         HeightRequest="260"
                                         IsVisible="{Binding HasCategoryTrendData}" />
-                    <Label Text="所選月份區間尚無足夠分類資料產生趨勢圖"
+                    <Label Text="{markup:Translate StatisticsCategoryTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasCategoryTrendData, Converter={StaticResource InverseBoolConverter}}" />

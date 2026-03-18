@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.HomePage"
              Shell.NavBarIsVisible="False"
-             Title="首頁">
+             Title="{markup:Translate HomePageTitle}">
 
     <Grid>
         <Grid RowDefinitions="Auto,*" Padding="16,6,16,8" RowSpacing="8">
@@ -83,17 +84,17 @@
                     <Label Text="{Binding SummaryCurrencyText}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
                         <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="收入" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{markup:Translate HomeIncomeLabel}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
                             <Label Text="{Binding TotalIncome, StringFormat='{0:N0}'}"
                                    Style="{StaticResource ValueStyle}" TextColor="{StaticResource Success}" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="支出" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{markup:Translate HomeExpenseLabel}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
                             <Label Text="{Binding TotalExpense, StringFormat='{0:N0}'}"
                                    Style="{StaticResource ValueStyle}" TextColor="{StaticResource Danger}" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="結餘" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
+                            <Label Text="{markup:Translate HomeBalanceLabel}" Style="{StaticResource CaptionStyle}" HorizontalOptions="Center" />
                             <Label Text="{Binding Balance, StringFormat='{0:N0}'}"
                                    Style="{StaticResource ValueStyle}" HorizontalOptions="Center" />
                         </VerticalStackLayout>
@@ -102,7 +103,7 @@
             </Frame>
 
             <Grid Grid.Row="1">
-                <Label Text="此期間尚無收支資料"
+                <Label Text="{markup:Translate HomeEmptyStateText}"
                        Style="{StaticResource CaptionStyle}"
                        HorizontalOptions="Center"
                        VerticalOptions="Start"
@@ -110,7 +111,7 @@
 
                 <ScrollView IsVisible="{Binding HasRecentTransactions}">
                     <VerticalStackLayout Spacing="0">
-                        <Label Text="期間內記錄" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                        <Label Text="{markup:Translate HomeRecentTransactionsTitle}" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentTransactions}" Spacing="0">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
@@ -145,7 +146,7 @@
             </Grid>
         </Grid>
 
-        <Button Text="新增"
+        <Button Text="{markup:Translate HomeAddButton}"
                 Command="{Binding AddTransactionCommand}"
                 HorizontalOptions="End"
                 VerticalOptions="End"
