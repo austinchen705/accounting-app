@@ -10,8 +10,8 @@ public class CategoryManagementPageTests
             "../../../../AccountingApp/AppShell.xaml"));
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("Title=\"分類管理\"", xaml);
         Assert.Contains("CategoryListPage", xaml);
+        Assert.Contains("CategoryManagementTabTitle", xaml);
     }
 
     [Fact]

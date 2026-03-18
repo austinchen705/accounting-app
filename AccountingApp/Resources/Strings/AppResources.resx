@@ -15,6 +15,24 @@
   <data name="HomeTabTitle" xml:space="preserve">
     <value>Home</value>
   </data>
+  <data name="TransactionListTabTitle" xml:space="preserve">
+    <value>Transactions</value>
+  </data>
+  <data name="StatisticsTabTitle" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="CategoryReportTabTitle" xml:space="preserve">
+    <value>Category Report</value>
+  </data>
+  <data name="AssetTrendTabTitle" xml:space="preserve">
+    <value>Asset Trend</value>
+  </data>
+  <data name="CategoryManagementTabTitle" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="BudgetTabTitle" xml:space="preserve">
+    <value>Budget</value>
+  </data>
   <data name="SettingsTabTitle" xml:space="preserve">
     <value>Settings</value>
   </data>

@@ -15,6 +15,24 @@
   <data name="HomeTabTitle" xml:space="preserve">
     <value>首頁</value>
   </data>
+  <data name="TransactionListTabTitle" xml:space="preserve">
+    <value>記錄</value>
+  </data>
+  <data name="StatisticsTabTitle" xml:space="preserve">
+    <value>統計</value>
+  </data>
+  <data name="CategoryReportTabTitle" xml:space="preserve">
+    <value>分類報告</value>
+  </data>
+  <data name="AssetTrendTabTitle" xml:space="preserve">
+    <value>資產趨勢</value>
+  </data>
+  <data name="CategoryManagementTabTitle" xml:space="preserve">
+    <value>分類管理</value>
+  </data>
+  <data name="BudgetTabTitle" xml:space="preserve">
+    <value>預算</value>
+  </data>
   <data name="SettingsTabTitle" xml:space="preserve">
     <value>設定</value>
   </data>
