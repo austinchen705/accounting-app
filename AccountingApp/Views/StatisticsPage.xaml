@@ -14,7 +14,7 @@
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                     <Button Text="‹" Command="{Binding PreviousMonthCommand}" WidthRequest="42" HeightRequest="42" Padding="0" />
                     <Label Grid.Column="1"
-                           Text="{Binding SelectedMonth, StringFormat='{0:yyyy年MM月}'}"
+                           Text="{Binding SelectedMonthLabel}"
                            Style="{StaticResource SectionTitleStyle}"
                            HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center" />

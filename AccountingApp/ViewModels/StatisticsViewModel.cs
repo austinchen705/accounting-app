@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 
 public class StatisticsViewModel : BindableObject
 {
+    private readonly ILocalizedFormattingService _localizedFormattingService;
     private readonly ILocalizationService _localizationService;
     public class ChartLegendItem
     {
@@ -44,7 +45,7 @@ public class StatisticsViewModel : BindableObject
     public DateTime SelectedMonth
     {
         get => _selectedMonth;
-        set { _selectedMonth = value; OnPropertyChanged(); _ = LoadAsync(); }
+        set { _selectedMonth = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedMonthLabel)); _ = LoadAsync(); }
     }
 
     public ISeries[] PieSeries
@@ -137,15 +138,19 @@ public class StatisticsViewModel : BindableObject
         set { _minNetText = value; OnPropertyChanged(); }
     }
 
+    public string SelectedMonthLabel => _localizedFormattingService.FormatMonthYear(SelectedMonth);
+
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
 
     public StatisticsViewModel(
         StatisticsService statisticsService,
+        ILocalizedFormattingService localizedFormattingService,
         ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
+        _localizedFormattingService = localizedFormattingService;
         _localizationService = localizationService;
         _refreshService = refreshService;
         PreviousMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(-1));

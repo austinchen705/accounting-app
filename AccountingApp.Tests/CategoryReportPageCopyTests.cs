@@ -29,10 +29,10 @@ public class CategoryReportPageCopyTests
 
         Assert.Contains("markup:Translate", xaml);
         Assert.Contains("CategoryReportPageTitle", xaml);
-        Assert.Contains("Week", xaml);
-        Assert.Contains("Month", xaml);
-        Assert.Contains("Year", xaml);
-        Assert.Contains("All", xaml);
+        Assert.Contains("CategoryReportRangeWeek", xaml);
+        Assert.Contains("CategoryReportRangeMonth", xaml);
+        Assert.Contains("CategoryReportRangeYear", xaml);
+        Assert.Contains("CategoryReportRangeAll", xaml);
         Assert.Contains("CategoryReportEmptyStateText", xaml);
         Assert.Contains("CategoryItems", xaml);
     }
@@ -47,5 +47,7 @@ public class CategoryReportPageCopyTests
 
         Assert.Contains("CategoryColorPalette.BuildDistinctHexColors", code);
         Assert.Contains("colorByCategory[category.CategoryName]", code);
+        Assert.Contains("ILocalizedFormattingService", code);
+        Assert.Contains("FormatCategoryReportPeriod", code);
     }
 }

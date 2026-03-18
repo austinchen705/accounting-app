@@ -279,6 +279,18 @@
   <data name="AllPeriodLabel" xml:space="preserve">
     <value>全部期間</value>
   </data>
+  <data name="CategoryReportRangeWeek" xml:space="preserve">
+    <value>週</value>
+  </data>
+  <data name="CategoryReportRangeMonth" xml:space="preserve">
+    <value>月</value>
+  </data>
+  <data name="CategoryReportRangeYear" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="CategoryReportRangeAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
   <data name="AssetTrendPageTitle" xml:space="preserve">
     <value>資產趨勢</value>
   </data>

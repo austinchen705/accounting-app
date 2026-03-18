@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 
 public class CategoryReportViewModel : BindableObject
 {
+    private readonly ILocalizedFormattingService _localizedFormattingService;
     private readonly ILocalizationService _localizationService;
     public class CategoryReportItem
     {
@@ -132,9 +133,14 @@ public class CategoryReportViewModel : BindableObject
     public ICommand NextPeriodCommand { get; }
     public ICommand SetRangeCommand { get; }
 
-    public CategoryReportViewModel(StatisticsService statisticsService, ILocalizationService localizationService, DataRefreshService refreshService)
+    public CategoryReportViewModel(
+        StatisticsService statisticsService,
+        ILocalizedFormattingService localizedFormattingService,
+        ILocalizationService localizationService,
+        DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
+        _localizedFormattingService = localizedFormattingService;
         _localizationService = localizationService;
         _refreshService = refreshService;
         PreviousPeriodCommand = new Command(() => ChangePeriod(-1));
@@ -252,24 +258,7 @@ public class CategoryReportViewModel : BindableObject
 
     private string BuildPeriodLabel()
     {
-        if (_selectedRange == ExpenseCategoryReportRange.All)
-        {
-            return _localizationService.GetString("AllPeriodLabel");
-        }
-
-        if (_selectedRange == ExpenseCategoryReportRange.Month)
-        {
-            return _anchorDate.ToString("yyyy年MM月");
-        }
-
-        if (_selectedRange == ExpenseCategoryReportRange.Year)
-        {
-            return _anchorDate.ToString("yyyy年");
-        }
-
-        var window = ExpenseCategoryReport.GetDateWindow(_selectedRange, _anchorDate);
-        var endDate = window.EndExclusive!.Value.AddDays(-1);
-        return $"{window.Start:yyyy/MM/dd} - {endDate:MM/dd}";
+        return _localizedFormattingService.FormatCategoryReportPeriod(_selectedRange, _anchorDate);
     }
 
     private void ApplyFilterButtonState()

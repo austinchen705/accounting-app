@@ -17,7 +17,7 @@
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
                         <Button Grid.Column="0"
-                                Text="Week"
+                                Text="{markup:Translate CategoryReportRangeWeek}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Week"
                                 BackgroundColor="{Binding WeekButtonBackgroundColor}"
@@ -26,7 +26,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="1"
-                                Text="Month"
+                                Text="{markup:Translate CategoryReportRangeMonth}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Month"
                                 BackgroundColor="{Binding MonthButtonBackgroundColor}"
@@ -35,7 +35,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="2"
-                                Text="Year"
+                                Text="{markup:Translate CategoryReportRangeYear}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Year"
                                 BackgroundColor="{Binding YearButtonBackgroundColor}"
@@ -44,7 +44,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="3"
-                                Text="All"
+                                Text="{markup:Translate CategoryReportRangeAll}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="All"
                                 BackgroundColor="{Binding AllButtonBackgroundColor}"

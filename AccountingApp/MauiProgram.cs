@@ -35,6 +35,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<JsonImportService>();
         builder.Services.AddSingleton<GoogleDriveService>();
         builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
+        builder.Services.AddSingleton<ILocalizedFormattingService, LocalizedFormattingService>();
 
         // ViewModels
         builder.Services.AddTransient<HomeViewModel>();
