@@ -1,7 +1,4 @@
 using System.Globalization;
-using System.Reflection;
-using System.Resources;
-
 namespace AccountingApp.Services;
 
 public interface ILocalizationService
@@ -16,9 +13,6 @@ public sealed class LocalizationService : ILocalizationService
 {
     public const string DefaultLanguage = "zh-Hant";
     private const string LanguagePreferenceKey = "app_language";
-    private static readonly ResourceManager ResourceManager = new(
-        "AccountingApp.Resources.Strings.AppResources",
-        typeof(LocalizationService).GetTypeInfo().Assembly);
 
     public string CurrentLanguage { get; private set; } = DefaultLanguage;
 
@@ -38,12 +32,13 @@ public sealed class LocalizationService : ILocalizationService
         CurrentLanguage = NormalizeLanguage(languageCode);
         Preferences.Set(LanguagePreferenceKey, CurrentLanguage);
         ApplyCulture(CurrentLanguage);
+        LocalizationResourceManager.Instance.Refresh();
         return Task.CompletedTask;
     }
 
     public string GetString(string key)
     {
-        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+        return LocalizationResourceManager.Instance.GetString(key);
     }
 
     private static string NormalizeLanguage(string? languageCode)

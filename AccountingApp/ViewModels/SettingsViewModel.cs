@@ -273,10 +273,9 @@ public class SettingsViewModel : BindableObject
 
         await _localizationService.SetLanguageAsync(languageCode);
 
-        if (Application.Current?.Windows.Count > 0)
+        if (Application.Current is App app)
         {
-            Application.Current.Windows[0].Page = new AppShell();
-            await Shell.Current.GoToAsync("//SettingsPage");
+            await app.ResetShellForLanguageChangeAsync();
         }
     }
 }

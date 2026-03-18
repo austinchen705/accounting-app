@@ -72,6 +72,21 @@
   <data name="HomeAddButton" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="HomeRangeDay" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="HomeRangeWeek" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="HomeRangeMonth" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="HomeRangeYear" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="HomeRangeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="UnitPrefix" xml:space="preserve">
     <value>Unit: {0}</value>
   </data>

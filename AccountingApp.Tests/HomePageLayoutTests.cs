@@ -13,6 +13,11 @@ public class HomePageLayoutTests
         Assert.Contains("CommandParameter=\"Month\"", xaml);
         Assert.Contains("CommandParameter=\"Year\"", xaml);
         Assert.Contains("CommandParameter=\"All\"", xaml);
+        Assert.Contains("HomeRangeDay", xaml);
+        Assert.Contains("HomeRangeWeek", xaml);
+        Assert.Contains("HomeRangeMonth", xaml);
+        Assert.Contains("HomeRangeYear", xaml);
+        Assert.Contains("HomeRangeAll", xaml);
         Assert.Contains("Command=\"{Binding PreviousMonthCommand}\"", xaml);
         Assert.Contains("Text=\"{Binding PeriodLabel}\"", xaml);
         Assert.Contains("Command=\"{Binding NextMonthCommand}\"", xaml);

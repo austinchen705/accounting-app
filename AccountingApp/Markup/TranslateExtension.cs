@@ -1,22 +1,16 @@
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
+using AccountingApp.Services;
 using Microsoft.Maui.Controls.Xaml;
 
 namespace AccountingApp.Markup;
 
 [ContentProperty(nameof(Key))]
-public sealed class TranslateExtension : IMarkupExtension<string>
+public sealed class TranslateExtension : IMarkupExtension<BindingBase>
 {
-    private static readonly ResourceManager ResourceManager = new(
-        "AccountingApp.Resources.Strings.AppResources",
-        typeof(TranslateExtension).GetTypeInfo().Assembly);
-
     public string Key { get; set; } = string.Empty;
 
-    public string ProvideValue(IServiceProvider serviceProvider)
+    public BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
-        return ResourceManager.GetString(Key, CultureInfo.CurrentUICulture) ?? Key;
+        return new Binding($"[{Key}]", source: LocalizationResourceManager.Instance);
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)

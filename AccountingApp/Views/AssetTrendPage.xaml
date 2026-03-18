@@ -19,7 +19,7 @@
                            TextColor="#1D4ED8"
                            IsVisible="{Binding IsEditing}" />
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
-                        <Label Text="Stock" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate AssetTrendStockLabel}" Style="{StaticResource CaptionStyle}" />
                         <Label Grid.Column="1" Text="{markup:Translate TransactionFormDateLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Grid.Row="1" Style="{StaticResource InputContainerStyle}">
                             <Entry Text="{Binding Stock}"

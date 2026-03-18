@@ -72,6 +72,21 @@
   <data name="HomeAddButton" xml:space="preserve">
     <value>新增</value>
   </data>
+  <data name="HomeRangeDay" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="HomeRangeWeek" xml:space="preserve">
+    <value>週</value>
+  </data>
+  <data name="HomeRangeMonth" xml:space="preserve">
+    <value>月</value>
+  </data>
+  <data name="HomeRangeYear" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="HomeRangeAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
   <data name="UnitPrefix" xml:space="preserve">
     <value>單位：{0}</value>
   </data>

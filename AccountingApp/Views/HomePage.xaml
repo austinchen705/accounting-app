@@ -13,7 +13,7 @@
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
                         <Button Grid.Column="0"
-                                Text="Day"
+                                Text="{markup:Translate HomeRangeDay}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Day"
                                 BackgroundColor="{Binding DayButtonBackgroundColor}"
@@ -22,7 +22,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="1"
-                                Text="Week"
+                                Text="{markup:Translate HomeRangeWeek}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Week"
                                 BackgroundColor="{Binding WeekButtonBackgroundColor}"
@@ -31,7 +31,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="2"
-                                Text="Month"
+                                Text="{markup:Translate HomeRangeMonth}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Month"
                                 BackgroundColor="{Binding MonthButtonBackgroundColor}"
@@ -40,7 +40,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="3"
-                                Text="Year"
+                                Text="{markup:Translate HomeRangeYear}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Year"
                                 BackgroundColor="{Binding YearButtonBackgroundColor}"
@@ -49,7 +49,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="4"
-                                Text="All"
+                                Text="{markup:Translate HomeRangeAll}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="All"
                                 BackgroundColor="{Binding AllButtonBackgroundColor}"

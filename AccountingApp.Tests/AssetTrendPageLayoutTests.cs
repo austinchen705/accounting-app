@@ -11,7 +11,7 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("AssetTrendPage", shellXaml);
         Assert.Contains("<lvc:CartesianChart", pageXaml);
         Assert.Contains("markup:Translate", pageXaml);
-        Assert.Contains("Stock", pageXaml);
+        Assert.Contains("AssetTrendStockLabel", pageXaml);
         Assert.Contains("FirstTrade", pageXaml);
         Assert.Contains("LatestTotalCaptionText", pageXaml);
         Assert.Contains("LatestTotalAmountText", pageXaml);
