@@ -195,4 +195,160 @@
   <data name="BudgetSetButton" xml:space="preserve">
     <value>Set</value>
   </data>
+  <data name="CategoryListPageTitle" xml:space="preserve">
+    <value>Category Management</value>
+  </data>
+  <data name="CategoryListDescription" xml:space="preserve">
+    <value>Review categories and directly add, edit, or delete unused ones.</value>
+  </data>
+  <data name="CategoryNameLabel" xml:space="preserve">
+    <value>Category Name</value>
+  </data>
+  <data name="CategoryNamePlaceholder" xml:space="preserve">
+    <value>For example: Coffee, Gym, Rent</value>
+  </data>
+  <data name="CategoryTypeLabel" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="CategoryTypePickerTitle" xml:space="preserve">
+    <value>Select Type</value>
+  </data>
+  <data name="CategoryCancelEditButton" xml:space="preserve">
+    <value>Cancel Edit</value>
+  </data>
+  <data name="CategoryListEmptyStateText" xml:space="preserve">
+    <value>No categories yet</value>
+  </data>
+  <data name="CategoryFormCreateTitle" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="CategoryFormEditTitle" xml:space="preserve">
+    <value>Edit Category</value>
+  </data>
+  <data name="CategoryFormCreateButton" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="CategoryFormUpdateButton" xml:space="preserve">
+    <value>Update Category</value>
+  </data>
+  <data name="CategoryTypeExpenseLabel" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="CategoryTypeIncomeLabel" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="CategoryNameRequiredError" xml:space="preserve">
+    <value>Please enter a category name</value>
+  </data>
+  <data name="CategoryNameDuplicateError" xml:space="preserve">
+    <value>This category name already exists</value>
+  </data>
+  <data name="CategoryNotFoundError" xml:space="preserve">
+    <value>Category to edit was not found</value>
+  </data>
+  <data name="CategoryDeleteBlockedTitle" xml:space="preserve">
+    <value>Unable to Delete</value>
+  </data>
+  <data name="CategoryDeleteBlockedMessage" xml:space="preserve">
+    <value>This category still has transactions and cannot be deleted.</value>
+  </data>
+  <data name="ConfirmButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CategoryReportPageTitle" xml:space="preserve">
+    <value>Category Report</value>
+  </data>
+  <data name="CategoryReportExpenseLabel" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="CategoryReportEmptyStateText" xml:space="preserve">
+    <value>No expense records for this period</value>
+  </data>
+  <data name="CategoryReportInfoTitle" xml:space="preserve">
+    <value>Category Details</value>
+  </data>
+  <data name="CategoryReportCountHeader" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="CategoryReportAmountHeader" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="CategoryReportPercentageHeader" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="AllPeriodLabel" xml:space="preserve">
+    <value>All Time</value>
+  </data>
+  <data name="AssetTrendPageTitle" xml:space="preserve">
+    <value>Asset Trend</value>
+  </data>
+  <data name="AssetTrendStockLabel" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="AssetTrendCashLabel" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="AssetTrendFirstTradeLabel" xml:space="preserve">
+    <value>FirstTrade</value>
+  </data>
+  <data name="AssetTrendPropertyLabel" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="AssetTrendImportCsvButton" xml:space="preserve">
+    <value>Import CSV</value>
+  </data>
+  <data name="AssetTrendCancelEditButton" xml:space="preserve">
+    <value>Cancel Edit</value>
+  </data>
+  <data name="AssetTrendChartSectionTitle" xml:space="preserve">
+    <value>Asset Trend Chart</value>
+  </data>
+  <data name="AssetTrendEmptyStateText" xml:space="preserve">
+    <value>No asset snapshots yet</value>
+  </data>
+  <data name="AssetTrendHistorySectionTitle" xml:space="preserve">
+    <value>Snapshot History</value>
+  </data>
+  <data name="AssetTrendImportSummaryFormat" xml:space="preserve">
+    <value>Imported {0}, Skipped {1}</value>
+  </data>
+  <data name="AssetTrendCreateTitle" xml:space="preserve">
+    <value>Add Asset Snapshot</value>
+  </data>
+  <data name="AssetTrendEditTitle" xml:space="preserve">
+    <value>Edit Asset Snapshot</value>
+  </data>
+  <data name="AssetTrendCreateButton" xml:space="preserve">
+    <value>Add Snapshot</value>
+  </data>
+  <data name="AssetTrendUpdateButton" xml:space="preserve">
+    <value>Update Snapshot</value>
+  </data>
+  <data name="AssetTrendEditingSnapshotFormat" xml:space="preserve">
+    <value>Editing asset snapshot for {0:yyyy/MM/dd}</value>
+  </data>
+  <data name="AssetTrendImportPickerTitle" xml:space="preserve">
+    <value>Select Asset Snapshot CSV</value>
+  </data>
+  <data name="AssetTrendImportConfirmTitle" xml:space="preserve">
+    <value>Confirm Import</value>
+  </data>
+  <data name="AssetTrendImportConfirmMessage" xml:space="preserve">
+    <value>This will clear all current asset snapshots and rebuild them from the selected CSV.</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AssetTrendPropertySeriesName" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="AssetTrendLatestTotalCaptionFormat" xml:space="preserve">
+    <value>Latest Total Assets ({0:yyyy/MM/dd})</value>
+  </data>
+  <data name="AssetTrendTotalSeriesName" xml:space="preserve">
+    <value>Total</value>
+  </data>
 </root>

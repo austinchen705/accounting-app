@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 public class AssetTrendViewModel : BindableObject
 {
     private readonly AssetSnapshotService _assetSnapshotService;
+    private readonly ILocalizationService _localizationService;
     private DateTime _snapshotDate = DateTime.Today;
     private decimal _stock;
     private decimal _cash;
@@ -31,9 +32,10 @@ public class AssetTrendViewModel : BindableObject
 
     public event EventHandler? EditRequested;
 
-    public AssetTrendViewModel(AssetSnapshotService assetSnapshotService)
+    public AssetTrendViewModel(AssetSnapshotService assetSnapshotService, ILocalizationService localizationService)
     {
         _assetSnapshotService = assetSnapshotService;
+        _localizationService = localizationService;
         AddSnapshotCommand = new Command(async () => await AddSnapshotAsync());
         EditSnapshotCommand = new Command<AssetSnapshot>(BeginEditSnapshot);
         CancelEditCommand = new Command(CancelEdit);
@@ -119,7 +121,10 @@ public class AssetTrendViewModel : BindableObject
         set { _skippedCount = value; OnPropertyChanged(); OnPropertyChanged(nameof(ImportSummaryText)); OnPropertyChanged(nameof(HasImportSummary)); }
     }
 
-    public string ImportSummaryText => $"Imported {ImportedCount}, Skipped {SkippedCount}";
+    public string ImportSummaryText => string.Format(
+        _localizationService.GetString("AssetTrendImportSummaryFormat"),
+        ImportedCount,
+        SkippedCount);
 
     public bool HasImportSummary => ImportedCount > 0 || SkippedCount > 0;
 
@@ -132,11 +137,17 @@ public class AssetTrendViewModel : BindableObject
         get => _editingSnapshotId.HasValue;
     }
 
-    public string FormTitleText => IsEditing ? "編輯資產快照" : "新增資產快照";
+    public string FormTitleText => IsEditing
+        ? _localizationService.GetString("AssetTrendEditTitle")
+        : _localizationService.GetString("AssetTrendCreateTitle");
 
-    public string EditingSnapshotDisplayText => IsEditing ? $"正在編輯 {SnapshotDate:yyyy/MM/dd} 的資產快照" : string.Empty;
+    public string EditingSnapshotDisplayText => IsEditing
+        ? string.Format(_localizationService.GetString("AssetTrendEditingSnapshotFormat"), SnapshotDate)
+        : string.Empty;
 
-    public string SubmitButtonText => IsEditing ? "更新快照" : "新增快照";
+    public string SubmitButtonText => IsEditing
+        ? _localizationService.GetString("AssetTrendUpdateButton")
+        : _localizationService.GetString("AssetTrendCreateButton");
 
     public ObservableCollection<AssetSnapshot> Snapshots { get; } = new();
     public ObservableCollection<string> ImportErrorDetails { get; } = new();
@@ -238,7 +249,7 @@ public class AssetTrendViewModel : BindableObject
         {
             var result = await FilePicker.Default.PickAsync(new PickOptions
             {
-                PickerTitle = "選擇資產快照 CSV",
+                PickerTitle = _localizationService.GetString("AssetTrendImportPickerTitle"),
                 FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
                 {
                     { DevicePlatform.iOS, ["public.comma-separated-values-text"] },
@@ -254,7 +265,11 @@ public class AssetTrendViewModel : BindableObject
             }
 
             var confirm = await Application.Current!.Windows[0].Page!
-                .DisplayAlert("確認匯入", "這會清空目前所有資產快照並改用所選 CSV 重新建立。", "匯入", "取消");
+                .DisplayAlert(
+                    _localizationService.GetString("AssetTrendImportConfirmTitle"),
+                    _localizationService.GetString("AssetTrendImportConfirmMessage"),
+                    _localizationService.GetString("ImportButtonText"),
+                    _localizationService.GetString("CancelButtonText"));
             if (!confirm)
             {
                 return;
@@ -342,10 +357,10 @@ public class AssetTrendViewModel : BindableObject
             BuildStackedColumnSeries("Stock", trend.StockValues, "#2563EB"),
             BuildStackedColumnSeries("Cash", trend.CashValues, "#16A34A"),
             BuildStackedColumnSeries("FirstTrade", trend.FirstTradeValues, "#EA580C"),
-            BuildStackedColumnSeries("Property(房產)", trend.PropertyValues, "#7C3AED"),
+            BuildStackedColumnSeries(_localizationService.GetString("AssetTrendPropertySeriesName"), trend.PropertyValues, "#7C3AED"),
             new LineSeries<double>
             {
-                Name = "Total",
+                Name = _localizationService.GetString("AssetTrendTotalSeriesName"),
                 Values = trend.Totals.Select(value => (double)value).ToArray(),
                 Fill = null,
                 GeometrySize = 8,
@@ -392,7 +407,9 @@ public class AssetTrendViewModel : BindableObject
             .OrderBy(snapshot => snapshot.Date)
             .Last();
         var latestTotal = totals[^1];
-        LatestTotalCaptionText = $"最新總資產 ({latestSnapshot.Date:yyyy/MM/dd})";
+        LatestTotalCaptionText = string.Format(
+            _localizationService.GetString("AssetTrendLatestTotalCaptionFormat"),
+            latestSnapshot.Date);
         LatestTotalAmountText = latestTotal.ToString("#,0.##");
     }
 

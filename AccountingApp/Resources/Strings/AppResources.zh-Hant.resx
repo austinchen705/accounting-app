@@ -195,4 +195,160 @@
   <data name="BudgetSetButton" xml:space="preserve">
     <value>設定</value>
   </data>
+  <data name="CategoryListPageTitle" xml:space="preserve">
+    <value>分類管理</value>
+  </data>
+  <data name="CategoryListDescription" xml:space="preserve">
+    <value>查看目前分類，並直接新增、編輯或刪除未使用的分類。</value>
+  </data>
+  <data name="CategoryNameLabel" xml:space="preserve">
+    <value>分類名稱</value>
+  </data>
+  <data name="CategoryNamePlaceholder" xml:space="preserve">
+    <value>例如：咖啡、健身、房租</value>
+  </data>
+  <data name="CategoryTypeLabel" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="CategoryTypePickerTitle" xml:space="preserve">
+    <value>選擇類型</value>
+  </data>
+  <data name="CategoryCancelEditButton" xml:space="preserve">
+    <value>取消編輯</value>
+  </data>
+  <data name="CategoryListEmptyStateText" xml:space="preserve">
+    <value>目前尚無分類</value>
+  </data>
+  <data name="CategoryFormCreateTitle" xml:space="preserve">
+    <value>新增分類</value>
+  </data>
+  <data name="CategoryFormEditTitle" xml:space="preserve">
+    <value>編輯分類</value>
+  </data>
+  <data name="CategoryFormCreateButton" xml:space="preserve">
+    <value>新增分類</value>
+  </data>
+  <data name="CategoryFormUpdateButton" xml:space="preserve">
+    <value>更新分類</value>
+  </data>
+  <data name="CategoryTypeExpenseLabel" xml:space="preserve">
+    <value>支出</value>
+  </data>
+  <data name="CategoryTypeIncomeLabel" xml:space="preserve">
+    <value>收入</value>
+  </data>
+  <data name="CategoryNameRequiredError" xml:space="preserve">
+    <value>請輸入分類名稱</value>
+  </data>
+  <data name="CategoryNameDuplicateError" xml:space="preserve">
+    <value>此分類名稱已存在</value>
+  </data>
+  <data name="CategoryNotFoundError" xml:space="preserve">
+    <value>找不到要編輯的分類</value>
+  </data>
+  <data name="CategoryDeleteBlockedTitle" xml:space="preserve">
+    <value>無法刪除</value>
+  </data>
+  <data name="CategoryDeleteBlockedMessage" xml:space="preserve">
+    <value>此分類下仍有記錄，無法刪除。</value>
+  </data>
+  <data name="ConfirmButtonText" xml:space="preserve">
+    <value>確定</value>
+  </data>
+  <data name="CategoryReportPageTitle" xml:space="preserve">
+    <value>分類報告</value>
+  </data>
+  <data name="CategoryReportExpenseLabel" xml:space="preserve">
+    <value>支出</value>
+  </data>
+  <data name="CategoryReportEmptyStateText" xml:space="preserve">
+    <value>此期間沒有支出紀錄</value>
+  </data>
+  <data name="CategoryReportInfoTitle" xml:space="preserve">
+    <value>分類資訊</value>
+  </data>
+  <data name="CategoryReportCountHeader" xml:space="preserve">
+    <value>筆數</value>
+  </data>
+  <data name="CategoryReportAmountHeader" xml:space="preserve">
+    <value>金額</value>
+  </data>
+  <data name="CategoryReportPercentageHeader" xml:space="preserve">
+    <value>佔比</value>
+  </data>
+  <data name="AllPeriodLabel" xml:space="preserve">
+    <value>全部期間</value>
+  </data>
+  <data name="AssetTrendPageTitle" xml:space="preserve">
+    <value>資產趨勢</value>
+  </data>
+  <data name="AssetTrendStockLabel" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="AssetTrendCashLabel" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="AssetTrendFirstTradeLabel" xml:space="preserve">
+    <value>FirstTrade</value>
+  </data>
+  <data name="AssetTrendPropertyLabel" xml:space="preserve">
+    <value>Property(房產)</value>
+  </data>
+  <data name="AssetTrendImportCsvButton" xml:space="preserve">
+    <value>匯入 CSV</value>
+  </data>
+  <data name="AssetTrendCancelEditButton" xml:space="preserve">
+    <value>取消編輯</value>
+  </data>
+  <data name="AssetTrendChartSectionTitle" xml:space="preserve">
+    <value>資產走勢圖</value>
+  </data>
+  <data name="AssetTrendEmptyStateText" xml:space="preserve">
+    <value>尚無資產快照資料</value>
+  </data>
+  <data name="AssetTrendHistorySectionTitle" xml:space="preserve">
+    <value>快照歷史</value>
+  </data>
+  <data name="AssetTrendImportSummaryFormat" xml:space="preserve">
+    <value>已匯入 {0} 筆，略過 {1} 筆</value>
+  </data>
+  <data name="AssetTrendCreateTitle" xml:space="preserve">
+    <value>新增資產快照</value>
+  </data>
+  <data name="AssetTrendEditTitle" xml:space="preserve">
+    <value>編輯資產快照</value>
+  </data>
+  <data name="AssetTrendCreateButton" xml:space="preserve">
+    <value>新增快照</value>
+  </data>
+  <data name="AssetTrendUpdateButton" xml:space="preserve">
+    <value>更新快照</value>
+  </data>
+  <data name="AssetTrendEditingSnapshotFormat" xml:space="preserve">
+    <value>正在編輯 {0:yyyy/MM/dd} 的資產快照</value>
+  </data>
+  <data name="AssetTrendImportPickerTitle" xml:space="preserve">
+    <value>選擇資產快照 CSV</value>
+  </data>
+  <data name="AssetTrendImportConfirmTitle" xml:space="preserve">
+    <value>確認匯入</value>
+  </data>
+  <data name="AssetTrendImportConfirmMessage" xml:space="preserve">
+    <value>這會清空目前所有資產快照並改用所選 CSV 重新建立。</value>
+  </data>
+  <data name="ImportButtonText" xml:space="preserve">
+    <value>匯入</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AssetTrendPropertySeriesName" xml:space="preserve">
+    <value>Property(房產)</value>
+  </data>
+  <data name="AssetTrendLatestTotalCaptionFormat" xml:space="preserve">
+    <value>最新總資產 ({0:yyyy/MM/dd})</value>
+  </data>
+  <data name="AssetTrendTotalSeriesName" xml:space="preserve">
+    <value>Total</value>
+  </data>
 </root>

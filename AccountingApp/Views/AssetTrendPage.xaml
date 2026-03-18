@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.AssetTrendPage"
-             Title="資產趨勢">
+             Title="{markup:Translate AssetTrendPageTitle}">
 
     <ScrollView x:Name="PageScrollView">
         <VerticalStackLayout Padding="16,16,16,24" Spacing="12">
-            <Label Text="資產趨勢" Style="{StaticResource PageTitleStyle}" />
+            <Label Text="{markup:Translate AssetTrendPageTitle}" Style="{StaticResource PageTitleStyle}" />
 
             <Frame x:Name="SnapshotFormFrame" Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="14">
@@ -19,7 +20,7 @@
                            IsVisible="{Binding IsEditing}" />
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
                         <Label Text="Stock" Style="{StaticResource CaptionStyle}" />
-                        <Label Grid.Column="1" Text="日期" Style="{StaticResource CaptionStyle}" />
+                        <Label Grid.Column="1" Text="{markup:Translate TransactionFormDateLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Grid.Row="1" Style="{StaticResource InputContainerStyle}">
                             <Entry Text="{Binding Stock}"
                                    Keyboard="Numeric"
@@ -35,8 +36,8 @@
                     </Grid>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
-                        <Label Text="Cash" Style="{StaticResource CaptionStyle}" />
-                        <Label Grid.Column="1" Text="FirstTrade" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate AssetTrendCashLabel}" Style="{StaticResource CaptionStyle}" />
+                        <Label Grid.Column="1" Text="{markup:Translate AssetTrendFirstTradeLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Grid.Row="1" Style="{StaticResource InputContainerStyle}">
                             <Entry Text="{Binding Cash}"
                                    Keyboard="Numeric"
@@ -49,7 +50,7 @@
                         </Frame>
                     </Grid>
 
-                    <Label Text="Property(房產)" Style="{StaticResource CaptionStyle}" />
+                    <Label Text="{markup:Translate AssetTrendPropertyLabel}" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
                         <Entry Text="{Binding Property}"
                                Keyboard="Numeric"
@@ -60,7 +61,7 @@
                                                  Date="{Binding SnapshotDate}"
                                                  ShowTrigger="False" />
 
-                    <Button Text="匯入 CSV" Command="{Binding ImportCsvCommand}" />
+                    <Button Text="{markup:Translate AssetTrendImportCsvButton}" Command="{Binding ImportCsvCommand}" />
                     <Label Text="{Binding ImportSummaryText}"
                            Style="{StaticResource CaptionStyle}"
                            IsVisible="{Binding HasImportSummary}" />
@@ -69,7 +70,7 @@
                            TextColor="#B45309"
                            IsVisible="{Binding HasImportErrorDetails}" />
                     <Button Text="{Binding SubmitButtonText}" Command="{Binding AddSnapshotCommand}" />
-                    <Button Text="取消編輯"
+                    <Button Text="{markup:Translate AssetTrendCancelEditButton}"
                             Command="{Binding CancelEditCommand}"
                             IsVisible="{Binding IsEditing}" />
                     <Label Text="{Binding ErrorMessage}"
@@ -80,7 +81,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="資產走勢圖" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate AssetTrendChartSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <VerticalStackLayout Spacing="2"
                                          IsVisible="{Binding HasSnapshots}">
                         <Label Text="{Binding LatestTotalCaptionText}"
@@ -95,7 +96,7 @@
                                         LegendPosition="Bottom"
                                         HeightRequest="280"
                                         IsVisible="{Binding HasSnapshots}" />
-                    <Label Text="尚無資產快照資料"
+                    <Label Text="{markup:Translate AssetTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasSnapshots, Converter={StaticResource InverseBoolConverter}}" />
@@ -104,7 +105,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="快照歷史" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{markup:Translate AssetTrendHistorySectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <CollectionView ItemsSource="{Binding Snapshots}"
                                     SelectionMode="None">
                         <CollectionView.ItemsLayout>
@@ -119,7 +120,7 @@
                                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
                                             <Frame Style="{StaticResource InputContainerStyle}" Padding="12" HasShadow="False">
                                                 <VerticalStackLayout Spacing="4">
-                                                    <Label Text="Stock" Style="{StaticResource CaptionStyle}" />
+                                                    <Label Text="{markup:Translate AssetTrendStockLabel}" Style="{StaticResource CaptionStyle}" />
                                                     <Label Text="{Binding Stock, StringFormat='{}{0:N0}'}"
                                                            FontAttributes="Bold"
                                                            FontSize="16" />
@@ -127,7 +128,7 @@
                                             </Frame>
                                             <Frame Grid.Column="1" Style="{StaticResource InputContainerStyle}" Padding="12" HasShadow="False">
                                                 <VerticalStackLayout Spacing="4">
-                                                    <Label Text="Cash" Style="{StaticResource CaptionStyle}" />
+                                                    <Label Text="{markup:Translate AssetTrendCashLabel}" Style="{StaticResource CaptionStyle}" />
                                                     <Label Text="{Binding Cash, StringFormat='{}{0:N0}'}"
                                                            FontAttributes="Bold"
                                                            FontSize="16" />
@@ -135,7 +136,7 @@
                                             </Frame>
                                             <Frame Grid.Row="1" Style="{StaticResource InputContainerStyle}" Padding="12" HasShadow="False">
                                                 <VerticalStackLayout Spacing="4">
-                                                    <Label Text="FirstTrade" Style="{StaticResource CaptionStyle}" />
+                                                    <Label Text="{markup:Translate AssetTrendFirstTradeLabel}" Style="{StaticResource CaptionStyle}" />
                                                     <Label Text="{Binding FirstTrade, StringFormat='{}{0:N0}'}"
                                                            FontAttributes="Bold"
                                                            FontSize="16" />
@@ -143,7 +144,7 @@
                                             </Frame>
                                             <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource InputContainerStyle}" Padding="12" HasShadow="False">
                                                 <VerticalStackLayout Spacing="4">
-                                                    <Label Text="Property(房產)" Style="{StaticResource CaptionStyle}" />
+                                                    <Label Text="{markup:Translate AssetTrendPropertyLabel}" Style="{StaticResource CaptionStyle}" />
                                                     <Label Text="{Binding Property, StringFormat='{}{0:N0}'}"
                                                            FontAttributes="Bold"
                                                            FontSize="16" />
@@ -151,10 +152,10 @@
                                             </Frame>
                                         </Grid>
                                         <HorizontalStackLayout Spacing="10" Margin="0,4,0,0">
-                                            <Button Text="編輯"
+                                            <Button Text="{markup:Translate EditButtonText}"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditSnapshotCommand}"
                                                     CommandParameter="{Binding .}" />
-                                            <Button Text="刪除"
+                                            <Button Text="{markup:Translate DeleteButtonText}"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteSnapshotCommand}"
                                                     CommandParameter="{Binding .}" />
                                         </HorizontalStackLayout>

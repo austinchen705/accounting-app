@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 
 public class CategoryReportViewModel : BindableObject
 {
+    private readonly ILocalizationService _localizationService;
     public class CategoryReportItem
     {
         public string CategoryName { get; set; } = string.Empty;
@@ -29,7 +30,7 @@ public class CategoryReportViewModel : BindableObject
     private bool _hasCategoryData;
     private string _periodLabel = string.Empty;
     private string _totalExpenseText = "0";
-    private string _currencyText = "單位：TWD";
+    private string _currencyText = "TWD";
     private bool _canNavigatePeriods = true;
     private Color _weekButtonBackgroundColor = Color.FromArgb("#007AFF");
     private Color _weekButtonTextColor = Colors.White;
@@ -131,9 +132,10 @@ public class CategoryReportViewModel : BindableObject
     public ICommand NextPeriodCommand { get; }
     public ICommand SetRangeCommand { get; }
 
-    public CategoryReportViewModel(StatisticsService statisticsService, DataRefreshService refreshService)
+    public CategoryReportViewModel(StatisticsService statisticsService, ILocalizationService localizationService, DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         PreviousPeriodCommand = new Command(() => ChangePeriod(-1));
         NextPeriodCommand = new Command(() => ChangePeriod(1));
@@ -151,7 +153,7 @@ public class CategoryReportViewModel : BindableObject
             return;
         }
 
-        CurrencyText = $"單位：{Preferences.Get("base_currency", "TWD")}";
+        CurrencyText = string.Format(_localizationService.GetString("UnitPrefix"), Preferences.Get("base_currency", "TWD"));
         TotalExpenseText = summary.TotalExpense.ToString("N0");
         HasCategoryData = summary.Categories.Count > 0;
 
@@ -252,7 +254,7 @@ public class CategoryReportViewModel : BindableObject
     {
         if (_selectedRange == ExpenseCategoryReportRange.All)
         {
-            return "全部期間";
+            return _localizationService.GetString("AllPeriodLabel");
         }
 
         if (_selectedRange == ExpenseCategoryReportRange.Month)

@@ -27,12 +27,13 @@ public class CategoryReportPageCopyTests
 
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("分類報告", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("CategoryReportPageTitle", xaml);
         Assert.Contains("Week", xaml);
         Assert.Contains("Month", xaml);
         Assert.Contains("Year", xaml);
         Assert.Contains("All", xaml);
-        Assert.Contains("此期間沒有支出紀錄", xaml);
+        Assert.Contains("CategoryReportEmptyStateText", xaml);
         Assert.Contains("CategoryItems", xaml);
     }
 

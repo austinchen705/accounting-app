@@ -10,6 +10,7 @@ public class AssetTrendPageLayoutTests
 
         Assert.Contains("AssetTrendPage", shellXaml);
         Assert.Contains("<lvc:CartesianChart", pageXaml);
+        Assert.Contains("markup:Translate", pageXaml);
         Assert.Contains("Stock", pageXaml);
         Assert.Contains("FirstTrade", pageXaml);
         Assert.Contains("LatestTotalCaptionText", pageXaml);
@@ -25,6 +26,7 @@ public class AssetTrendPageLayoutTests
 
         Assert.Contains("ImportCsvCommand", pageXaml);
         Assert.Contains("ImportErrorDetailsText", pageXaml);
+        Assert.Contains("AssetTrendImportCsvButton", pageXaml);
         Assert.DoesNotContain("從 Google Drive 匯入", pageXaml);
     }
 
@@ -39,7 +41,7 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("IsEditing", pageXaml);
         Assert.Contains("FormTitleText", pageXaml);
         Assert.Contains("EditingSnapshotDisplayText", pageXaml);
-        Assert.Contains("Property(房產)", pageXaml);
+        Assert.Contains("AssetTrendPropertyLabel", pageXaml);
         Assert.DoesNotContain("Fund3", pageXaml);
         Assert.Contains("ScrollToAsync", codeBehind);
     }

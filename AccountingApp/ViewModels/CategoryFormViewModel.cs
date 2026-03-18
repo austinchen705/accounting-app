@@ -5,10 +5,11 @@ using AccountingApp.Services;
 namespace AccountingApp.ViewModels;
 public class CategoryFormViewModel : BindableObject
 {
+    private readonly ILocalizationService _localizationService;
     public class CategoryTypeOption
     {
         public string Value { get; init; } = "expense";
-        public string Label { get; init; } = "支出";
+        public string Label { get; init; } = string.Empty;
     }
 
     private readonly CategoryService _categoryService;
@@ -43,10 +44,7 @@ public class CategoryFormViewModel : BindableObject
     }
 
     public List<CategoryTypeOption> TypeOptions { get; } =
-    [
-        new() { Value = "expense", Label = "支出" },
-        new() { Value = "income", Label = "收入" }
-    ];
+    [];
 
     public CategoryTypeOption? SelectedTypeOption
     {
@@ -71,15 +69,25 @@ public class CategoryFormViewModel : BindableObject
         set { _hasError = value; OnPropertyChanged(); }
     }
 
-    public string FormTitle => _isEdit ? "編輯分類" : "新增分類";
+    public string FormTitle => _isEdit
+        ? _localizationService.GetString("CategoryFormEditTitle")
+        : _localizationService.GetString("CategoryFormCreateTitle");
 
-    public string SubmitButtonText => _isEdit ? "更新分類" : "新增分類";
+    public string SubmitButtonText => _isEdit
+        ? _localizationService.GetString("CategoryFormUpdateButton")
+        : _localizationService.GetString("CategoryFormCreateButton");
 
     public ICommand SaveCommand { get; }
 
-    public CategoryFormViewModel(CategoryService categoryService)
+    public CategoryFormViewModel(CategoryService categoryService, ILocalizationService localizationService)
     {
         _categoryService = categoryService;
+        _localizationService = localizationService;
+        TypeOptions =
+        [
+            new() { Value = "expense", Label = _localizationService.GetString("CategoryTypeExpenseLabel") },
+            new() { Value = "income", Label = _localizationService.GetString("CategoryTypeIncomeLabel") }
+        ];
         _selectedTypeOption = TypeOptions.First();
         SaveCommand = new Command(async () => await SaveAsync());
     }
@@ -88,7 +96,7 @@ public class CategoryFormViewModel : BindableObject
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            ErrorMessage = "請輸入分類名稱";
+            ErrorMessage = _localizationService.GetString("CategoryNameRequiredError");
             HasError = true;
             return;
         }
@@ -102,7 +110,7 @@ public class CategoryFormViewModel : BindableObject
 
         if (duplicated)
         {
-            ErrorMessage = "此分類名稱已存在";
+            ErrorMessage = _localizationService.GetString("CategoryNameDuplicateError");
             HasError = true;
             return;
         }
@@ -112,7 +120,7 @@ public class CategoryFormViewModel : BindableObject
             var existing = await _categoryService.GetByIdAsync(CategoryId);
             if (existing is null)
             {
-                ErrorMessage = "找不到要編輯的分類";
+                ErrorMessage = _localizationService.GetString("CategoryNotFoundError");
                 HasError = true;
                 return;
             }

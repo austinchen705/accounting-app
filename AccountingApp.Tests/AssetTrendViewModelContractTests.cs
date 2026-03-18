@@ -20,11 +20,12 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("IsEditing", vmCode);
         Assert.Contains("FormTitleText", vmCode);
         Assert.Contains("EditingSnapshotDisplayText", vmCode);
-        Assert.Contains("Property(房產)", vmCode);
+        Assert.Contains("AssetTrendPropertySeriesName", vmCode);
         Assert.Contains("EditRequested", vmCode);
         Assert.Contains("ImportErrorDetails", vmCode);
         Assert.Contains("ReplaceImportCsvAsync", vmCode);
-        Assert.Contains("確認匯入", vmCode);
+        Assert.Contains("AssetTrendImportConfirmTitle", vmCode);
+        Assert.Contains("AssetTrendImportSummaryFormat", vmCode);
         Assert.Contains("BuildCondensedDateLabels", vmCode);
         Assert.Contains("LatestTotalCaptionText", vmCode);
         Assert.Contains("LatestTotalAmountText", vmCode);
