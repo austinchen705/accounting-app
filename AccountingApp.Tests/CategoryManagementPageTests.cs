@@ -10,8 +10,8 @@ public class CategoryManagementPageTests
             "../../../../AccountingApp/AppShell.xaml"));
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("Title=\"分類管理\"", xaml);
         Assert.Contains("CategoryListPage", xaml);
+        Assert.Contains("CategoryManagementTabTitle", xaml);
     }
 
     [Fact]
@@ -22,9 +22,11 @@ public class CategoryManagementPageTests
             "../../../../AccountingApp/Views/CategoryListPage.xaml"));
         var xaml = File.ReadAllText(path);
 
+        Assert.Contains("markup:Translate", xaml);
         Assert.Contains("FormTitleText", xaml);
-        Assert.Contains("Text=\"編輯\"", xaml);
-        Assert.Contains("Text=\"刪除\"", xaml);
+        Assert.Contains("CategoryNameLabel", xaml);
+        Assert.Contains("EditButtonText", xaml);
+        Assert.Contains("DeleteButtonText", xaml);
         Assert.Contains("HasCategories", xaml);
         Assert.Contains("SubmitButtonText", xaml);
         Assert.Contains("CancelEditCommand", xaml);
@@ -39,6 +41,8 @@ public class CategoryManagementPageTests
         var xaml = File.ReadAllText(path);
 
         Assert.Contains("Title=\"{Binding FormTitle}\"", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("CategoryNameLabel", xaml);
         Assert.Contains("Text=\"{Binding SubmitButtonText}\"", xaml);
     }
 
@@ -50,7 +54,9 @@ public class CategoryManagementPageTests
             "../../../../AccountingApp/ViewModels/CategoryFormViewModel.cs"));
         var code = File.ReadAllText(path);
 
-        Assert.Contains("public string FormTitle => _isEdit ? \"編輯分類\" : \"新增分類\";", code);
-        Assert.Contains("public string SubmitButtonText => _isEdit ? \"更新分類\" : \"新增分類\";", code);
+        Assert.Contains("CategoryFormEditTitle", code);
+        Assert.Contains("CategoryFormCreateTitle", code);
+        Assert.Contains("CategoryFormUpdateButton", code);
+        Assert.Contains("CategoryFormCreateButton", code);
     }
 }

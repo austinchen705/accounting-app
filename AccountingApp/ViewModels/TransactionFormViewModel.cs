@@ -13,6 +13,7 @@ public class TransactionFormViewModel : BindableObject
     private readonly TransactionService _transactionService;
     private readonly CategoryService _categoryService;
     private readonly BudgetService _budgetService;
+    private readonly ILocalizationService _localizationService;
 
     private int _transactionId;
     private string _amountText = string.Empty;
@@ -97,11 +98,16 @@ public class TransactionFormViewModel : BindableObject
 
     public ICommand SaveCommand { get; }
 
-    public TransactionFormViewModel(TransactionService transactionService, CategoryService categoryService, BudgetService budgetService)
+    public TransactionFormViewModel(
+        TransactionService transactionService,
+        CategoryService categoryService,
+        BudgetService budgetService,
+        ILocalizationService localizationService)
     {
         _transactionService = transactionService;
         _categoryService = categoryService;
         _budgetService = budgetService;
+        _localizationService = localizationService;
         SaveCommand = new Command(async () => await SaveAsync());
     }
 
@@ -137,7 +143,7 @@ public class TransactionFormViewModel : BindableObject
     {
         if (!AmountInputSanitizer.TryParsePositiveDecimal(AmountText, out var amount))
         {
-            ErrorMessage = "請輸入有效金額（大於 0）";
+            ErrorMessage = _localizationService.GetString("TransactionFormInvalidAmountError");
             HasError = true;
             return;
         }

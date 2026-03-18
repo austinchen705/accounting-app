@@ -10,6 +10,7 @@ public class SettingsViewModel : BindableObject
     private readonly ExportService _exportService;
     private readonly GoogleDriveService _googleDriveService;
     private readonly JsonImportService _jsonImportService;
+    private readonly ILocalizationService _localizationService;
     private readonly DataRefreshService _refreshService;
     private string _selectedCurrency;
     private string _selectedGoogleDriveFolder;
@@ -60,16 +61,20 @@ public class SettingsViewModel : BindableObject
     public ICommand ManageCategoriesCommand { get; }
     public ICommand ImportJsonCommand { get; }
     public ICommand ImportJsonFromUrlCommand { get; }
+    public ICommand SetTraditionalChineseCommand { get; }
+    public ICommand SetEnglishCommand { get; }
 
     public SettingsViewModel(
         ExportService exportService,
         GoogleDriveService googleDriveService,
         JsonImportService jsonImportService,
+        ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
         _exportService = exportService;
         _googleDriveService = googleDriveService;
         _jsonImportService = jsonImportService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         _selectedCurrency = Preferences.Get("base_currency", "TWD");
         _selectedGoogleDriveFolder = Preferences.Get("google_drive_folder_name", "尚未設定");
@@ -82,6 +87,8 @@ public class SettingsViewModel : BindableObject
         ManageCategoriesCommand = new Command(async () => await NavigateToCategoryListAsync());
         ImportJsonCommand = new Command(async () => await ImportJsonAsync());
         ImportJsonFromUrlCommand = new Command(async () => await ImportJsonFromUrlAsync());
+        SetTraditionalChineseCommand = new Command(async () => await SetLanguageAsync(LocalizationService.DefaultLanguage));
+        SetEnglishCommand = new Command(async () => await SetLanguageAsync("en"));
     }
 
     private async Task ExportAsync(bool excel)
@@ -255,5 +262,20 @@ public class SettingsViewModel : BindableObject
             "覆蓋舊交易資料" => true,
             _ => null
         };
+    }
+
+    private async Task SetLanguageAsync(string languageCode)
+    {
+        if (string.Equals(_localizationService.CurrentLanguage, languageCode, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        await _localizationService.SetLanguageAsync(languageCode);
+
+        if (Application.Current is App app)
+        {
+            await app.ResetShellForLanguageChangeAsync();
+        }
     }
 }

@@ -17,11 +17,12 @@ public class TransactionListLayoutTests
     {
         var xaml = ReadTransactionListXaml();
 
-        Assert.Contains("Text=\"當日總覽\"", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("TransactionListDailySummaryTitle", xaml);
         Assert.Contains("SummaryCurrencyText", xaml);
-        Assert.Contains("Text=\"{Binding DailyIncome, StringFormat='收入 {0:N0}'}\"", xaml);
-        Assert.Contains("Text=\"{Binding DailyExpense, StringFormat='支出 {0:N0}'}\"", xaml);
-        Assert.Contains("Text=\"{Binding DailyBalance, StringFormat='結餘 {0:N0}'}\"", xaml);
+        Assert.Contains("Text=\"{Binding DailyIncomeText}\"", xaml);
+        Assert.Contains("Text=\"{Binding DailyExpenseText}\"", xaml);
+        Assert.Contains("Text=\"{Binding DailyBalanceText}\"", xaml);
     }
 
     [Fact]

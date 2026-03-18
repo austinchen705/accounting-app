@@ -12,6 +12,8 @@ namespace AccountingApp.ViewModels;
 
 public class StatisticsViewModel : BindableObject
 {
+    private readonly ILocalizedFormattingService _localizedFormattingService;
+    private readonly ILocalizationService _localizationService;
     public class ChartLegendItem
     {
         public string Name { get; set; } = string.Empty;
@@ -43,7 +45,7 @@ public class StatisticsViewModel : BindableObject
     public DateTime SelectedMonth
     {
         get => _selectedMonth;
-        set { _selectedMonth = value; OnPropertyChanged(); _ = LoadAsync(); }
+        set { _selectedMonth = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedMonthLabel)); _ = LoadAsync(); }
     }
 
     public ISeries[] PieSeries
@@ -136,12 +138,20 @@ public class StatisticsViewModel : BindableObject
         set { _minNetText = value; OnPropertyChanged(); }
     }
 
+    public string SelectedMonthLabel => _localizedFormattingService.FormatMonthYear(SelectedMonth);
+
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
 
-    public StatisticsViewModel(StatisticsService statisticsService, DataRefreshService refreshService)
+    public StatisticsViewModel(
+        StatisticsService statisticsService,
+        ILocalizedFormattingService localizedFormattingService,
+        ILocalizationService localizationService,
+        DataRefreshService refreshService)
     {
         _statisticsService = statisticsService;
+        _localizedFormattingService = localizedFormattingService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         PreviousMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(-1));
         NextMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(1));
@@ -207,7 +217,7 @@ public class StatisticsViewModel : BindableObject
         var stats = await _statisticsService.GetLast12MonthsStatsAsync(monthDate);
         if (loadVersion != _loadVersion) return;
         var baseCurrency = Preferences.Get("base_currency", "TWD");
-        BarChartUnitText = $"單位：{baseCurrency}";
+        BarChartUnitText = string.Format(_localizationService.GetString("UnitPrefix"), baseCurrency);
         HasBarData = stats.Any(s => s.Income > 0 || s.Expense > 0);
 
         var months = stats.Select(s => s.Month.Replace("月", "")).ToArray();
@@ -218,7 +228,7 @@ public class StatisticsViewModel : BindableObject
         [
             new LineSeries<double>
             {
-                Name = "收入",
+                Name = _localizationService.GetString("StatisticsIncomeSeriesName"),
                 Values = incomeValues,
                 Fill = null,
                 GeometrySize = 8,
@@ -229,7 +239,7 @@ public class StatisticsViewModel : BindableObject
             },
             new LineSeries<double>
             {
-                Name = "支出",
+                Name = _localizationService.GetString("StatisticsExpenseSeriesName"),
                 Values = expenseValues,
                 Fill = null,
                 GeometrySize = 8,

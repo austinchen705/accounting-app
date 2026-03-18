@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.CategoryListPage"
              x:Name="CategoryListPageRoot"
-             Title="分類管理">
+             Title="{markup:Translate CategoryListPageTitle}">
     <ScrollView x:Name="CategoryScrollView">
         <VerticalStackLayout Padding="16,16,16,24" Spacing="0">
             <Frame x:Name="CategoryFormCard"
@@ -11,21 +12,21 @@
                 <VerticalStackLayout Spacing="14">
                     <Label Text="{Binding FormTitleText}"
                            Style="{StaticResource SectionTitleStyle}" />
-                    <Label Text="查看目前分類，並直接新增、編輯或刪除未使用的分類。"
+                    <Label Text="{markup:Translate CategoryListDescription}"
                            Style="{StaticResource CaptionStyle}" />
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="分類名稱" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate CategoryNameLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Style="{StaticResource InputContainerStyle}">
                             <Entry Text="{Binding Name}"
-                                   Placeholder="例如：咖啡、健身、房租" />
+                                   Placeholder="{markup:Translate CategoryNamePlaceholder}" />
                         </Frame>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="類型" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate CategoryTypeLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Style="{StaticResource InputContainerStyle}">
-                            <Picker Title="選擇類型"
+                            <Picker Title="{markup:Translate CategoryTypePickerTitle}"
                                     ItemsSource="{Binding TypeOptions}"
                                     SelectedItem="{Binding SelectedTypeOption}"
                                     ItemDisplayBinding="{Binding Label}" />
@@ -41,7 +42,7 @@
                         <Button Text="{Binding SubmitButtonText}"
                                 Grid.Column="0"
                                 Command="{Binding SaveCommand}" />
-                        <Button Text="取消編輯"
+                        <Button Text="{markup:Translate CategoryCancelEditButton}"
                                 Grid.Column="1"
                                 Command="{Binding CancelEditCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
@@ -50,7 +51,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Label Text="目前尚無分類"
+            <Label Text="{markup:Translate CategoryListEmptyStateText}"
                    Style="{StaticResource CaptionStyle}"
                    HorizontalOptions="Center"
                    Margin="0,12,0,0"
@@ -88,12 +89,12 @@
 
                                 <Grid ColumnDefinitions="*,*"
                                       ColumnSpacing="10">
-                                    <Button Text="編輯"
+                                    <Button Text="{markup:Translate EditButtonText}"
                                             Grid.Column="0"
                                             Command="{Binding Source={x:Reference CategoryListPageRoot}, Path=BindingContext.EditCommand}"
                                             CommandParameter="{Binding .}"
                                             Style="{StaticResource SecondaryButtonStyle}" />
-                                    <Button Text="刪除"
+                                    <Button Text="{markup:Translate DeleteButtonText}"
                                             Grid.Column="1"
                                             Command="{Binding Source={x:Reference CategoryListPageRoot}, Path=BindingContext.DeleteCommand}"
                                             CommandParameter="{Binding .}"

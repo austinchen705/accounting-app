@@ -8,6 +8,7 @@ namespace AccountingApp.ViewModels;
 public class CategoryListViewModel : BindableObject
 {
     private readonly CategoryService _categoryService;
+    private readonly ILocalizationService _localizationService;
     private bool _hasCategories;
     private int _editingCategoryId;
     private string _name = string.Empty;
@@ -22,22 +23,22 @@ public class CategoryListViewModel : BindableObject
     public class CategoryTypeOption
     {
         public string Value { get; init; } = "expense";
-        public string Label { get; init; } = "支出";
+        public string Label { get; init; } = string.Empty;
     }
 
     public class CategoryItemViewModel
     {
         public required Category Category { get; init; }
+        public required ILocalizationService LocalizationService { get; init; }
         public string Name => Category.Name;
-        public string TypeText => Category.Type == "income" ? "收入" : "支出";
+        public string TypeText => Category.Type == "income"
+            ? LocalizationService.GetString("CategoryTypeIncomeLabel")
+            : LocalizationService.GetString("CategoryTypeExpenseLabel");
     }
 
     public ObservableCollection<CategoryItemViewModel> Categories { get; } = new();
     public List<CategoryTypeOption> TypeOptions { get; } =
-    [
-        new() { Value = "expense", Label = "支出" },
-        new() { Value = "income", Label = "收入" }
-    ];
+    [];
 
     public bool HasCategories
     {
@@ -92,18 +93,28 @@ public class CategoryListViewModel : BindableObject
         }
     }
 
-    public string FormTitleText => IsEditing ? "編輯分類" : "新增分類";
+    public string FormTitleText => IsEditing
+        ? _localizationService.GetString("CategoryFormEditTitle")
+        : _localizationService.GetString("CategoryFormCreateTitle");
 
-    public string SubmitButtonText => IsEditing ? "更新分類" : "新增分類";
+    public string SubmitButtonText => IsEditing
+        ? _localizationService.GetString("CategoryFormUpdateButton")
+        : _localizationService.GetString("CategoryFormCreateButton");
 
     public ICommand SaveCommand { get; }
     public ICommand EditCommand { get; }
     public ICommand CancelEditCommand { get; }
     public ICommand DeleteCommand { get; }
 
-    public CategoryListViewModel(CategoryService categoryService)
+    public CategoryListViewModel(CategoryService categoryService, ILocalizationService localizationService)
     {
         _categoryService = categoryService;
+        _localizationService = localizationService;
+        TypeOptions =
+        [
+            new() { Value = "expense", Label = _localizationService.GetString("CategoryTypeExpenseLabel") },
+            new() { Value = "income", Label = _localizationService.GetString("CategoryTypeIncomeLabel") }
+        ];
         _selectedTypeOption = TypeOptions.First();
         SaveCommand = new Command(async () => await SaveAsync());
         EditCommand = new Command<object>(item => BeginEdit(ResolveCategory(item)));
@@ -116,7 +127,7 @@ public class CategoryListViewModel : BindableObject
         var list = await _categoryService.GetAllAsync();
         Categories.Clear();
         foreach (var c in list)
-            Categories.Add(new CategoryItemViewModel { Category = c });
+            Categories.Add(new CategoryItemViewModel { Category = c, LocalizationService = _localizationService });
         HasCategories = Categories.Count > 0;
     }
 
@@ -124,7 +135,7 @@ public class CategoryListViewModel : BindableObject
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            ErrorMessage = "請輸入分類名稱";
+            ErrorMessage = _localizationService.GetString("CategoryNameRequiredError");
             HasError = true;
             return;
         }
@@ -138,7 +149,7 @@ public class CategoryListViewModel : BindableObject
 
         if (duplicated)
         {
-            ErrorMessage = "此分類名稱已存在";
+            ErrorMessage = _localizationService.GetString("CategoryNameDuplicateError");
             HasError = true;
             return;
         }
@@ -148,7 +159,7 @@ public class CategoryListViewModel : BindableObject
             var existing = await _categoryService.GetByIdAsync(_editingCategoryId);
             if (existing is null)
             {
-                ErrorMessage = "找不到要編輯的分類";
+                ErrorMessage = _localizationService.GetString("CategoryNotFoundError");
                 HasError = true;
                 return;
             }
@@ -162,7 +173,7 @@ public class CategoryListViewModel : BindableObject
             var added = await _categoryService.AddAsync(new Category { Name = normalizedName, Type = Type });
             if (!added)
             {
-                ErrorMessage = "此分類名稱已存在";
+                ErrorMessage = _localizationService.GetString("CategoryNameDuplicateError");
                 HasError = true;
                 return;
             }
@@ -186,6 +197,7 @@ public class CategoryListViewModel : BindableObject
         else
             await Application.Current!.Windows[0].Page!
                 .DisplayAlert("無法刪除", "此分類下仍有記錄，無法刪除。", "確定");
+                
     }
 
     private static Category? ResolveCategory(object? item)

@@ -11,6 +11,7 @@ public class HomeViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
     private readonly CurrencyService _currencyService;
+    private readonly ILocalizationService _localizationService;
     private readonly DataRefreshService _refreshService;
     private decimal _totalIncome;
     private decimal _totalExpense;
@@ -56,7 +57,9 @@ public class HomeViewModel : BindableObject
         set { _periodLabel = value; OnPropertyChanged(); }
     }
 
-    public string SummaryTitle => $"{PeriodLabel} 總覽";
+    public string SummaryTitle => string.Format(
+        _localizationService.GetString("SummaryTitleFormat"),
+        PeriodLabel);
 
     public string SummaryCurrencyText
     {
@@ -164,10 +167,12 @@ public class HomeViewModel : BindableObject
     public HomeViewModel(
         TransactionService transactionService,
         CurrencyService currencyService,
+        ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
         _transactionService = transactionService;
         _currencyService = currencyService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         AddTransactionCommand = new Command(async () =>
             await Shell.Current.GoToAsync("TransactionFormPage"));
@@ -186,7 +191,7 @@ public class HomeViewModel : BindableObject
         Balance = income - expense;
 
         var baseCurrency = Preferences.Get("base_currency", "TWD");
-        SummaryCurrencyText = $"單位：{baseCurrency}";
+        SummaryCurrencyText = string.Format(_localizationService.GetString("UnitPrefix"), baseCurrency);
         var window = HomeDateWindow.GetDateWindow(_selectedRange, _anchorDate);
         var recent = await _transactionService.GetByDateRangeAsync(window.Start, window.EndExclusive);
         RecentTransactions.Clear();

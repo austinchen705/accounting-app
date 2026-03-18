@@ -19,6 +19,7 @@ public class BudgetViewModel : BindableObject
 {
     private readonly BudgetService _budgetService;
     private readonly CategoryService _categoryService;
+    private readonly ILocalizationService _localizationService;
     private string _currentMonth;
     private bool _hasBudgetItems;
 
@@ -30,10 +31,11 @@ public class BudgetViewModel : BindableObject
         set { _hasBudgetItems = value; OnPropertyChanged(); }
     }
 
-    public BudgetViewModel(BudgetService budgetService, CategoryService categoryService)
+    public BudgetViewModel(BudgetService budgetService, CategoryService categoryService, ILocalizationService localizationService)
     {
         _budgetService = budgetService;
         _categoryService = categoryService;
+        _localizationService = localizationService;
         _currentMonth = DateTime.Today.ToString("yyyy-MM");
         SetBudgetCommand = new Command<BudgetItemViewModel>(async item => await SetBudgetAsync(item));
     }
@@ -62,7 +64,10 @@ public class BudgetViewModel : BindableObject
     private async Task SetBudgetAsync(BudgetItemViewModel item)
     {
         var result = await Application.Current!.Windows[0].Page!
-            .DisplayPromptAsync("設定預算", $"請輸入「{item.CategoryName}」本月預算金額", keyboard: Keyboard.Numeric);
+            .DisplayPromptAsync(
+                _localizationService.GetString("BudgetSetButton"),
+                $"{item.CategoryName}",
+                keyboard: Keyboard.Numeric);
         if (result == null) return;
         if (!decimal.TryParse(result, out var amount) || amount <= 0)
         {

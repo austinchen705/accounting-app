@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.CategoryFormPage"
              Title="{Binding FormTitle}">
     <ScrollView>
@@ -9,21 +10,21 @@
                 <VerticalStackLayout Spacing="14">
                     <Label Text="{Binding FormTitle}"
                            Style="{StaticResource SectionTitleStyle}" />
-                    <Label Text="建立新分類，或調整既有分類的名稱與類型。"
+                    <Label Text="{markup:Translate CategoryListDescription}"
                            Style="{StaticResource CaptionStyle}" />
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="分類名稱" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate CategoryNameLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Style="{StaticResource InputContainerStyle}">
                             <Entry Text="{Binding Name}"
-                                   Placeholder="例如：咖啡、健身、房租" />
+                                   Placeholder="{markup:Translate CategoryNamePlaceholder}" />
                         </Frame>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="類型" Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate CategoryTypeLabel}" Style="{StaticResource CaptionStyle}" />
                         <Frame Style="{StaticResource InputContainerStyle}">
-                            <Picker Title="選擇類型"
+                            <Picker Title="{markup:Translate CategoryTypePickerTitle}"
                                     ItemsSource="{Binding TypeOptions}"
                                     SelectedItem="{Binding SelectedTypeOption}"
                                     ItemDisplayBinding="{Binding Label}" />

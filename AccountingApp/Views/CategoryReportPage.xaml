@@ -2,13 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.CategoryReportPage"
              Shell.NavBarIsVisible="False"
-             Title="分類報告">
+             Title="{markup:Translate CategoryReportPageTitle}">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,12,16,24" Spacing="0">
-            <Label Text="分類報告"
+            <Label Text="{markup:Translate CategoryReportPageTitle}"
                    Style="{StaticResource SectionTitleStyle}"
                    Margin="0,0,0,12" />
 
@@ -16,7 +17,7 @@
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
                         <Button Grid.Column="0"
-                                Text="Week"
+                                Text="{markup:Translate CategoryReportRangeWeek}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Week"
                                 BackgroundColor="{Binding WeekButtonBackgroundColor}"
@@ -25,7 +26,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="1"
-                                Text="Month"
+                                Text="{markup:Translate CategoryReportRangeMonth}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Month"
                                 BackgroundColor="{Binding MonthButtonBackgroundColor}"
@@ -34,7 +35,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="2"
-                                Text="Year"
+                                Text="{markup:Translate CategoryReportRangeYear}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="Year"
                                 BackgroundColor="{Binding YearButtonBackgroundColor}"
@@ -43,7 +44,7 @@
                                 HeightRequest="38"
                                 Padding="0" />
                         <Button Grid.Column="3"
-                                Text="All"
+                                Text="{markup:Translate CategoryReportRangeAll}"
                                 Command="{Binding SetRangeCommand}"
                                 CommandParameter="All"
                                 BackgroundColor="{Binding AllButtonBackgroundColor}"
@@ -90,7 +91,7 @@
                         <VerticalStackLayout HorizontalOptions="Center"
                                              VerticalOptions="Center"
                                              Spacing="4">
-                            <Label Text="支出"
+                            <Label Text="{markup:Translate CategoryReportExpenseLabel}"
                                    HorizontalOptions="Center"
                                    Style="{StaticResource CaptionStyle}" />
                             <Label Text="{Binding TotalExpenseText}"
@@ -104,7 +105,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Label Text="此期間沒有支出紀錄"
+                    <Label Text="{markup:Translate CategoryReportEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasCategoryData, Converter={StaticResource InverseBoolConverter}}" />
@@ -116,13 +117,13 @@
                     <Grid ColumnDefinitions="*,Auto,Auto,Auto"
                           ColumnSpacing="8"
                           IsVisible="{Binding HasCategoryData}">
-                        <Label Text="分類資訊" Style="{StaticResource SectionTitleStyle}" />
-                        <Label Grid.Column="1" Text="筆數" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
-                        <Label Grid.Column="2" Text="金額" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
-                        <Label Grid.Column="3" Text="佔比" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                        <Label Text="{markup:Translate CategoryReportInfoTitle}" Style="{StaticResource SectionTitleStyle}" />
+                        <Label Grid.Column="1" Text="{markup:Translate CategoryReportCountHeader}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                        <Label Grid.Column="2" Text="{markup:Translate CategoryReportAmountHeader}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
+                        <Label Grid.Column="3" Text="{markup:Translate CategoryReportPercentageHeader}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="End" />
                     </Grid>
 
-                    <Label Text="此期間沒有支出紀錄"
+                    <Label Text="{markup:Translate CategoryReportEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasCategoryData, Converter={StaticResource InverseBoolConverter}}" />

@@ -10,7 +10,9 @@ public class CategoryReportPageCopyTests
             "../../../../AccountingApp/AppShell.xaml"));
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("Title=\"分類報告\"", xaml);
+        Assert.Contains("CategoryReportPage", xaml);
+        Assert.Contains("CategoryReportTabTitle", xaml);
+        Assert.Contains("markup:Translate", xaml);
         Assert.Contains("CategoryReportPage", xaml);
     }
 
@@ -25,12 +27,13 @@ public class CategoryReportPageCopyTests
 
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("分類報告", xaml);
-        Assert.Contains("Week", xaml);
-        Assert.Contains("Month", xaml);
-        Assert.Contains("Year", xaml);
-        Assert.Contains("All", xaml);
-        Assert.Contains("此期間沒有支出紀錄", xaml);
+        Assert.Contains("markup:Translate", xaml);
+        Assert.Contains("CategoryReportPageTitle", xaml);
+        Assert.Contains("CategoryReportRangeWeek", xaml);
+        Assert.Contains("CategoryReportRangeMonth", xaml);
+        Assert.Contains("CategoryReportRangeYear", xaml);
+        Assert.Contains("CategoryReportRangeAll", xaml);
+        Assert.Contains("CategoryReportEmptyStateText", xaml);
         Assert.Contains("CategoryItems", xaml);
     }
 
@@ -44,5 +47,7 @@ public class CategoryReportPageCopyTests
 
         Assert.Contains("CategoryColorPalette.BuildDistinctHexColors", code);
         Assert.Contains("colorByCategory[category.CategoryName]", code);
+        Assert.Contains("ILocalizedFormattingService", code);
+        Assert.Contains("FormatCategoryReportPeriod", code);
     }
 }

@@ -9,6 +9,7 @@ public class TransactionListViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
     private readonly CurrencyService _currencyService;
+    private readonly ILocalizationService _localizationService;
     private readonly DataRefreshService _refreshService;
     private bool _hasTransactions;
     private decimal _dailyIncome;
@@ -69,6 +70,10 @@ public class TransactionListViewModel : BindableObject
         set { _summaryCurrencyText = value; OnPropertyChanged(); }
     }
 
+    public string DailyIncomeText => string.Format(_localizationService.GetString("TransactionListIncomeFormat"), DailyIncome);
+    public string DailyExpenseText => string.Format(_localizationService.GetString("TransactionListExpenseFormat"), DailyExpense);
+    public string DailyBalanceText => string.Format(_localizationService.GetString("TransactionListBalanceFormat"), DailyBalance);
+
     public ObservableCollection<TransactionItemViewModel> Transactions { get; } = new();
 
     private DateTime _filterDate = DateTime.Today;
@@ -94,10 +99,12 @@ public class TransactionListViewModel : BindableObject
     public TransactionListViewModel(
         TransactionService transactionService,
         CurrencyService currencyService,
+        ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
         _transactionService = transactionService;
         _currencyService = currencyService;
+        _localizationService = localizationService;
         _refreshService = refreshService;
         DeleteCommand = new Command<TransactionItemViewModel>(async t =>
         {
@@ -135,7 +142,7 @@ public class TransactionListViewModel : BindableObject
             });
         }
         HasTransactions = Transactions.Count > 0;
-        SummaryCurrencyText = $"單位：{baseCurrency}";
+        SummaryCurrencyText = string.Format(_localizationService.GetString("UnitPrefix"), baseCurrency);
 
         decimal income = 0;
         decimal expense = 0;
@@ -156,6 +163,9 @@ public class TransactionListViewModel : BindableObject
         DailyIncome = income;
         DailyExpense = expense;
         DailyBalance = DailyIncome - DailyExpense;
+        OnPropertyChanged(nameof(DailyIncomeText));
+        OnPropertyChanged(nameof(DailyExpenseText));
+        OnPropertyChanged(nameof(DailyBalanceText));
     }
 
     private async Task DeleteAsync(Transaction transaction)
