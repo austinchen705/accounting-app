@@ -67,6 +67,9 @@ digraph brainstorming {
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
+- Use `sequential-thinking` only when the problem has meaningful branching trade-offs, spans multiple modules, or has enough ambiguity that you might otherwise miss assumptions.
+- Do **not** default to `sequential-thinking` for simple requests, small UI tweaks, or straightforward single-file changes; it slows the conversation and can over-design the solution.
+- If you do use `sequential-thinking`, keep it as an internal structuring aid. It must not replace the one-question-at-a-time dialogue with the user.
 
 **Presenting the design:**
 - Once you believe you understand what you're building, present the design
@@ -94,3 +97,4 @@ digraph brainstorming {
 - **Explore alternatives** - Always propose 2-3 approaches before settling
 - **Incremental validation** - Present design, get approval before moving on
 - **Be flexible** - Go back and clarify when something doesn't make sense
+- **Use deeper thinking selectively** - Reserve `sequential-thinking` for complex, high-branching design work rather than every brainstorming session
