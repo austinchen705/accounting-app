@@ -324,6 +324,18 @@
   <data name="CategoryReportRangeAll" xml:space="preserve">
     <value>全部</value>
   </data>
+  <data name="CategoryReportTransactionDetailPageTitle" xml:space="preserve">
+    <value>分類明細</value>
+  </data>
+  <data name="CategoryReportTransactionDetailTotalLabel" xml:space="preserve">
+    <value>總計</value>
+  </data>
+  <data name="CategoryReportTransactionDetailEmptyStateText" xml:space="preserve">
+    <value>此期間內此分類沒有符合的支出記錄</value>
+  </data>
+  <data name="CategoryReportTransactionDetailNoNoteText" xml:space="preserve">
+    <value>無備註</value>
+  </data>
   <data name="AssetTrendPageTitle" xml:space="preserve">
     <value>資產趨勢</value>
   </data>

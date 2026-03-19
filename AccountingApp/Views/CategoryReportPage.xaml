@@ -129,13 +129,17 @@
                            IsVisible="{Binding HasCategoryData, Converter={StaticResource InverseBoolConverter}}" />
 
                     <CollectionView ItemsSource="{Binding CategoryItems}"
-                                    SelectionMode="None"
+                                    SelectionMode="Single"
                                     IsVisible="{Binding HasCategoryData}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
                                       ColumnSpacing="8"
                                       Padding="0,8">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCategoryDetailCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
                                     <BoxView WidthRequest="12"
                                              HeightRequest="12"
                                              CornerRadius="6"

@@ -7,7 +7,7 @@ public record CategoryStat(string CategoryName, decimal Amount);
 public record MonthStat(string Month, decimal Income, decimal Expense);
 public record ExpenseCategoryTrendStat(string CategoryName, decimal[] Values);
 public record ExpenseCategoryOptionStat(int CategoryId, string CategoryName);
-public record ExpenseCategoryReportItemStat(string CategoryName, int TransactionCount, decimal Amount);
+public record ExpenseCategoryReportItemStat(int CategoryId, string CategoryName, int TransactionCount, decimal Amount);
 public record ExpenseCategoryReportStat(decimal TotalExpense, IReadOnlyList<ExpenseCategoryReportItemStat> Categories);
 
 public class StatisticsService
@@ -118,10 +118,37 @@ public class StatisticsService
             summary.TotalExpense,
             summary.Categories
                 .Select(category => new ExpenseCategoryReportItemStat(
+                    category.CategoryId,
                     category.CategoryName,
                     category.TransactionCount,
                     category.Amount))
                 .ToList());
+    }
+
+    public async Task<IReadOnlyList<ExpenseCategoryTransactionDetailStat>> GetExpenseCategoryTransactionsAsync(
+        int categoryId,
+        string categoryName,
+        ExpenseCategoryReportRange range,
+        DateTime anchorDate)
+    {
+        var baseCurrency = Preferences.Get("base_currency", "TWD");
+        var transactions = await _transactionService.GetAllAsync();
+
+        return await ExpenseCategoryTransactionDetailReport.BuildAsync(
+            transactions.Select(transaction => new ExpenseCategoryReportDetailSourceTransaction(
+                transaction.Id,
+                transaction.CategoryId,
+                transaction.Note,
+                transaction.Date,
+                transaction.Amount,
+                transaction.Currency,
+                transaction.Type)),
+            categoryId,
+            categoryName,
+            range,
+            anchorDate,
+            baseCurrency,
+            _currencyService.GetRateAsync);
     }
 
     private async Task<List<ExpenseCategoryMonthValue>> BuildExpenseCategoryMonthValuesAsync(IReadOnlyList<string> months)

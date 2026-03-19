@@ -324,6 +324,18 @@
   <data name="CategoryReportRangeAll" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="CategoryReportTransactionDetailPageTitle" xml:space="preserve">
+    <value>Category Transactions</value>
+  </data>
+  <data name="CategoryReportTransactionDetailTotalLabel" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="CategoryReportTransactionDetailEmptyStateText" xml:space="preserve">
+    <value>No expense transactions found for this category in the selected period</value>
+  </data>
+  <data name="CategoryReportTransactionDetailNoNoteText" xml:space="preserve">
+    <value>No note</value>
+  </data>
   <data name="AssetTrendPageTitle" xml:space="preserve">
     <value>Asset Trend</value>
   </data>
