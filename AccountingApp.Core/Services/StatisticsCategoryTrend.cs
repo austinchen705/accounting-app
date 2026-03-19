@@ -38,4 +38,25 @@ public static class StatisticsCategoryTrend
             })
             .ToArray();
     }
+
+    public static ExpenseCategoryTrendSeries BuildSingleExpenseCategorySeries(
+        IReadOnlyList<string> months,
+        IReadOnlyList<ExpenseCategoryMonthValue> values,
+        int categoryId)
+    {
+        var categoryValues = values
+            .Where(v => v.CategoryId == categoryId)
+            .ToList();
+
+        var categoryName = categoryValues
+            .Select(v => v.CategoryName)
+            .FirstOrDefault()
+            ?? string.Empty;
+        var monthAmounts = categoryValues.ToDictionary(v => v.Month, v => v.Amount);
+        var seriesValues = months
+            .Select(month => monthAmounts.TryGetValue(month, out var amount) ? amount : 0m)
+            .ToArray();
+
+        return new ExpenseCategoryTrendSeries(categoryName, seriesValues);
+    }
 }

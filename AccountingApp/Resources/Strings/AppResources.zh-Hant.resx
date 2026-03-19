@@ -192,6 +192,24 @@
   <data name="StatisticsCategoryTrendSectionTitle" xml:space="preserve">
     <value>前 5 大支出分類近 12 個月趨勢</value>
   </data>
+  <data name="StatisticsCategoryTrendTop5ModeLabel" xml:space="preserve">
+    <value>前 5 大</value>
+  </data>
+  <data name="StatisticsCategoryTrendSingleCategoryModeLabel" xml:space="preserve">
+    <value>單一分類</value>
+  </data>
+  <data name="StatisticsCategoryTrendPickerTitle" xml:space="preserve">
+    <value>選擇分類</value>
+  </data>
+  <data name="StatisticsCategoryTrendSelectCategoryPrompt" xml:space="preserve">
+    <value>請先選擇分類以查看近 12 個月趨勢</value>
+  </data>
+  <data name="StatisticsCategoryTrendTop5EmptyStateText" xml:space="preserve">
+    <value>所選月份區間尚無足夠分類資料產生趨勢圖</value>
+  </data>
+  <data name="StatisticsCategoryTrendSingleCategoryEmptyStateText" xml:space="preserve">
+    <value>所選分類在此期間沒有可用趨勢資料</value>
+  </data>
   <data name="StatisticsCategoryTrendEmptyStateText" xml:space="preserve">
     <value>所選月份區間尚無足夠分類資料產生趨勢圖</value>
   </data>

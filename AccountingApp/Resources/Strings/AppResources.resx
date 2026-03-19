@@ -192,6 +192,24 @@
   <data name="StatisticsCategoryTrendSectionTitle" xml:space="preserve">
     <value>Top 5 Expense Categories 12-Month Trend</value>
   </data>
+  <data name="StatisticsCategoryTrendTop5ModeLabel" xml:space="preserve">
+    <value>Top 5</value>
+  </data>
+  <data name="StatisticsCategoryTrendSingleCategoryModeLabel" xml:space="preserve">
+    <value>Single Category</value>
+  </data>
+  <data name="StatisticsCategoryTrendPickerTitle" xml:space="preserve">
+    <value>Select Category</value>
+  </data>
+  <data name="StatisticsCategoryTrendSelectCategoryPrompt" xml:space="preserve">
+    <value>Select a category to view its 12-month trend</value>
+  </data>
+  <data name="StatisticsCategoryTrendTop5EmptyStateText" xml:space="preserve">
+    <value>Not enough category data to build the trend chart</value>
+  </data>
+  <data name="StatisticsCategoryTrendSingleCategoryEmptyStateText" xml:space="preserve">
+    <value>No trend data for the selected category in this period</value>
+  </data>
   <data name="StatisticsCategoryTrendEmptyStateText" xml:space="preserve">
     <value>Not enough category data to build the trend chart</value>
   </data>

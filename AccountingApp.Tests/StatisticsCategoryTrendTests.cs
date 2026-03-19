@@ -43,4 +43,20 @@ public class StatisticsCategoryTrendTests
         Assert.Equal("餐飲", series[0].CategoryName);
         Assert.Equal("交通", series[1].CategoryName);
     }
+
+    [Fact]
+    public void BuildSingleExpenseCategorySeries_fills_missing_months_with_zero()
+    {
+        var months = new[] { "2026-01", "2026-02", "2026-03" };
+        var values = new[]
+        {
+            new ExpenseCategoryMonthValue(7, "Rent", "2026-01", 1200),
+            new ExpenseCategoryMonthValue(7, "Rent", "2026-03", 1300)
+        };
+
+        var series = StatisticsCategoryTrend.BuildSingleExpenseCategorySeries(months, values, 7);
+
+        Assert.Equal("Rent", series.CategoryName);
+        Assert.Equal(new decimal[] { 1200, 0, 1300 }, series.Values);
+    }
 }
