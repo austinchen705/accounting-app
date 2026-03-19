@@ -48,6 +48,7 @@ public static class MauiProgram
         builder.Services.AddTransient<AssetTrendViewModel>();
         builder.Services.AddTransient<CategoryListViewModel>();
         builder.Services.AddTransient<CategoryFormViewModel>();
+        builder.Services.AddTransient<CategoryReportTransactionDetailViewModel>();
 
         // Tab pages
         builder.Services.AddTransient<HomePage>();
@@ -62,6 +63,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TransactionFormPage>();
         builder.Services.AddTransient<CategoryListPage>();
         builder.Services.AddTransient<CategoryFormPage>();
+        builder.Services.AddTransient<CategoryReportTransactionDetailPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows.Input;
 using AccountingApp.Core.Services;
 using AccountingApp.Services;
+using AccountingApp.Views;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -16,6 +17,7 @@ public class CategoryReportViewModel : BindableObject
     private readonly ILocalizationService _localizationService;
     public class CategoryReportItem
     {
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string TransactionCountText { get; set; } = "0";
         public string AmountText { get; set; } = "0";
@@ -132,6 +134,7 @@ public class CategoryReportViewModel : BindableObject
     public ICommand PreviousPeriodCommand { get; }
     public ICommand NextPeriodCommand { get; }
     public ICommand SetRangeCommand { get; }
+    public ICommand OpenCategoryDetailCommand { get; }
 
     public CategoryReportViewModel(
         StatisticsService statisticsService,
@@ -146,6 +149,7 @@ public class CategoryReportViewModel : BindableObject
         PreviousPeriodCommand = new Command(() => ChangePeriod(-1));
         NextPeriodCommand = new Command(() => ChangePeriod(1));
         SetRangeCommand = new Command<string>(SetRange);
+        OpenCategoryDetailCommand = new Command<CategoryReportItem>(async item => await OpenCategoryDetailAsync(item));
         UpdateRangeState();
         _refreshService.DataChanged += OnDataChanged;
     }
@@ -193,6 +197,7 @@ public class CategoryReportViewModel : BindableObject
 
             CategoryItems.Add(new CategoryReportItem
             {
+                CategoryId = category.CategoryId,
                 CategoryName = category.CategoryName,
                 TransactionCountText = category.TransactionCount.ToString(),
                 AmountText = category.Amount.ToString("N0"),
@@ -278,6 +283,21 @@ public class CategoryReportViewModel : BindableObject
 
     private Color GetButtonText(ExpenseCategoryReportRange range) =>
         _selectedRange == range ? Colors.White : Color.FromArgb("#007AFF");
+
+    private async Task OpenCategoryDetailAsync(CategoryReportItem? item)
+    {
+        if (item is null)
+        {
+            return;
+        }
+
+        var route = $"{nameof(CategoryReportTransactionDetailPage)}" +
+                    $"?categoryId={item.CategoryId}" +
+                    $"&categoryName={Uri.EscapeDataString(item.CategoryName)}" +
+                    $"&range={_selectedRange}" +
+                    $"&anchorDate={Uri.EscapeDataString(_anchorDate.ToString("O"))}";
+        await Shell.Current.GoToAsync(route);
+    }
 
     private async void OnDataChanged()
     {
