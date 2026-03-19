@@ -6,6 +6,7 @@ namespace AccountingApp.Services;
 public record CategoryStat(string CategoryName, decimal Amount);
 public record MonthStat(string Month, decimal Income, decimal Expense);
 public record ExpenseCategoryTrendStat(string CategoryName, decimal[] Values);
+public record ExpenseCategoryOptionStat(int CategoryId, string CategoryName);
 public record ExpenseCategoryReportItemStat(string CategoryName, int TransactionCount, decimal Amount);
 public record ExpenseCategoryReportStat(decimal TotalExpense, IReadOnlyList<ExpenseCategoryReportItemStat> Categories);
 
@@ -64,31 +65,31 @@ public class StatisticsService
         var months = StatisticsTrendWindow.GetTwelveMonthWindow(anchorMonth)
             .Select(date => date.ToString("yyyy-MM"))
             .ToArray();
-        var baseCurrency = Preferences.Get("base_currency", "TWD");
-        var categories = await _categoryService.GetAllAsync();
-        var values = new List<ExpenseCategoryMonthValue>();
-
-        foreach (var month in months)
-        {
-            var txns = await _transactionService.GetByMonthAsync(month);
-            var grouped = new Dictionary<int, decimal>();
-
-            foreach (var txn in txns.Where(t => t.Type == "expense"))
-            {
-                var rate = await _currencyService.GetRateAsync(txn.Currency, baseCurrency);
-                grouped.TryAdd(txn.CategoryId, 0);
-                grouped[txn.CategoryId] += txn.Amount * (decimal)rate;
-            }
-
-            foreach (var (categoryId, amount) in grouped)
-            {
-                var name = categories.FirstOrDefault(c => c.Id == categoryId)?.Name ?? "未知";
-                values.Add(new ExpenseCategoryMonthValue(categoryId, name, month, amount));
-            }
-        }
+        var values = await BuildExpenseCategoryMonthValuesAsync(months);
 
         return StatisticsCategoryTrend.BuildTopExpenseCategorySeries(months, values, topCount)
             .Select(series => new ExpenseCategoryTrendStat(series.CategoryName, series.Values))
+            .ToList();
+    }
+
+    public async Task<ExpenseCategoryTrendStat?> GetExpenseCategoryTrendAsync(DateTime anchorMonth, int categoryId)
+    {
+        var months = StatisticsTrendWindow.GetTwelveMonthWindow(anchorMonth)
+            .Select(date => date.ToString("yyyy-MM"))
+            .ToArray();
+        var values = await BuildExpenseCategoryMonthValuesAsync(months);
+        var series = StatisticsCategoryTrend.BuildSingleExpenseCategorySeries(months, values, categoryId);
+
+        return string.IsNullOrWhiteSpace(series.CategoryName)
+            ? null
+            : new ExpenseCategoryTrendStat(series.CategoryName, series.Values);
+    }
+
+    public async Task<IReadOnlyList<ExpenseCategoryOptionStat>> GetExpenseCategoriesAsync()
+    {
+        return (await _categoryService.GetByTypeAsync("expense"))
+            .OrderBy(category => category.Name, StringComparer.Ordinal)
+            .Select(category => new ExpenseCategoryOptionStat(category.Id, category.Name))
             .ToList();
     }
 
@@ -121,5 +122,34 @@ public class StatisticsService
                     category.TransactionCount,
                     category.Amount))
                 .ToList());
+    }
+
+    private async Task<List<ExpenseCategoryMonthValue>> BuildExpenseCategoryMonthValuesAsync(IReadOnlyList<string> months)
+    {
+        var baseCurrency = Preferences.Get("base_currency", "TWD");
+        var categories = await _categoryService.GetAllAsync();
+        var categoryNameById = categories.ToDictionary(category => category.Id, category => category.Name);
+        var values = new List<ExpenseCategoryMonthValue>();
+
+        foreach (var month in months)
+        {
+            var txns = await _transactionService.GetByMonthAsync(month);
+            var grouped = new Dictionary<int, decimal>();
+
+            foreach (var txn in txns.Where(t => t.Type == "expense"))
+            {
+                var rate = await _currencyService.GetRateAsync(txn.Currency, baseCurrency);
+                grouped.TryAdd(txn.CategoryId, 0);
+                grouped[txn.CategoryId] += txn.Amount * (decimal)rate;
+            }
+
+            foreach (var (categoryId, amount) in grouped)
+            {
+                categoryNameById.TryGetValue(categoryId, out var categoryName);
+                values.Add(new ExpenseCategoryMonthValue(categoryId, categoryName ?? "未知", month, amount));
+            }
+        }
+
+        return values;
     }
 }

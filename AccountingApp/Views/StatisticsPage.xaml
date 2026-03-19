@@ -108,13 +108,28 @@
             <Frame Style="{StaticResource CardFrameStyle}" Margin="0,0,0,0">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{markup:Translate StatisticsCategoryTrendSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
+                    <HorizontalStackLayout Spacing="12">
+                        <RadioButton Content="{markup:Translate StatisticsCategoryTrendTop5ModeLabel}"
+                                     IsChecked="{Binding SelectedCategoryTrendMode, Converter={StaticResource StringEqualConverter}, ConverterParameter=Top5}"
+                                     Command="{Binding SelectTop5CategoryTrendModeCommand}" />
+                        <RadioButton Content="{markup:Translate StatisticsCategoryTrendSingleCategoryModeLabel}"
+                                     IsChecked="{Binding SelectedCategoryTrendMode, Converter={StaticResource StringEqualConverter}, ConverterParameter=SingleCategory}"
+                                     Command="{Binding SelectSingleCategoryTrendModeCommand}" />
+                    </HorizontalStackLayout>
+                    <Picker Title="{markup:Translate StatisticsCategoryTrendPickerTitle}"
+                            ItemsSource="{Binding AvailableExpenseCategories}"
+                            SelectedItem="{Binding SelectedExpenseCategory}"
+                            IsVisible="{Binding ShowCategoryPicker}" />
+                    <Label Text="{markup:Translate StatisticsCategoryTrendSelectCategoryPrompt}"
+                           Style="{StaticResource CaptionStyle}"
+                           IsVisible="{Binding ShowCategoryPicker}" />
                     <lvc:CartesianChart Series="{Binding CategoryTrendSeries}"
                                         XAxes="{Binding CategoryTrendXAxes}"
                                         YAxes="{Binding CategoryTrendYAxes}"
                                         LegendPosition="Bottom"
                                         HeightRequest="260"
                                         IsVisible="{Binding HasCategoryTrendData}" />
-                    <Label Text="{markup:Translate StatisticsCategoryTrendEmptyStateText}"
+                    <Label Text="{Binding CategoryTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"
                            HorizontalOptions="Center"
                            IsVisible="{Binding HasCategoryTrendData, Converter={StaticResource InverseBoolConverter}}" />

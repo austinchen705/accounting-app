@@ -14,6 +14,20 @@ public class StatisticsViewModel : BindableObject
 {
     private readonly ILocalizedFormattingService _localizedFormattingService;
     private readonly ILocalizationService _localizationService;
+    public enum CategoryTrendMode
+    {
+        Top5,
+        SingleCategory
+    }
+
+    public class ExpenseCategoryOption
+    {
+        public int Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+
+        public override string ToString() => Name;
+    }
+
     public class ChartLegendItem
     {
         public string Name { get; set; } = string.Empty;
@@ -40,7 +54,12 @@ public class StatisticsViewModel : BindableObject
     private string _expenseMoMText = "--";
     private string _maxExpenseText = "--";
     private string _minNetText = "--";
+    private string _categoryTrendEmptyStateText = string.Empty;
+    private CategoryTrendMode _selectedCategoryTrendMode = CategoryTrendMode.Top5;
+    private ExpenseCategoryOption? _selectedExpenseCategory;
     public ObservableCollection<ChartLegendItem> PieLegends { get; } = new();
+    public ObservableCollection<ExpenseCategoryOption> AvailableExpenseCategories { get; } = new();
+    public IReadOnlyList<CategoryTrendMode> CategoryTrendModes { get; } = Enum.GetValues<CategoryTrendMode>();
 
     public DateTime SelectedMonth
     {
@@ -140,8 +159,52 @@ public class StatisticsViewModel : BindableObject
 
     public string SelectedMonthLabel => _localizedFormattingService.FormatMonthYear(SelectedMonth);
 
+    public CategoryTrendMode SelectedCategoryTrendMode
+    {
+        get => _selectedCategoryTrendMode;
+        set
+        {
+            if (_selectedCategoryTrendMode == value) return;
+            _selectedCategoryTrendMode = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsTop5Mode));
+            OnPropertyChanged(nameof(IsSingleCategoryMode));
+            OnPropertyChanged(nameof(ShowCategoryPicker));
+            OnPropertyChanged(nameof(CategoryTrendEmptyStateText));
+            _ = ReloadCategoryTrendOnlyAsync();
+        }
+    }
+
+    public ExpenseCategoryOption? SelectedExpenseCategory
+    {
+        get => _selectedExpenseCategory;
+        set
+        {
+            if (_selectedExpenseCategory == value) return;
+            _selectedExpenseCategory = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CategoryTrendEmptyStateText));
+            if (IsSingleCategoryMode)
+            {
+                _ = ReloadCategoryTrendOnlyAsync();
+            }
+        }
+    }
+
+    public bool IsTop5Mode => SelectedCategoryTrendMode == CategoryTrendMode.Top5;
+    public bool IsSingleCategoryMode => SelectedCategoryTrendMode == CategoryTrendMode.SingleCategory;
+    public bool ShowCategoryPicker => IsSingleCategoryMode;
+
+    public string CategoryTrendEmptyStateText
+    {
+        get => _categoryTrendEmptyStateText;
+        private set { _categoryTrendEmptyStateText = value; OnPropertyChanged(); }
+    }
+
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
+    public ICommand SelectTop5CategoryTrendModeCommand { get; }
+    public ICommand SelectSingleCategoryTrendModeCommand { get; }
 
     public StatisticsViewModel(
         StatisticsService statisticsService,
@@ -155,7 +218,10 @@ public class StatisticsViewModel : BindableObject
         _refreshService = refreshService;
         PreviousMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(-1));
         NextMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(1));
+        SelectTop5CategoryTrendModeCommand = new Command(() => SelectedCategoryTrendMode = CategoryTrendMode.Top5);
+        SelectSingleCategoryTrendModeCommand = new Command(() => SelectedCategoryTrendMode = CategoryTrendMode.SingleCategory);
         _refreshService.DataChanged += OnDataChanged;
+        CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendEmptyStateText");
     }
 
     public async Task LoadAsync()
@@ -277,18 +343,93 @@ public class StatisticsViewModel : BindableObject
 
     private async Task LoadCategoryTrendChartAsync(DateTime monthDate, int loadVersion)
     {
+        await EnsureAvailableExpenseCategoriesAsync(loadVersion);
+        if (loadVersion != _loadVersion) return;
+
+        if (!IsSingleCategoryMode)
+        {
+            await LoadTopCategoryTrendChartAsync(monthDate, loadVersion);
+            return;
+        }
+
+        await LoadSingleCategoryTrendChartAsync(monthDate, loadVersion);
+    }
+
+    private async Task EnsureAvailableExpenseCategoriesAsync(int loadVersion)
+    {
+        var categories = await _statisticsService.GetExpenseCategoriesAsync();
+        if (loadVersion != _loadVersion) return;
+
+        var selectedCategoryId = SelectedExpenseCategory?.Id;
+        AvailableExpenseCategories.Clear();
+        foreach (var category in categories)
+        {
+            AvailableExpenseCategories.Add(new ExpenseCategoryOption
+            {
+                Id = category.CategoryId,
+                Name = category.CategoryName
+            });
+        }
+
+        if (selectedCategoryId is null) return;
+
+        var existing = AvailableExpenseCategories.FirstOrDefault(category => category.Id == selectedCategoryId.Value);
+        if (existing is null)
+        {
+            SelectedExpenseCategory = null;
+            return;
+        }
+
+        if (SelectedExpenseCategory?.Id != existing.Id)
+        {
+            SelectedExpenseCategory = existing;
+        }
+    }
+
+    private async Task LoadTopCategoryTrendChartAsync(DateTime monthDate, int loadVersion)
+    {
         var stats = await _statisticsService.GetTopExpenseCategoryTrendAsync(monthDate);
         if (loadVersion != _loadVersion) return;
 
         HasCategoryTrendData = stats.Count > 0;
+        CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendTop5EmptyStateText");
         if (!HasCategoryTrendData)
         {
-            CategoryTrendSeries = Array.Empty<ISeries>();
-            CategoryTrendXAxes = Array.Empty<Axis>();
-            CategoryTrendYAxes = Array.Empty<Axis>();
+            ClearCategoryTrendChart();
             return;
         }
 
+        ApplyCategoryTrendChart(stats, monthDate);
+    }
+
+    private async Task LoadSingleCategoryTrendChartAsync(DateTime monthDate, int loadVersion)
+    {
+        if (SelectedExpenseCategory is null)
+        {
+            HasCategoryTrendData = false;
+            CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendSelectCategoryPrompt");
+            ClearCategoryTrendChart();
+            return;
+        }
+
+        var stat = await _statisticsService.GetExpenseCategoryTrendAsync(monthDate, SelectedExpenseCategory.Id);
+        if (loadVersion != _loadVersion) return;
+
+        if (stat is null || stat.Values.All(value => value == 0))
+        {
+            HasCategoryTrendData = false;
+            CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendSingleCategoryEmptyStateText");
+            ClearCategoryTrendChart();
+            return;
+        }
+
+        HasCategoryTrendData = true;
+        CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendSingleCategoryEmptyStateText");
+        ApplyCategoryTrendChart([stat], monthDate);
+    }
+
+    private void ApplyCategoryTrendChart(IReadOnlyList<ExpenseCategoryTrendStat> stats, DateTime monthDate)
+    {
         var months = StatisticsTrendWindow.GetTwelveMonthWindow(monthDate)
             .Select(date => date.ToString("MM"))
             .ToArray();
@@ -335,6 +476,19 @@ public class StatisticsViewModel : BindableObject
                 SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
             }
         ];
+    }
+
+    private void ClearCategoryTrendChart()
+    {
+        CategoryTrendSeries = Array.Empty<ISeries>();
+        CategoryTrendXAxes = Array.Empty<Axis>();
+        CategoryTrendYAxes = Array.Empty<Axis>();
+    }
+
+    private async Task ReloadCategoryTrendOnlyAsync()
+    {
+        var version = Interlocked.Increment(ref _loadVersion);
+        await LoadCategoryTrendChartAsync(SelectedMonth, version);
     }
 
     private void ApplyTrendInsights(IReadOnlyList<MonthStat> stats)
