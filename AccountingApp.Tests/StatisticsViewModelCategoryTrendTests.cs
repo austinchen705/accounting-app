@@ -30,4 +30,16 @@ public class StatisticsViewModelCategoryTrendTests
         Assert.Contains("CategoryTrendEmptyStateText", code);
         Assert.Contains("HasCategoryTrendData", code);
     }
+
+    [Fact]
+    public void StatisticsViewModel_keeps_category_picker_items_stable_during_chart_reload()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/StatisticsViewModel.cs"));
+        var code = File.ReadAllText(path);
+
+        Assert.Contains("AvailableExpenseCategories.Count > 0", code);
+        Assert.DoesNotContain("AvailableExpenseCategories.Clear();", code);
+    }
 }

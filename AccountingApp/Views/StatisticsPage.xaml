@@ -110,16 +110,17 @@
                     <Label Text="{markup:Translate StatisticsCategoryTrendSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <HorizontalStackLayout Spacing="12">
                         <RadioButton Content="{markup:Translate StatisticsCategoryTrendTop5ModeLabel}"
-                                     IsChecked="{Binding SelectedCategoryTrendMode, Converter={StaticResource StringEqualConverter}, ConverterParameter=Top5}"
-                                     Command="{Binding SelectTop5CategoryTrendModeCommand}" />
+                                     IsChecked="{Binding IsTop5Mode}" />
                         <RadioButton Content="{markup:Translate StatisticsCategoryTrendSingleCategoryModeLabel}"
-                                     IsChecked="{Binding SelectedCategoryTrendMode, Converter={StaticResource StringEqualConverter}, ConverterParameter=SingleCategory}"
-                                     Command="{Binding SelectSingleCategoryTrendModeCommand}" />
+                                     IsChecked="{Binding IsSingleCategoryMode}" />
                     </HorizontalStackLayout>
-                    <Picker Title="{markup:Translate StatisticsCategoryTrendPickerTitle}"
-                            ItemsSource="{Binding AvailableExpenseCategories}"
-                            SelectedItem="{Binding SelectedExpenseCategory}"
-                            IsVisible="{Binding ShowCategoryPicker}" />
+                    <Frame Style="{StaticResource InputContainerStyle}"
+                           IsVisible="{Binding ShowCategoryPicker}">
+                        <Picker Title="{markup:Translate StatisticsCategoryTrendPickerTitle}"
+                                ItemsSource="{Binding AvailableExpenseCategories}"
+                                SelectedItem="{Binding SelectedExpenseCategory}"
+                                ItemDisplayBinding="{Binding Name}" />
+                    </Frame>
                     <Label Text="{markup:Translate StatisticsCategoryTrendSelectCategoryPrompt}"
                            Style="{StaticResource CaptionStyle}"
                            IsVisible="{Binding ShowCategoryPicker}" />

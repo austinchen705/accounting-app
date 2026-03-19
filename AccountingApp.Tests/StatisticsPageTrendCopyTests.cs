@@ -14,9 +14,12 @@ public class StatisticsPageTrendCopyTests
         Assert.Contains("StatisticsTrendSectionTitle", xaml);
         Assert.Contains("StatisticsCategoryTrendSectionTitle", xaml);
         Assert.Contains("CategoryTrendSeries", xaml);
-        Assert.Contains("SelectedCategoryTrendMode", xaml);
+        Assert.Contains("IsTop5Mode", xaml);
+        Assert.Contains("IsSingleCategoryMode", xaml);
         Assert.Contains("AvailableExpenseCategories", xaml);
         Assert.Contains("SelectedExpenseCategory", xaml);
+        Assert.Contains("InputContainerStyle", xaml);
+        Assert.Contains("ItemDisplayBinding=\"{Binding Name}\"", xaml);
         Assert.Contains("StatisticsCategoryTrendTop5ModeLabel", xaml);
         Assert.Contains("StatisticsCategoryTrendSingleCategoryModeLabel", xaml);
         Assert.Contains("StatisticsCategoryTrendSelectCategoryPrompt", xaml);

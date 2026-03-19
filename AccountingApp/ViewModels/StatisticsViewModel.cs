@@ -191,8 +191,25 @@ public class StatisticsViewModel : BindableObject
         }
     }
 
-    public bool IsTop5Mode => SelectedCategoryTrendMode == CategoryTrendMode.Top5;
-    public bool IsSingleCategoryMode => SelectedCategoryTrendMode == CategoryTrendMode.SingleCategory;
+    public bool IsTop5Mode
+    {
+        get => SelectedCategoryTrendMode == CategoryTrendMode.Top5;
+        set
+        {
+            if (!value) return;
+            SelectedCategoryTrendMode = CategoryTrendMode.Top5;
+        }
+    }
+
+    public bool IsSingleCategoryMode
+    {
+        get => SelectedCategoryTrendMode == CategoryTrendMode.SingleCategory;
+        set
+        {
+            if (!value) return;
+            SelectedCategoryTrendMode = CategoryTrendMode.SingleCategory;
+        }
+    }
     public bool ShowCategoryPicker => IsSingleCategoryMode;
 
     public string CategoryTrendEmptyStateText
@@ -203,8 +220,6 @@ public class StatisticsViewModel : BindableObject
 
     public ICommand PreviousMonthCommand { get; }
     public ICommand NextMonthCommand { get; }
-    public ICommand SelectTop5CategoryTrendModeCommand { get; }
-    public ICommand SelectSingleCategoryTrendModeCommand { get; }
 
     public StatisticsViewModel(
         StatisticsService statisticsService,
@@ -218,8 +233,6 @@ public class StatisticsViewModel : BindableObject
         _refreshService = refreshService;
         PreviousMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(-1));
         NextMonthCommand = new Command(() => SelectedMonth = SelectedMonth.AddMonths(1));
-        SelectTop5CategoryTrendModeCommand = new Command(() => SelectedCategoryTrendMode = CategoryTrendMode.Top5);
-        SelectSingleCategoryTrendModeCommand = new Command(() => SelectedCategoryTrendMode = CategoryTrendMode.SingleCategory);
         _refreshService.DataChanged += OnDataChanged;
         CategoryTrendEmptyStateText = _localizationService.GetString("StatisticsCategoryTrendEmptyStateText");
     }
@@ -357,11 +370,14 @@ public class StatisticsViewModel : BindableObject
 
     private async Task EnsureAvailableExpenseCategoriesAsync(int loadVersion)
     {
+        if (AvailableExpenseCategories.Count > 0)
+        {
+            return;
+        }
+
         var categories = await _statisticsService.GetExpenseCategoriesAsync();
         if (loadVersion != _loadVersion) return;
 
-        var selectedCategoryId = SelectedExpenseCategory?.Id;
-        AvailableExpenseCategories.Clear();
         foreach (var category in categories)
         {
             AvailableExpenseCategories.Add(new ExpenseCategoryOption
@@ -369,20 +385,6 @@ public class StatisticsViewModel : BindableObject
                 Id = category.CategoryId,
                 Name = category.CategoryName
             });
-        }
-
-        if (selectedCategoryId is null) return;
-
-        var existing = AvailableExpenseCategories.FirstOrDefault(category => category.Id == selectedCategoryId.Value);
-        if (existing is null)
-        {
-            SelectedExpenseCategory = null;
-            return;
-        }
-
-        if (SelectedExpenseCategory?.Id != existing.Id)
-        {
-            SelectedExpenseCategory = existing;
         }
     }
 
