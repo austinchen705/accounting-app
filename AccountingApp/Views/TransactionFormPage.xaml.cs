@@ -18,4 +18,9 @@ public partial class TransactionFormPage : ContentPage
         base.OnAppearing();
         await _vm.InitializeAsync();
     }
+
+    private void OnAmountEntryCompleted(object? sender, EventArgs e)
+    {
+        NoteEntry.Focus();
+    }
 }

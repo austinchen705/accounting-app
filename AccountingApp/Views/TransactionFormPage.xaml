@@ -22,7 +22,13 @@
 
                     <Label Text="{markup:Translate TransactionFormAmountLabel}" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
-                        <Entry Text="{Binding AmountText}" Placeholder="0" Keyboard="Numeric" FontSize="28" />
+                        <Entry x:Name="AmountEntry"
+                               Text="{Binding AmountText}"
+                               Placeholder="0"
+                               Keyboard="Numeric"
+                               FontSize="28"
+                               ReturnType="Next"
+                               Completed="OnAmountEntryCompleted" />
                     </Frame>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
@@ -54,7 +60,10 @@
 
                     <Label Text="{markup:Translate TransactionFormNoteLabel}" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
-                        <Entry Text="{Binding Note}" Placeholder="{markup:Translate TransactionFormNotePlaceholder}" />
+                        <Entry x:Name="NoteEntry"
+                               Text="{Binding Note}"
+                               Placeholder="{markup:Translate TransactionFormNotePlaceholder}"
+                               ReturnType="Done" />
                     </Frame>
 
                     <Label Text="{markup:Translate TransactionFormCurrencyLabel}" Style="{StaticResource CaptionStyle}" />

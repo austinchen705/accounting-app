@@ -45,6 +45,18 @@ public class TransactionFormLayoutTests
         Assert.Contains("TransactionFormSaveButton", xaml);
     }
 
+    [Fact]
+    public void TransactionForm_amount_entry_moves_focus_to_note_entry_on_enter()
+    {
+        var xaml = ReadTransactionFormXaml();
+
+        Assert.Contains("x:Name=\"AmountEntry\"", xaml);
+        Assert.Contains("x:Name=\"NoteEntry\"", xaml);
+        Assert.Contains("ReturnType=\"Next\"", xaml);
+        Assert.Contains("Completed=\"OnAmountEntryCompleted\"", xaml);
+        Assert.Contains("ReturnType=\"Done\"", xaml);
+    }
+
     private static string ReadTransactionFormXaml()
     {
         var path = Path.GetFullPath(Path.Combine(
