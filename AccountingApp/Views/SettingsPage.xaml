@@ -59,7 +59,7 @@
                     <Label Text="Google Drive 備份" Style="{StaticResource SectionTitleStyle}" />
                     <Label Text="{Binding SelectedGoogleDriveFolder, StringFormat='目前資料夾：{0}'}"
                            Style="{StaticResource CaptionStyle}" />
-                    <Button Text="使用 personaccount_backup 資料夾"
+                    <Button Text="選擇或建立 Google Drive 資料夾"
                             Command="{Binding SelectGoogleDriveFolderCommand}"
                             IsEnabled="{Binding IsGoogleDriveIdle}"
                             Style="{StaticResource SecondaryButtonStyle}" />
