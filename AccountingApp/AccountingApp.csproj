@@ -21,7 +21,7 @@
 		<ApplicationTitle>Personal Accounting</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>austin-accounting.poc-account</ApplicationId>
+		<ApplicationId>dindin.accounting</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
