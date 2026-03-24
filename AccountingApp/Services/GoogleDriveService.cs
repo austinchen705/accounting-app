@@ -219,19 +219,14 @@ public class GoogleDriveService : IGoogleDriveFileApi
         if (!string.IsNullOrWhiteSpace(folderId))
             return folderId;
 
-        await PickFolderAsync();
-        folderId = Preferences.Get(FolderIdKey, null);
-        if (string.IsNullOrWhiteSpace(folderId))
-            throw new InvalidOperationException("尚未設定 Google Drive 備份資料夾。");
-
-        return folderId;
+        throw new InvalidOperationException("尚未設定 Google Drive 備份資料夾，請先到設定頁選擇或建立資料夾。");
     }
 
     private async Task<List<DriveFolder>> ListFoldersAsync()
     {
         await EnsureAuthorizedHeaderAsync();
 
-        const string q = "mimeType='application/vnd.google-apps.folder' and trashed=false";
+        const string q = "mimeType='application/vnd.google-apps.folder' and trashed=false and 'root' in parents";
         var url = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(q)}&fields=files(id,name)&orderBy=name&pageSize=20&includeItemsFromAllDrives=true&supportsAllDrives=true";
         using var response = await _httpClient.GetAsync(url);
         await EnsureSuccessAsync(response);

@@ -77,7 +77,9 @@ public class SettingsViewModel : BindableObject
         _localizationService = localizationService;
         _refreshService = refreshService;
         _selectedCurrency = Preferences.Get("base_currency", "TWD");
-        _selectedGoogleDriveFolder = Preferences.Get("google_drive_folder_name", "尚未設定");
+        _selectedGoogleDriveFolder = FormatFolderDisplayName(
+            Preferences.Get("google_drive_folder_name", null),
+            Preferences.Get("google_drive_folder_id", null));
 
         ExportCsvCommand = new Command(async () => await ExportAsync(false));
         ExportExcelCommand = new Command(async () => await ExportAsync(true));
@@ -160,8 +162,42 @@ public class SettingsViewModel : BindableObject
         IsGoogleDriveBusy = true;
         try
         {
-            await _googleDriveService.EnsureDefaultBackupFolderSelectedAsync();
-            SelectedGoogleDriveFolder = _googleDriveService.FolderName ?? "personaccount_backup";
+            var page = Application.Current!.Windows[0].Page!;
+            var options = await _googleDriveService.GetFolderOptionsAsync();
+            const string CreateDefaultFolderAction = "建立新的 personaccount_backup";
+
+            var labels = options
+                .Select(folder => $"{folder.Name} ({ShortFolderId(folder.Id)})")
+                .ToArray();
+
+            var action = await page.DisplayActionSheet(
+                "選擇 Google Drive 備份資料夾",
+                "取消",
+                null,
+                [.. labels, CreateDefaultFolderAction]);
+
+            if (string.IsNullOrWhiteSpace(action) || action == "取消")
+            {
+                return;
+            }
+
+            if (action == CreateDefaultFolderAction)
+            {
+                await _googleDriveService.CreateFolderAndSelectAsync("personaccount_backup");
+            }
+            else
+            {
+                var selectedIndex = Array.IndexOf(labels, action);
+                if (selectedIndex < 0)
+                    return;
+
+                var selectedFolder = options[selectedIndex];
+                await _googleDriveService.SelectFolderAsync(selectedFolder.Id, selectedFolder.Name);
+            }
+
+            SelectedGoogleDriveFolder = FormatFolderDisplayName(
+                _googleDriveService.FolderName,
+                _googleDriveService.FolderId);
             await Application.Current!.Windows[0].Page!
                 .DisplayAlert("成功", $"已設定備份資料夾：{SelectedGoogleDriveFolder}", "確定");
         }
@@ -277,5 +313,20 @@ public class SettingsViewModel : BindableObject
         {
             await app.ResetShellForLanguageChangeAsync();
         }
+    }
+
+    private static string FormatFolderDisplayName(string? folderName, string? folderId)
+    {
+        if (string.IsNullOrWhiteSpace(folderId))
+            return string.IsNullOrWhiteSpace(folderName) ? "尚未設定" : folderName;
+
+        var name = string.IsNullOrWhiteSpace(folderName) ? "未命名資料夾" : folderName;
+        return $"{name} ({ShortFolderId(folderId)})";
+    }
+
+    private static string ShortFolderId(string folderId)
+    {
+        var trimmed = folderId.Trim();
+        return trimmed.Length <= 8 ? trimmed : trimmed[..8];
     }
 }
