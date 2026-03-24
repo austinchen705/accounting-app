@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>350597496746-s34tikf6j2aefsc59kpjro3q3ile0f0b.apps.googleusercontent.com</string>
+	<string>147395096355-ds9167aem2bbduvndcp3n7nene7thqpl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.350597496746-s34tikf6j2aefsc59kpjro3q3ile0f0b</string>
+	<string>com.googleusercontent.apps.147395096355-ds9167aem2bbduvndcp3n7nene7thqpl</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>austin-accounting.poc-account</string>
+	<string>dindin.accounting</string>
 </dict>
 </plist>
