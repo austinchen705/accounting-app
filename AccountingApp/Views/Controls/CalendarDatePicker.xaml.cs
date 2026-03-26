@@ -37,8 +37,10 @@ public partial class CalendarDatePicker : ContentView
     {
         OpenCalendarCommand = new Command(OpenCalendar);
         CloseCalendarCommand = new Command(() => IsCalendarVisible = false);
+        PreviousCalendarYearCommand = new Command(() => ChangeCalendarMonth(-12));
         PreviousCalendarMonthCommand = new Command(() => ChangeCalendarMonth(-1));
         NextCalendarMonthCommand = new Command(() => ChangeCalendarMonth(1));
+        NextCalendarYearCommand = new Command(() => ChangeCalendarMonth(12));
         SelectCalendarDateCommand = new Command<CalendarDayItem>(SelectCalendarDate);
         InitializeComponent();
         SyncCalendarMonth(Date);
@@ -93,8 +95,10 @@ public partial class CalendarDatePicker : ContentView
 
     public ICommand OpenCalendarCommand { get; }
     public ICommand CloseCalendarCommand { get; }
+    public ICommand PreviousCalendarYearCommand { get; }
     public ICommand PreviousCalendarMonthCommand { get; }
     public ICommand NextCalendarMonthCommand { get; }
+    public ICommand NextCalendarYearCommand { get; }
     public ICommand SelectCalendarDateCommand { get; }
 
     private static void OnDatePropertyChanged(BindableObject bindable, object oldValue, object newValue)

@@ -116,11 +116,17 @@ public class TransactionFormViewModel : BindableObject
         await LoadCategoriesForTypeAsync();
     }
 
-    private async Task LoadCategoriesForTypeAsync()
+    private async Task LoadCategoriesForTypeAsync(int? preferredCategoryId = null)
     {
         var cats = await _categoryService.GetByTypeAsync(Type);
         Categories.Clear();
         foreach (var c in cats) Categories.Add(c);
+        var selectedCategoryId = preferredCategoryId ?? SelectedCategory?.Id;
+        if (selectedCategoryId.HasValue)
+        {
+            SelectedCategory = Categories.FirstOrDefault(c => c.Id == selectedCategoryId.Value);
+        }
+
         if (SelectedCategory == null || !Categories.Contains(SelectedCategory))
             SelectedCategory = Categories.FirstOrDefault();
     }
@@ -135,8 +141,13 @@ public class TransactionFormViewModel : BindableObject
         Currency = txn.Currency;
         Date = txn.Date;
         Note = txn.Note;
-        Type = txn.Type;
-        SelectedCategory = Categories.FirstOrDefault(c => c.Id == txn.CategoryId);
+        if (!string.Equals(_type, txn.Type, StringComparison.Ordinal))
+        {
+            _type = txn.Type;
+            OnPropertyChanged(nameof(Type));
+        }
+
+        await LoadCategoriesForTypeAsync(txn.CategoryId);
     }
 
     private async Task SaveAsync()

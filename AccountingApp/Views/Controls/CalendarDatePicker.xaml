@@ -18,25 +18,47 @@
                Margin="0,0,0,0"
                IsVisible="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=IsCalendarVisible}">
             <VerticalStackLayout Spacing="12">
-                <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                    <Button Text="‹"
-                            Command="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=PreviousCalendarMonthCommand}"
+                <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="6" VerticalOptions="Center">
+                    <Button Text="«"
+                            Command="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=PreviousCalendarYearCommand}"
                             WidthRequest="36"
                             HeightRequest="36"
                             Padding="0"
-                            BackgroundColor="Transparent" />
-                    <Label Grid.Column="1"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+                    <Button Text="‹"
+                            Command="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=PreviousCalendarMonthCommand}"
+                            Grid.Column="1"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            Padding="0"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+                    <Label Grid.Column="2"
                            Text="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=CalendarMonthText}"
                            Style="{StaticResource SectionTitleStyle}"
                            HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center" />
-                    <Button Grid.Column="2"
+                    <Button Grid.Column="3"
                             Text="›"
                             Command="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=NextCalendarMonthCommand}"
                             WidthRequest="36"
                             HeightRequest="36"
                             Padding="0"
-                            BackgroundColor="Transparent" />
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+                    <Button Grid.Column="4"
+                            Text="»"
+                            Command="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=NextCalendarYearCommand}"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            Padding="0"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
                 </Grid>
 
                 <Grid ColumnDefinitions="*,*,*,*,*,*,*" ColumnSpacing="4">
