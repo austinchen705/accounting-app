@@ -302,6 +302,8 @@ public class StatisticsViewModel : BindableObject
         var months = stats.Select(s => s.Month.Replace("月", "")).ToArray();
         var incomeValues = stats.Select(s => (double)s.Income).ToArray();
         var expenseValues = stats.Select(s => (double)s.Expense).ToArray();
+        var trendAxisStep = StatisticsAxisScaleHelper.CalculateStep(
+            incomeValues.Concat(expenseValues));
 
         TrendSeries =
         [
@@ -337,18 +339,13 @@ public class StatisticsViewModel : BindableObject
             }
         ];
 
+        var trendYAxis = CreateYAxis(baseCurrency, trendAxisStep);
+        trendYAxis.ForceStepToMin = true;
+        trendYAxis.Labeler = value => FormatAxisValue(value);
+
         TrendYAxes =
         [
-            new Axis
-            {
-                MinLimit = 0,
-                MinStep = 50_000,
-                ForceStepToMin = true,
-                TextSize = 12,
-                Name = baseCurrency,
-                Labeler = value => FormatAxisValue(value),
-                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
-            }
+            trendYAxis
         ];
 
         ApplyTrendInsights(stats);
@@ -437,6 +434,8 @@ public class StatisticsViewModel : BindableObject
             .ToArray();
         var colorByCategory = CategoryColorPalette.BuildDistinctHexColors(
             stats.Select(stat => stat.CategoryName));
+        var categoryTrendAxisStep = StatisticsAxisScaleHelper.CalculateStep(
+            stats.SelectMany(stat => stat.Values).Select(value => (double)value));
 
         CategoryTrendSeries = stats
             .Select(stat =>
@@ -465,19 +464,29 @@ public class StatisticsViewModel : BindableObject
             }
         ];
 
+        var categoryTrendYAxis = CreateYAxis(
+            Preferences.Get("base_currency", "TWD"),
+            categoryTrendAxisStep);
+        categoryTrendYAxis.ForceStepToMin = true;
+        categoryTrendYAxis.Labeler = value => FormatAxisValue(value);
+
         CategoryTrendYAxes =
         [
-            new Axis
-            {
-                MinLimit = 0,
-                MinStep = 50_000,
-                ForceStepToMin = true,
-                TextSize = 12,
-                Name = Preferences.Get("base_currency", "TWD"),
-                Labeler = value => FormatAxisValue(value),
-                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
-            }
+            categoryTrendYAxis
         ];
+    }
+
+    private static Axis CreateYAxis
+        (string currency, double minStep)
+    {
+        return new Axis
+        {
+            MinLimit = 0,
+            MinStep = minStep,
+            TextSize = 12,
+            Name = currency,
+            SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
+        };
     }
 
     private void ClearCategoryTrendChart()
