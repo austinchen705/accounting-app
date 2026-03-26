@@ -72,6 +72,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<TrimmerRootAssembly Include="ClosedXML" />
+		<TrimmerRootAssembly Include="ClosedXML.Parser" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\AccountingApp.Core\AccountingApp.Core.csproj" />
 	</ItemGroup>
 
