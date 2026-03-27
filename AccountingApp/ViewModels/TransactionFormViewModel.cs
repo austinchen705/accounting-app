@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Threading;
 using System.Windows.Input;
 using AccountingApp.Models;
 using AccountingApp.Services;
@@ -18,13 +19,14 @@ public class TransactionFormViewModel : BindableObject
     private int _transactionId;
     private string _amountText = string.Empty;
     private string _currency = "TWD";
-    private Category? _selectedCategory;
     private DateTime _date = DateTime.Today;
     private string _note = string.Empty;
     private string _type = "expense";
     private string _errorMessage = string.Empty;
     private bool _hasError;
     private bool _isEdit;
+    private int _categoryLoadVersion;
+    private readonly TransactionFormFrequentCategoryState<Category, Transaction> _frequentCategoryState = new();
 
     public int TransactionId
     {
@@ -56,8 +58,15 @@ public class TransactionFormViewModel : BindableObject
 
     public Category? SelectedCategory
     {
-        get => _selectedCategory;
-        set { _selectedCategory = value; OnPropertyChanged(); }
+        get => _frequentCategoryState.SelectedCategory;
+        set
+        {
+            if (!ReferenceEquals(_frequentCategoryState.SelectedCategory, value))
+            {
+                _frequentCategoryState.SelectedCategory = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     public DateTime Date
@@ -96,12 +105,14 @@ public class TransactionFormViewModel : BindableObject
     public string SaveButtonText => _localizationService.GetString(
         _isEdit ? "TransactionFormUpdateButton" : "TransactionFormSaveButton");
 
-    public ObservableCollection<Category> Categories { get; } = new();
+    public ObservableCollection<Category> Categories => _frequentCategoryState.Categories;
+    public ObservableCollection<Category> FrequentCategories => _frequentCategoryState.FrequentCategories;
     public ObservableCollection<string> Currencies { get; } =
     [
         "TWD", "USD", "JPY", "EUR", "GBP", "CNY", "HKD", "AUD", "CAD", "SGD"
     ];
 
+    public ICommand SelectFrequentCategoryCommand { get; }
     public ICommand SaveCommand { get; }
 
     public TransactionFormViewModel(
@@ -114,6 +125,14 @@ public class TransactionFormViewModel : BindableObject
         _categoryService = categoryService;
         _budgetService = budgetService;
         _localizationService = localizationService;
+        SelectFrequentCategoryCommand = new Command<Category>(category =>
+        {
+            if (category is not null)
+            {
+                _frequentCategoryState.SelectFrequentCategory(category);
+                OnPropertyChanged(nameof(SelectedCategory));
+            }
+        });
         SaveCommand = new Command(async () => await SaveAsync());
     }
 
@@ -124,17 +143,16 @@ public class TransactionFormViewModel : BindableObject
 
     private async Task LoadCategoriesForTypeAsync(int? preferredCategoryId = null)
     {
+        var loadVersion = Interlocked.Increment(ref _categoryLoadVersion);
         var cats = await _categoryService.GetByTypeAsync(Type);
-        Categories.Clear();
-        foreach (var c in cats) Categories.Add(c);
-        var selectedCategoryId = preferredCategoryId ?? SelectedCategory?.Id;
-        if (selectedCategoryId.HasValue)
+        var transactions = await _transactionService.GetAllAsync();
+        if (loadVersion != _categoryLoadVersion)
         {
-            SelectedCategory = Categories.FirstOrDefault(c => c.Id == selectedCategoryId.Value);
+            return;
         }
 
-        if (SelectedCategory == null || !Categories.Contains(SelectedCategory))
-            SelectedCategory = Categories.FirstOrDefault();
+        _frequentCategoryState.Apply(cats, transactions, Type, preferredCategoryId);
+        OnPropertyChanged(nameof(SelectedCategory));
     }
 
     private async Task LoadExistingAsync(int id)

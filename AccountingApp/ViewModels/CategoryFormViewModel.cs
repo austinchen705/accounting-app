@@ -136,13 +136,17 @@ public class CategoryFormViewModel : BindableObject
         }
 
         HasError = false;
-        if (Shell.Current?.Navigation?.NavigationStack?.Count > 1)
+        var navigation = Shell.Current?.Navigation;
+        if (navigation?.NavigationStack?.Count > 1)
         {
-            await Shell.Current.Navigation.PopAsync();
+            await navigation.PopAsync();
             return;
         }
 
-        await Shell.Current.GoToAsync("..");
+        if (Shell.Current is not null)
+        {
+            await Shell.Current.GoToAsync("..");
+        }
     }
 
     public void PrepareForCreate()

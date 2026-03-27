@@ -22,4 +22,9 @@
     <ProjectReference Include="..\AccountingApp.Core\AccountingApp.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\AccountingApp\ViewModels\TransactionFormViewModel.cs" Link="Source\TransactionFormViewModel.cs" />
+    <Compile Include="..\AccountingApp\ViewModels\TransactionFormFrequentCategoryState.cs" Link="Source\TransactionFormFrequentCategoryState.cs" />
+  </ItemGroup>
+
 </Project>

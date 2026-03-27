@@ -150,6 +150,9 @@
   <data name="TransactionFormCategoryLabel" xml:space="preserve">
     <value>分類</value>
   </data>
+  <data name="TransactionFormFrequentCategoriesLabel" xml:space="preserve">
+    <value>常用分類</value>
+  </data>
   <data name="TransactionFormDateLabel" xml:space="preserve">
     <value>日期</value>
   </data>
