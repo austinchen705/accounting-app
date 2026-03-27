@@ -129,6 +129,9 @@
   <data name="TransactionFormPageTitle" xml:space="preserve">
     <value>Add Transaction</value>
   </data>
+  <data name="TransactionFormEditTitle" xml:space="preserve">
+    <value>Edit Transaction</value>
+  </data>
   <data name="TransactionFormPrimarySectionTitle" xml:space="preserve">
     <value>Primary Info</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="TransactionFormSaveButton" xml:space="preserve">
     <value>Save Transaction</value>
+  </data>
+  <data name="TransactionFormUpdateButton" xml:space="preserve">
+    <value>Update Transaction</value>
   </data>
   <data name="TransactionFormInvalidAmountError" xml:space="preserve">
     <value>Please enter a valid amount greater than 0</value>

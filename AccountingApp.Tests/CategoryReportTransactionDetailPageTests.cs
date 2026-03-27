@@ -18,6 +18,8 @@ public class CategoryReportTransactionDetailPageTests
         Assert.Contains("DateLabel", xaml);
         Assert.Contains("AmountText", xaml);
         Assert.Contains("CategoryReportTransactionDetailEmptyStateText", xaml);
+        Assert.Contains("TapGestureRecognizer", xaml);
+        Assert.Contains("OpenTransactionEditCommand", xaml);
     }
 
     [Fact]
@@ -36,6 +38,7 @@ public class CategoryReportTransactionDetailPageTests
         Assert.Contains("TotalAmountText", code);
         Assert.Contains("AmountText", code);
         Assert.Contains("HasTransactions", code);
+        Assert.Contains("OpenTransactionEditCommand", code);
         Assert.Contains("CategoryReportTransactionDetailEmptyStateText", File.ReadAllText(Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
             "../../../../AccountingApp/Resources/Strings/AppResources.resx"))));

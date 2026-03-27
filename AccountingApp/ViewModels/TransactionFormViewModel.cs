@@ -90,6 +90,12 @@ public class TransactionFormViewModel : BindableObject
         set { _hasError = value; OnPropertyChanged(); }
     }
 
+    public string PageTitle => _localizationService.GetString(
+        _isEdit ? "TransactionFormEditTitle" : "TransactionFormPageTitle");
+
+    public string SaveButtonText => _localizationService.GetString(
+        _isEdit ? "TransactionFormUpdateButton" : "TransactionFormSaveButton");
+
     public ObservableCollection<Category> Categories { get; } = new();
     public ObservableCollection<string> Currencies { get; } =
     [
@@ -135,6 +141,8 @@ public class TransactionFormViewModel : BindableObject
     {
         if (id <= 0) return;
         _isEdit = true;
+        OnPropertyChanged(nameof(PageTitle));
+        OnPropertyChanged(nameof(SaveButtonText));
         var txn = (await _transactionService.GetAllAsync()).FirstOrDefault(t => t.Id == id);
         if (txn is null) return;
         AmountText = txn.Amount.ToString(CultureInfo.InvariantCulture);

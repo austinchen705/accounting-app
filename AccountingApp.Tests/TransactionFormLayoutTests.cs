@@ -32,6 +32,8 @@ public class TransactionFormLayoutTests
         Assert.Contains("ShowTrigger=\"False\"", xaml);
         Assert.Contains("x:Name=\"FormCalendarDatePicker\"", xaml);
         Assert.Contains("Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand", xaml);
+        Assert.Contains("ColumnDefinitions=\"*,Auto\"", xaml);
+        Assert.Contains("Text=\"⌄\"", xaml);
     }
 
     [Fact]
@@ -41,8 +43,21 @@ public class TransactionFormLayoutTests
 
         Assert.Contains("Text=\"{Binding AmountText}\"", xaml);
         Assert.Contains("Keyboard=\"Numeric\"", xaml);
-        Assert.Contains("markup:Translate", xaml);
-        Assert.Contains("TransactionFormSaveButton", xaml);
+        Assert.Contains("Text=\"{Binding PageTitle}\"", xaml);
+        Assert.Contains("Text=\"{Binding SaveButtonText}\"", xaml);
+    }
+
+    [Fact]
+    public void TransactionForm_viewmodel_exposes_edit_specific_copy_properties()
+    {
+        var code = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/TransactionFormViewModel.cs")));
+
+        Assert.Contains("TransactionFormEditTitle", code);
+        Assert.Contains("TransactionFormUpdateButton", code);
+        Assert.Contains("PageTitle", code);
+        Assert.Contains("SaveButtonText", code);
     }
 
     [Fact]

@@ -129,6 +129,9 @@
   <data name="TransactionFormPageTitle" xml:space="preserve">
     <value>新增記錄</value>
   </data>
+  <data name="TransactionFormEditTitle" xml:space="preserve">
+    <value>編輯記錄</value>
+  </data>
   <data name="TransactionFormPrimarySectionTitle" xml:space="preserve">
     <value>主要資訊</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="TransactionFormSaveButton" xml:space="preserve">
     <value>儲存記錄</value>
+  </data>
+  <data name="TransactionFormUpdateButton" xml:space="preserve">
+    <value>更新記錄</value>
   </data>
   <data name="TransactionFormInvalidAmountError" xml:space="preserve">
     <value>請輸入有效金額（大於 0）</value>

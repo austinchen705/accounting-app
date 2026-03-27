@@ -42,6 +42,10 @@
                         <Frame Style="{StaticResource CardFrameStyle}"
                                Padding="12"
                                Margin="0,0,0,8">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenTransactionEditCommand}"
+                                                      CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="*,Auto"
                                   RowDefinitions="Auto,Auto"
                                   ColumnSpacing="12"

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using AccountingApp.Core.Services;
 using AccountingApp.Services;
 
@@ -12,6 +13,7 @@ public class CategoryReportTransactionDetailViewModel : BindableObject
 {
     public class TransactionItem
     {
+        public int TransactionId { get; init; }
         public string Note { get; init; } = string.Empty;
         public string AmountText { get; init; } = "0";
         public string CurrencyText { get; init; } = string.Empty;
@@ -38,6 +40,7 @@ public class CategoryReportTransactionDetailViewModel : BindableObject
     private string _periodLabel = string.Empty;
     private string _totalAmountText = "0";
     private bool _hasTransactions;
+    public ICommand OpenTransactionEditCommand { get; }
 
     public CategoryReportTransactionDetailViewModel(
         StatisticsService statisticsService,
@@ -47,6 +50,7 @@ public class CategoryReportTransactionDetailViewModel : BindableObject
         _statisticsService = statisticsService;
         _localizedFormattingService = localizedFormattingService;
         _localizationService = localizationService;
+        OpenTransactionEditCommand = new Command<TransactionItem>(async item => await OpenTransactionEditAsync(item));
     }
 
     public ObservableCollection<TransactionDateGroup> TransactionGroups { get; } = new();
@@ -144,6 +148,7 @@ public class CategoryReportTransactionDetailViewModel : BindableObject
                 group.DateLabel,
                 group.Items.Select(item => new TransactionItem
                 {
+                    TransactionId = item.TransactionId,
                     Note = string.IsNullOrWhiteSpace(item.Note)
                         ? _localizationService.GetString("CategoryReportTransactionDetailNoNoteText")
                         : item.Note,
@@ -154,5 +159,15 @@ public class CategoryReportTransactionDetailViewModel : BindableObject
 
         HasTransactions = TransactionGroups.Count > 0;
         TotalAmountText = details.Sum(detail => detail.ConvertedAmount).ToString("N0");
+    }
+
+    private static async Task OpenTransactionEditAsync(TransactionItem? item)
+    {
+        if (item is null || item.TransactionId <= 0)
+        {
+            return;
+        }
+
+        await Shell.Current.GoToAsync($"TransactionFormPage?id={item.TransactionId}");
     }
 }

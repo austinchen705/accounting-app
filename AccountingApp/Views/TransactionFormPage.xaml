@@ -4,11 +4,11 @@
              xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
              xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.TransactionFormPage"
-             Title="{markup:Translate TransactionFormPageTitle}">
+             Title="{Binding PageTitle}">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,120" Spacing="14">
-            <Label Text="{markup:Translate TransactionFormPageTitle}" Style="{StaticResource PageTitleStyle}" />
+            <Label Text="{Binding PageTitle}" Style="{StaticResource PageTitleStyle}" />
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="14">
@@ -40,11 +40,25 @@
                                     ItemDisplayBinding="{Binding Name}" />
                         </Frame>
                         <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource InputContainerStyle}">
-                            <Button Text="{Binding Source={x:Reference FormCalendarDatePicker}, Path=DateDisplayText}"
-                                    Command="{Binding Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand}"
-                                    HorizontalOptions="Fill"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8"
+                                  Padding="12,10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference FormCalendarDatePicker}, Path=OpenCalendarCommand}" />
+                                </Grid.GestureRecognizers>
+                                <Label Text="{Binding Source={x:Reference FormCalendarDatePicker}, Path=DateDisplayText}"
+                                       VerticalOptions="Center"
+                                       FontSize="16"
+                                       FontAttributes="None"
+                                       LineBreakMode="NoWrap"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}" />
+                                <Label Grid.Column="1"
+                                       Text="⌄"
+                                       VerticalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="16"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource DarkTextSecondary}}" />
+                            </Grid>
                         </Frame>
                     </Grid>
 
@@ -76,7 +90,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Button Text="{markup:Translate TransactionFormSaveButton}" Command="{Binding SaveCommand}" Margin="0,2,0,0" />
+            <Button Text="{Binding SaveButtonText}" Command="{Binding SaveCommand}" Margin="0,2,0,0" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
