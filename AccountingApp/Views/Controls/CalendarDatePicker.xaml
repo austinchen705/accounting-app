@@ -39,6 +39,8 @@
                     <Label Grid.Column="2"
                            Text="{Binding Source={x:Reference CalendarDatePickerRoot}, Path=CalendarMonthText}"
                            Style="{StaticResource SectionTitleStyle}"
+                           LineBreakMode="WordWrap"
+                           MaxLines="2"
                            HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center" />
                     <Button Grid.Column="3"

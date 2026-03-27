@@ -17,6 +17,8 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("LatestTotalAmountText", pageXaml);
         Assert.Contains("CalendarDatePicker", pageXaml);
         Assert.Contains("InputContainerStyle", pageXaml);
+        Assert.Contains("ColumnDefinitions=\"*,Auto\"", pageXaml);
+        Assert.Contains("Text=\"⌄\"", pageXaml);
     }
 
     [Fact]

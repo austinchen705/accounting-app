@@ -31,7 +31,7 @@ public partial class CalendarDatePicker : ContentView
 
     private bool _isCalendarVisible;
     private DateTime _calendarMonth = new(DateTime.Today.Year, DateTime.Today.Month, 1);
-    private string _calendarMonthText = DateTime.Today.ToString("yyyy年MM月");
+    private string _calendarMonthText = $"{DateTime.Today:yyyy}\n{DateTime.Today:MM}";
 
     public CalendarDatePicker()
     {
@@ -142,7 +142,7 @@ public partial class CalendarDatePicker : ContentView
 
     private void UpdateCalendarMonthText()
     {
-        CalendarMonthText = _calendarMonth.ToString("yyyy年MM月");
+        CalendarMonthText = $"{_calendarMonth:yyyy}\n{_calendarMonth:MM}";
     }
 
     private void RefreshCalendarDays()
