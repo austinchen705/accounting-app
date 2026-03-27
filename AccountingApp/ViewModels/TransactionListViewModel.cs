@@ -8,6 +8,7 @@ namespace AccountingApp.ViewModels;
 public class TransactionListViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
+    private readonly CategoryService _categoryService;
     private readonly CurrencyService _currencyService;
     private readonly ILocalizationService _localizationService;
     private readonly DataRefreshService _refreshService;
@@ -31,6 +32,7 @@ public class TransactionListViewModel : BindableObject
         public DateTime Date => Transaction.Date;
         public string Note => Transaction.Note;
         public string Type => Transaction.Type;
+        public string CategoryName { get; init; } = string.Empty;
         public string AmountDisplayText => $"{Transaction.Amount:N0} {Transaction.Currency}";
         public bool HasExchangeInfo => !string.Equals(Transaction.Currency, BaseCurrency, StringComparison.OrdinalIgnoreCase)
                                        && ConvertedAmount is not null
@@ -98,11 +100,13 @@ public class TransactionListViewModel : BindableObject
 
     public TransactionListViewModel(
         TransactionService transactionService,
+        CategoryService categoryService,
         CurrencyService currencyService,
         ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
         _transactionService = transactionService;
+        _categoryService = categoryService;
         _currencyService = currencyService;
         _localizationService = localizationService;
         _refreshService = refreshService;
@@ -125,6 +129,8 @@ public class TransactionListViewModel : BindableObject
     public async Task LoadAsync()
     {
         var list = await _transactionService.GetByDateAsync(FilterDate);
+        var categories = await _categoryService.GetAllAsync();
+        var categoryNamesById = categories.ToDictionary(category => category.Id, category => category.Name);
         var baseCurrency = Preferences.Get("base_currency", "TWD");
 
         Transactions.Clear();
@@ -134,6 +140,9 @@ public class TransactionListViewModel : BindableObject
             Transactions.Add(new TransactionItemViewModel
             {
                 Transaction = t,
+                CategoryName = categoryNamesById.TryGetValue(t.CategoryId, out var categoryName)
+                    ? categoryName
+                    : string.Empty,
                 BaseCurrency = baseCurrency,
                 ExchangeRate = string.Equals(t.Currency, baseCurrency, StringComparison.OrdinalIgnoreCase) ? null : rate,
                 ConvertedAmount = string.Equals(t.Currency, baseCurrency, StringComparison.OrdinalIgnoreCase)

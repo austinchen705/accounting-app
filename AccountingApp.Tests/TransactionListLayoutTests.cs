@@ -37,6 +37,14 @@ public class TransactionListLayoutTests
         Assert.Contains("IsVisible=\"{Binding HasExchangeInfo}\"", xaml);
     }
 
+    [Fact]
+    public void TransactionList_shows_category_name_per_row_between_date_and_note()
+    {
+        var xaml = ReadTransactionListXaml();
+
+        Assert.Contains("Text=\"{Binding CategoryName}\"", xaml);
+    }
+
     private static string ReadTransactionListXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

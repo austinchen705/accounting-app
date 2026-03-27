@@ -68,6 +68,14 @@
                                         <VerticalStackLayout Grid.Column="0" Spacing="2">
                                             <Label Text="{Binding Date, StringFormat='{0:yyyy/MM/dd}'}"
                                                    Style="{StaticResource CaptionStyle}" />
+                                            <Label Text="{Binding CategoryName}"
+                                                   Style="{StaticResource CaptionStyle}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding CategoryName}" Value="">
+                                                        <Setter Property="IsVisible" Value="False" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
                                             <Label Text="{Binding Note}"
                                                    Style="{StaticResource CaptionStyle}">
                                                 <Label.Triggers>
