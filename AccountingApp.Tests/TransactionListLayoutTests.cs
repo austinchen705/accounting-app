@@ -10,6 +10,8 @@ public class TransactionListLayoutTests
         Assert.DoesNotContain("<DatePicker", xaml);
         Assert.Contains("<controls:CalendarDatePicker", xaml);
         Assert.Contains("Date=\"{Binding FilterDate}\"", xaml);
+        Assert.Contains("HorizontalOptions=\"End\"", xaml);
+        Assert.DoesNotContain("<Grid ColumnDefinitions=\"*,Auto\" ColumnSpacing=\"10\">", xaml);
     }
 
     [Fact]

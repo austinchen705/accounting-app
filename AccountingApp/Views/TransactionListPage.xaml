@@ -15,16 +15,16 @@
         <Frame Grid.Row="0" Style="{StaticResource CardFrameStyle}" Padding="12,8">
             <VerticalStackLayout Spacing="8">
                 <Label Text="{markup:Translate TransactionListDateFilterLabel}" Style="{StaticResource CaptionStyle}" />
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <VerticalStackLayout Spacing="8">
                     <controls:CalendarDatePicker Date="{Binding FilterDate}" />
-                    <Button Grid.Column="1"
-                            Text="{markup:Translate TransactionListTodayButton}"
+                    <Button Text="{markup:Translate TransactionListTodayButton}"
                             Command="{Binding ResetToTodayCommand}"
                             Style="{StaticResource SecondaryButtonStyle}"
                             FontSize="13"
                             Padding="10,6"
-                            HeightRequest="36" />
-                </Grid>
+                            HeightRequest="36"
+                            HorizontalOptions="End" />
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </Frame>
 
