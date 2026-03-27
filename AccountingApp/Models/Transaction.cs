@@ -1,9 +1,10 @@
 using SQLite;
+using AccountingApp.Core.Abstractions;
 
 namespace AccountingApp.Models;
 
 [Table("Transactions")]
-public class Transaction
+public class Transaction : IFrequentCategorySourceTransaction
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }

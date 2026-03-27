@@ -48,6 +48,22 @@ public class TransactionFormLayoutTests
     }
 
     [Fact]
+    public void TransactionForm_includes_frequent_category_chips_above_the_full_picker()
+    {
+        var xaml = ReadTransactionFormXaml();
+
+        Assert.Contains("FrequentCategoriesLabel", xaml);
+        Assert.Contains("FrequentCategories", xaml);
+        Assert.Contains("SelectFrequentCategoryCommand", xaml);
+        Assert.Contains("BindableLayout.ItemsSource=\"{Binding FrequentCategories}\"", xaml);
+        Assert.Contains("FlexLayout", xaml);
+        Assert.Contains("CategorySelectionEqualsConverter", xaml);
+        Assert.DoesNotContain("SelectionMode=\"Single\"", xaml);
+        Assert.DoesNotContain("SelectedItem=\"{Binding SelectedCategory, Mode=TwoWay}\"", xaml);
+        Assert.Contains("Picker ItemsSource=\"{Binding Categories}\"", xaml);
+    }
+
+    [Fact]
     public void TransactionForm_viewmodel_exposes_edit_specific_copy_properties()
     {
         var code = File.ReadAllText(Path.GetFullPath(Path.Combine(

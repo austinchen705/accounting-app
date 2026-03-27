@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:AccountingApp.Converters"
              xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
              xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.TransactionFormPage"
              Title="{Binding PageTitle}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:CategorySelectionEqualsConverter x:Key="CategorySelectionEqualsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,120" Spacing="14">
@@ -34,11 +40,49 @@
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
                         <Label Text="{markup:Translate TransactionFormCategoryLabel}" Style="{StaticResource CaptionStyle}" />
                         <Label Grid.Column="1" Text="{markup:Translate TransactionFormDateLabel}" Style="{StaticResource CaptionStyle}" />
-                        <Frame Grid.Row="1" Style="{StaticResource InputContainerStyle}">
-                            <Picker ItemsSource="{Binding Categories}"
-                                    SelectedItem="{Binding SelectedCategory}"
-                                    ItemDisplayBinding="{Binding Name}" />
-                        </Frame>
+                        <VerticalStackLayout Grid.Row="1" Spacing="8">
+                            <Label Text="{markup:Translate TransactionFormFrequentCategoriesLabel}"
+                                   Style="{StaticResource CaptionStyle}" />
+                            <FlexLayout BindableLayout.ItemsSource="{Binding FrequentCategories}"
+                                        Direction="Row"
+                                        Wrap="Wrap"
+                                        AlignItems="Start"
+                                        JustifyContent="Start">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Text="{Binding Name}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectFrequentCategoryCommand}"
+                                                CommandParameter="{Binding .}"
+                                                FontSize="13"
+                                                Padding="12,8"
+                                                Margin="0,0,8,8"
+                                                CornerRadius="18"
+                                                HorizontalOptions="Start"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource DarkInputSurface}}"
+                                                TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource DarkTextPrimary}}">
+                                            <Button.Triggers>
+                                                <DataTrigger TargetType="Button">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding Converter="{StaticResource CategorySelectionEqualsConverter}">
+                                                            <Binding Path="." />
+                                                            <Binding Source="{RelativeSource AncestorType={x:Type ContentPage}}"
+                                                                     Path="BindingContext.SelectedCategory" />
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                    <Setter Property="TextColor" Value="{StaticResource White}" />
+                                                </DataTrigger>
+                                            </Button.Triggers>
+                                        </Button>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                            <Frame Style="{StaticResource InputContainerStyle}">
+                                <Picker ItemsSource="{Binding Categories}"
+                                        SelectedItem="{Binding SelectedCategory}"
+                                        ItemDisplayBinding="{Binding Name}" />
+                            </Frame>
+                        </VerticalStackLayout>
                         <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource InputContainerStyle}">
                             <Grid ColumnDefinitions="*,Auto"
                                   ColumnSpacing="8"
