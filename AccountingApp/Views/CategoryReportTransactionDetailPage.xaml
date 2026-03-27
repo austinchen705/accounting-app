@@ -47,17 +47,18 @@
                                                       CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="*,Auto"
-                                  RowDefinitions="Auto,Auto"
                                   ColumnSpacing="12"
                                   RowSpacing="4">
-                                <Label Text="{Binding Note}"
-                                       LineBreakMode="TailTruncation" />
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Note}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding CurrencyText}"
+                                           Style="{StaticResource CaptionStyle}" />
+                                </VerticalStackLayout>
                                 <Label Grid.Column="1"
                                        Text="{Binding AmountText}"
-                                       HorizontalTextAlignment="End" />
-                                <Label Grid.Row="1"
-                                       Text="{Binding CurrencyText}"
-                                       Style="{StaticResource CaptionStyle}" />
+                                       HorizontalTextAlignment="End"
+                                       VerticalOptions="Center" />
                             </Grid>
                         </Frame>
                     </DataTemplate>

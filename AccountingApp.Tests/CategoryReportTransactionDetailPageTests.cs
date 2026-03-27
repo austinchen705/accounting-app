@@ -23,6 +23,19 @@ public class CategoryReportTransactionDetailPageTests
     }
 
     [Fact]
+    public void CategoryReportTransactionDetailPage_separates_note_and_currency_from_amount_column()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/CategoryReportTransactionDetailPage.xaml"));
+
+        var xaml = File.ReadAllText(path);
+
+        Assert.Contains("<VerticalStackLayout Grid.Column=\"0\" Spacing=\"2\">", xaml);
+        Assert.DoesNotContain("RowDefinitions=\"Auto,Auto\"", xaml);
+    }
+
+    [Fact]
     public void CategoryReportTransactionDetailViewModel_exposes_grouped_output_and_period_summary_copy()
     {
         var path = Path.GetFullPath(Path.Combine(
