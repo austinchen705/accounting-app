@@ -30,6 +30,9 @@
             <CollectionView ItemsSource="{Binding TransactionGroups}"
                             IsGrouped="True"
                             IsVisible="{Binding HasTransactions}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="16" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.GroupHeaderTemplate>
                     <DataTemplate>
                         <Label Text="{Binding DateLabel}"
@@ -41,24 +44,23 @@
                     <DataTemplate>
                         <Frame Style="{StaticResource CardFrameStyle}"
                                Padding="12"
-                               Margin="0,0,0,8">
+                               Margin="0">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenTransactionEditCommand}"
                                                       CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
                                   ColumnSpacing="12"
                                   RowSpacing="4">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="{Binding Note}"
-                                           LineBreakMode="TailTruncation" />
-                                    <Label Text="{Binding CurrencyText}"
-                                           Style="{StaticResource CaptionStyle}" />
-                                </VerticalStackLayout>
+                                <Label Text="{Binding Note}"
+                                       LineBreakMode="TailTruncation" />
                                 <Label Grid.Column="1"
                                        Text="{Binding AmountText}"
-                                       HorizontalTextAlignment="End"
-                                       VerticalOptions="Center" />
+                                       HorizontalTextAlignment="End" />
+                                <Label Grid.Row="1"
+                                       Text="{Binding CurrencyText}"
+                                       Style="{StaticResource CaptionStyle}" />
                             </Grid>
                         </Frame>
                     </DataTemplate>

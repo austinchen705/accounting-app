@@ -31,8 +31,20 @@ public class CategoryReportTransactionDetailPageTests
 
         var xaml = File.ReadAllText(path);
 
-        Assert.Contains("<VerticalStackLayout Grid.Column=\"0\" Spacing=\"2\">", xaml);
-        Assert.DoesNotContain("RowDefinitions=\"Auto,Auto\"", xaml);
+        Assert.Contains("RowDefinitions=\"Auto,Auto\"", xaml);
+        Assert.Contains("Grid.Row=\"1\"", xaml);
+    }
+
+    [Fact]
+    public void CategoryReportTransactionDetailPage_uses_larger_vertical_spacing_between_cards()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/CategoryReportTransactionDetailPage.xaml"));
+
+        var xaml = File.ReadAllText(path);
+
+        Assert.Contains("<LinearItemsLayout Orientation=\"Vertical\" ItemSpacing=\"16\" />", xaml);
     }
 
     [Fact]
