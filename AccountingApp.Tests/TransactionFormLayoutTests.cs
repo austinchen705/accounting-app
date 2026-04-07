@@ -114,6 +114,30 @@ public class TransactionFormLayoutTests
         Assert.Contains("NoteEntry.Focus();", code);
     }
 
+    [Fact]
+    public void TransactionForm_includes_attachment_section_and_media_actions()
+    {
+        var xaml = ReadTransactionFormXaml();
+        var code = ReadTransactionFormCodeBehind();
+
+        Assert.Contains("TransactionFormAttachmentLabel", xaml);
+        Assert.Contains("TransactionFormAttachmentCameraButton", xaml);
+        Assert.Contains("TransactionFormAttachmentPhotoLibraryButton", xaml);
+        Assert.Contains("TransactionFormAttachmentViewButton", xaml);
+        Assert.Contains("TransactionFormAttachmentReplaceButton", xaml);
+        Assert.Contains("TransactionFormAttachmentRemoveButton", xaml);
+        Assert.Contains("HasAttachmentImage", xaml);
+        Assert.Contains("OnCaptureAttachmentClicked", xaml);
+        Assert.Contains("OnPickAttachmentFromLibraryClicked", xaml);
+        Assert.Contains("OnViewAttachmentClicked", xaml);
+        Assert.Contains("OnReplaceAttachmentClicked", xaml);
+        Assert.Contains("OnRemoveAttachmentClicked", xaml);
+        Assert.Contains("private async void OnCaptureAttachmentClicked", code);
+        Assert.Contains("private async void OnPickAttachmentFromLibraryClicked", code);
+        Assert.Contains("private async void OnViewAttachmentClicked", code);
+        Assert.Contains("private void OnRemoveAttachmentClicked", code);
+    }
+
     private static string ReadTransactionFormXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

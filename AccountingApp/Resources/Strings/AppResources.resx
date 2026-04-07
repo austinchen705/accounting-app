@@ -168,6 +168,24 @@
   <data name="TransactionFormCurrencyLabel" xml:space="preserve">
     <value>Currency</value>
   </data>
+  <data name="TransactionFormAttachmentLabel" xml:space="preserve">
+    <value>Attachment Photo</value>
+  </data>
+  <data name="TransactionFormAttachmentCameraButton" xml:space="preserve">
+    <value>Take Photo</value>
+  </data>
+  <data name="TransactionFormAttachmentPhotoLibraryButton" xml:space="preserve">
+    <value>Choose from Library</value>
+  </data>
+  <data name="TransactionFormAttachmentViewButton" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="TransactionFormAttachmentReplaceButton" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="TransactionFormAttachmentRemoveButton" xml:space="preserve">
+    <value>Remove</value>
+  </data>
   <data name="TransactionFormSaveButton" xml:space="preserve">
     <value>Save Transaction</value>
   </data>

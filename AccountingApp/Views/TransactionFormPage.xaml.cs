@@ -47,4 +47,29 @@ public partial class TransactionFormPage : ContentPage
     {
         NoteEntry.Focus();
     }
+
+    private async void OnCaptureAttachmentClicked(object? sender, EventArgs e)
+    {
+        await Task.CompletedTask;
+    }
+
+    private async void OnPickAttachmentFromLibraryClicked(object? sender, EventArgs e)
+    {
+        await Task.CompletedTask;
+    }
+
+    private async void OnViewAttachmentClicked(object? sender, EventArgs e)
+    {
+        await Task.CompletedTask;
+    }
+
+    private async void OnReplaceAttachmentClicked(object? sender, EventArgs e)
+    {
+        await Task.CompletedTask;
+    }
+
+    private void OnRemoveAttachmentClicked(object? sender, EventArgs e)
+    {
+        _vm.RemoveAttachmentImage();
+    }
 }
