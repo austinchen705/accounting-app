@@ -11,6 +11,8 @@ public partial class TransactionFormPage : ContentPage
         InitializeComponent();
         _vm = vm;
         BindingContext = vm;
+        FormCalendarDatePicker.CalendarOpened += OnCalendarOpened;
+        FormCalendarDatePicker.CalendarCompleted += OnCalendarCompleted;
     }
 
     protected override async void OnAppearing()
@@ -19,7 +21,29 @@ public partial class TransactionFormPage : ContentPage
         await _vm.InitializeAsync();
     }
 
+    protected override void OnDisappearing()
+    {
+        FormCalendarDatePicker.CalendarOpened -= OnCalendarOpened;
+        FormCalendarDatePicker.CalendarCompleted -= OnCalendarCompleted;
+        base.OnDisappearing();
+    }
+
     private void OnAmountEntryCompleted(object? sender, EventArgs e)
+    {
+        CategoryPicker.Focus();
+    }
+
+    private async void OnCalendarOpened(object? sender, EventArgs e)
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await Task.Yield();
+            var targetY = Math.Max(0, FormCalendarDatePicker.Y - 24);
+            await FormScrollView.ScrollToAsync(0, targetY, true);
+        });
+    }
+
+    private void OnCalendarCompleted(object? sender, EventArgs e)
     {
         NoteEntry.Focus();
     }

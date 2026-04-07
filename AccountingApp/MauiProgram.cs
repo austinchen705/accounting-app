@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using AccountingApp.Services;
+using AccountingApp.Platforms.iOS;
 using AccountingApp.Views;
 using AccountingApp.ViewModels;
 using LiveChartsCore.SkiaSharpView.Maui;
@@ -21,6 +22,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+        IosEntryAccessory.Configure();
 
         // Services
         builder.Services.AddSingleton<DatabaseService>();

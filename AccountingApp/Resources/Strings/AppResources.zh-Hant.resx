@@ -177,6 +177,9 @@
   <data name="TransactionFormInvalidAmountError" xml:space="preserve">
     <value>請輸入有效金額（大於 0）</value>
   </data>
+  <data name="TransactionFormInputNextButton" xml:space="preserve">
+    <value>下一步</value>
+  </data>
   <data name="StatisticsPageTitle" xml:space="preserve">
     <value>統計</value>
   </data>

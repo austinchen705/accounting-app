@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:AccountingApp.Converters"
              xmlns:controls="clr-namespace:AccountingApp.Views.Controls"
+             xmlns:ios="clr-namespace:AccountingApp.Platforms.iOS"
              xmlns:markup="clr-namespace:AccountingApp.Markup"
              x:Class="AccountingApp.Views.TransactionFormPage"
              Title="{Binding PageTitle}">
@@ -12,7 +13,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView>
+    <ScrollView x:Name="FormScrollView">
         <VerticalStackLayout Padding="16,16,16,120" Spacing="14">
             <Label Text="{Binding PageTitle}" Style="{StaticResource PageTitleStyle}" />
 
@@ -33,6 +34,7 @@
                                Placeholder="0"
                                Keyboard="Numeric"
                                FontSize="28"
+                               ios:IosEntryAccessory.Next="True"
                                ReturnType="Next"
                                Completed="OnAmountEntryCompleted" />
                     </Frame>
@@ -78,7 +80,8 @@
                                 </BindableLayout.ItemTemplate>
                             </FlexLayout>
                             <Frame Style="{StaticResource InputContainerStyle}">
-                                <Picker ItemsSource="{Binding Categories}"
+                                <Picker x:Name="CategoryPicker"
+                                        ItemsSource="{Binding Categories}"
                                         SelectedItem="{Binding SelectedCategory}"
                                         ItemDisplayBinding="{Binding Name}" />
                             </Frame>

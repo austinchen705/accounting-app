@@ -60,7 +60,8 @@ public class TransactionFormLayoutTests
         Assert.Contains("CategorySelectionEqualsConverter", xaml);
         Assert.DoesNotContain("SelectionMode=\"Single\"", xaml);
         Assert.DoesNotContain("SelectedItem=\"{Binding SelectedCategory, Mode=TwoWay}\"", xaml);
-        Assert.Contains("Picker ItemsSource=\"{Binding Categories}\"", xaml);
+        Assert.Contains("<Picker", xaml);
+        Assert.Contains("ItemsSource=\"{Binding Categories}\"", xaml);
     }
 
     [Fact]
@@ -80,12 +81,37 @@ public class TransactionFormLayoutTests
     public void TransactionForm_amount_entry_moves_focus_to_note_entry_on_enter()
     {
         var xaml = ReadTransactionFormXaml();
+        var code = ReadTransactionFormCodeBehind();
+        var amountHandlerStart = code.IndexOf("private void OnAmountEntryCompleted", StringComparison.Ordinal);
+        Assert.True(amountHandlerStart >= 0, "Expected OnAmountEntryCompleted handler in code-behind.");
+        var amountHandlerEnd = code.IndexOf("private async void OnCalendarOpened", amountHandlerStart, StringComparison.Ordinal);
+        Assert.True(amountHandlerEnd > amountHandlerStart, "Expected calendar opened handler after amount handler.");
+        var amountHandlerSnippet = code[amountHandlerStart..amountHandlerEnd];
 
         Assert.Contains("x:Name=\"AmountEntry\"", xaml);
+        Assert.Contains("ios:IosEntryAccessory.Next=\"True\"", xaml);
+        Assert.Contains("x:Name=\"CategoryPicker\"", xaml);
+        Assert.Contains("x:Name=\"FormCalendarDatePicker\"", xaml);
         Assert.Contains("x:Name=\"NoteEntry\"", xaml);
         Assert.Contains("ReturnType=\"Next\"", xaml);
         Assert.Contains("Completed=\"OnAmountEntryCompleted\"", xaml);
         Assert.Contains("ReturnType=\"Done\"", xaml);
+        Assert.Contains("CategoryPicker.Focus();", amountHandlerSnippet);
+        Assert.DoesNotContain("NoteEntry.Focus();", amountHandlerSnippet);
+    }
+
+    [Fact]
+    public void TransactionForm_scrolls_calendar_into_view_and_continues_to_note()
+    {
+        var xaml = ReadTransactionFormXaml();
+        var code = ReadTransactionFormCodeBehind();
+
+        Assert.Contains("x:Name=\"FormScrollView\"", xaml);
+        Assert.Contains("FormCalendarDatePicker.CalendarOpened += OnCalendarOpened;", code);
+        Assert.Contains("FormCalendarDatePicker.CalendarCompleted += OnCalendarCompleted;", code);
+        Assert.Contains("await FormScrollView.ScrollToAsync(0,", code);
+        Assert.DoesNotContain("ScrollToAsync(FormCalendarDatePicker", code);
+        Assert.Contains("NoteEntry.Focus();", code);
     }
 
     private static string ReadTransactionFormXaml()
@@ -93,6 +119,15 @@ public class TransactionFormLayoutTests
         var path = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
             "../../../../AccountingApp/Views/TransactionFormPage.xaml"));
+
+        return File.ReadAllText(path);
+    }
+
+    private static string ReadTransactionFormCodeBehind()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/TransactionFormPage.xaml.cs"));
 
         return File.ReadAllText(path);
     }
