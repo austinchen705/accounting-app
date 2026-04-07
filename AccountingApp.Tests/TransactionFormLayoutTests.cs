@@ -81,6 +81,7 @@ public class TransactionFormLayoutTests
     public void TransactionForm_amount_entry_moves_focus_to_note_entry_on_enter()
     {
         var xaml = ReadTransactionFormXaml();
+        var code = ReadTransactionFormCodeBehind();
 
         Assert.Contains("x:Name=\"AmountEntry\"", xaml);
         Assert.Contains("x:Name=\"CategoryPicker\"", xaml);
@@ -89,6 +90,8 @@ public class TransactionFormLayoutTests
         Assert.Contains("ReturnType=\"Next\"", xaml);
         Assert.Contains("Completed=\"OnAmountEntryCompleted\"", xaml);
         Assert.Contains("ReturnType=\"Done\"", xaml);
+        Assert.Contains("CategoryPicker.Focus();", code);
+        Assert.DoesNotContain("NoteEntry.Focus();", code);
     }
 
     private static string ReadTransactionFormXaml()
@@ -96,6 +99,15 @@ public class TransactionFormLayoutTests
         var path = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
             "../../../../AccountingApp/Views/TransactionFormPage.xaml"));
+
+        return File.ReadAllText(path);
+    }
+
+    private static string ReadTransactionFormCodeBehind()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/TransactionFormPage.xaml.cs"));
 
         return File.ReadAllText(path);
     }

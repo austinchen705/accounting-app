@@ -21,6 +21,6 @@ public partial class TransactionFormPage : ContentPage
 
     private void OnAmountEntryCompleted(object? sender, EventArgs e)
     {
-        NoteEntry.Focus();
+        CategoryPicker.Focus();
     }
 }
