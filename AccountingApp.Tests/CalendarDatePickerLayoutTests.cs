@@ -18,6 +18,9 @@ public class CalendarDatePickerLayoutTests
 
         Assert.Contains("PreviousCalendarYearCommand = new Command(() => ChangeCalendarMonth(-12));", code);
         Assert.Contains("NextCalendarYearCommand = new Command(() => ChangeCalendarMonth(12));", code);
+        Assert.Contains("OpenCalendarCommand", code);
+        Assert.Contains("CloseCalendarCommand", code);
+        Assert.Contains("SelectCalendarDateCommand", code);
         Assert.Contains("LineBreakMode=\"WordWrap\"", xaml);
         Assert.Contains("MaxLines=\"2\"", xaml);
         Assert.Contains("\\n{DateTime.Today:MM}", code);

@@ -60,7 +60,8 @@ public class TransactionFormLayoutTests
         Assert.Contains("CategorySelectionEqualsConverter", xaml);
         Assert.DoesNotContain("SelectionMode=\"Single\"", xaml);
         Assert.DoesNotContain("SelectedItem=\"{Binding SelectedCategory, Mode=TwoWay}\"", xaml);
-        Assert.Contains("Picker ItemsSource=\"{Binding Categories}\"", xaml);
+        Assert.Contains("<Picker", xaml);
+        Assert.Contains("ItemsSource=\"{Binding Categories}\"", xaml);
     }
 
     [Fact]
@@ -82,6 +83,8 @@ public class TransactionFormLayoutTests
         var xaml = ReadTransactionFormXaml();
 
         Assert.Contains("x:Name=\"AmountEntry\"", xaml);
+        Assert.Contains("x:Name=\"CategoryPicker\"", xaml);
+        Assert.Contains("x:Name=\"FormCalendarDatePicker\"", xaml);
         Assert.Contains("x:Name=\"NoteEntry\"", xaml);
         Assert.Contains("ReturnType=\"Next\"", xaml);
         Assert.Contains("Completed=\"OnAmountEntryCompleted\"", xaml);

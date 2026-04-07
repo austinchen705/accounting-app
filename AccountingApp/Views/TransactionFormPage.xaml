@@ -78,7 +78,8 @@
                                 </BindableLayout.ItemTemplate>
                             </FlexLayout>
                             <Frame Style="{StaticResource InputContainerStyle}">
-                                <Picker ItemsSource="{Binding Categories}"
+                                <Picker x:Name="CategoryPicker"
+                                        ItemsSource="{Binding Categories}"
                                         SelectedItem="{Binding SelectedCategory}"
                                         ItemDisplayBinding="{Binding Name}" />
                             </Frame>
