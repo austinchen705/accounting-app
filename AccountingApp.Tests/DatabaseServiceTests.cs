@@ -1,11 +1,22 @@
 using AccountingApp.Core.Models;
 using AccountingApp.Core.Services;
+using AccountingApp.Tests.Helpers;
 using SQLite;
 
 namespace AccountingApp.Tests;
 
 public class DatabaseServiceTests
 {
+    [Fact]
+    public async Task Initialize_adds_image_relative_path_column_to_transactions_table()
+    {
+        await using var db = await TestDb.CreateAsync();
+
+        var transactionColumns = await db.Service.Db.GetTableInfoAsync("Transactions");
+
+        Assert.Contains(transactionColumns, column => column.Name == "ImageRelativePath");
+    }
+
     [Fact]
     public async Task Initialize_does_not_repair_transaction_types_to_match_linked_categories()
     {

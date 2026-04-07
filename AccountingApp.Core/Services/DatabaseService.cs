@@ -22,8 +22,18 @@ public class DatabaseService
         await _db.CreateTableAsync<Budget>();
         await _db.CreateTableAsync<ExchangeRateCache>();
         await _db.CreateTableAsync<AssetSnapshot>();
+        await EnsureTransactionSchemaAsync();
         await EnsureIndexesAsync();
         await SeedDefaultCategoriesAsync();
+    }
+
+    private async Task EnsureTransactionSchemaAsync()
+    {
+        var columns = await _db!.GetTableInfoAsync("Transactions");
+        if (columns.All(column => !string.Equals(column.Name, "ImageRelativePath", StringComparison.Ordinal)))
+        {
+            await _db.ExecuteAsync("ALTER TABLE Transactions ADD COLUMN ImageRelativePath TEXT NULL;");
+        }
     }
 
     private async Task EnsureIndexesAsync()

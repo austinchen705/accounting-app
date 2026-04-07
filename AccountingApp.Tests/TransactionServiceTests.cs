@@ -99,6 +99,31 @@ public class TransactionServiceTests
     }
 
     [Fact]
+    public async Task Add_and_update_persist_image_relative_path()
+    {
+        await using var db = await TestDb.CreateAsync();
+        var svc = BuildSvc(db.Service);
+
+        await svc.AddAsync(new Transaction
+        {
+            Amount = 100,
+            Currency = "TWD",
+            Type = "expense",
+            Date = DateTime.Today,
+            ImageRelativePath = "receipts/2026/04/example.jpg"
+        });
+
+        var saved = Assert.Single(await svc.GetAllAsync());
+        Assert.Equal("receipts/2026/04/example.jpg", saved.ImageRelativePath);
+
+        saved.ImageRelativePath = "receipts/2026/04/replaced.jpg";
+        await svc.UpdateAsync(saved);
+
+        var updated = Assert.Single(await svc.GetAllAsync());
+        Assert.Equal("receipts/2026/04/replaced.jpg", updated.ImageRelativePath);
+    }
+
+    [Fact]
     public async Task Delete_removes_the_transaction()
     {
         await using var db = await TestDb.CreateAsync();

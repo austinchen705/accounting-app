@@ -22,6 +22,8 @@ public class Transaction : IFrequentCategorySourceTransaction
 
     public string Note { get; set; } = string.Empty;
 
+    public string? ImageRelativePath { get; set; }
+
     [NotNull, MaxLength(10)]
     public string Type { get; set; } = "expense"; // "income" or "expense"
 }
