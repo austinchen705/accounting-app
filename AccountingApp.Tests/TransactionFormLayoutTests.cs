@@ -82,16 +82,36 @@ public class TransactionFormLayoutTests
     {
         var xaml = ReadTransactionFormXaml();
         var code = ReadTransactionFormCodeBehind();
+        var amountHandlerStart = code.IndexOf("private void OnAmountEntryCompleted", StringComparison.Ordinal);
+        Assert.True(amountHandlerStart >= 0, "Expected OnAmountEntryCompleted handler in code-behind.");
+        var amountHandlerEnd = code.IndexOf("private async void OnCalendarOpened", amountHandlerStart, StringComparison.Ordinal);
+        Assert.True(amountHandlerEnd > amountHandlerStart, "Expected calendar opened handler after amount handler.");
+        var amountHandlerSnippet = code[amountHandlerStart..amountHandlerEnd];
 
         Assert.Contains("x:Name=\"AmountEntry\"", xaml);
+        Assert.Contains("ios:IosEntryAccessory.Next=\"True\"", xaml);
         Assert.Contains("x:Name=\"CategoryPicker\"", xaml);
         Assert.Contains("x:Name=\"FormCalendarDatePicker\"", xaml);
         Assert.Contains("x:Name=\"NoteEntry\"", xaml);
         Assert.Contains("ReturnType=\"Next\"", xaml);
         Assert.Contains("Completed=\"OnAmountEntryCompleted\"", xaml);
         Assert.Contains("ReturnType=\"Done\"", xaml);
-        Assert.Contains("CategoryPicker.Focus();", code);
-        Assert.DoesNotContain("NoteEntry.Focus();", code);
+        Assert.Contains("CategoryPicker.Focus();", amountHandlerSnippet);
+        Assert.DoesNotContain("NoteEntry.Focus();", amountHandlerSnippet);
+    }
+
+    [Fact]
+    public void TransactionForm_scrolls_calendar_into_view_and_continues_to_note()
+    {
+        var xaml = ReadTransactionFormXaml();
+        var code = ReadTransactionFormCodeBehind();
+
+        Assert.Contains("x:Name=\"FormScrollView\"", xaml);
+        Assert.Contains("FormCalendarDatePicker.CalendarOpened += OnCalendarOpened;", code);
+        Assert.Contains("FormCalendarDatePicker.CalendarCompleted += OnCalendarCompleted;", code);
+        Assert.Contains("await FormScrollView.ScrollToAsync(0,", code);
+        Assert.DoesNotContain("ScrollToAsync(FormCalendarDatePicker", code);
+        Assert.Contains("NoteEntry.Focus();", code);
     }
 
     private static string ReadTransactionFormXaml()

@@ -177,6 +177,9 @@
   <data name="TransactionFormInvalidAmountError" xml:space="preserve">
     <value>Please enter a valid amount greater than 0</value>
   </data>
+  <data name="TransactionFormInputNextButton" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="StatisticsPageTitle" xml:space="preserve">
     <value>Statistics</value>
   </data>
