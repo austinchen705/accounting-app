@@ -1,15 +1,18 @@
 using AccountingApp.ViewModels;
+using AccountingApp.Services;
 
 namespace AccountingApp.Views;
 
 public partial class TransactionFormPage : ContentPage
 {
     private readonly TransactionFormViewModel _vm;
+    private readonly TransactionImageService _transactionImageService;
 
-    public TransactionFormPage(TransactionFormViewModel vm)
+    public TransactionFormPage(TransactionFormViewModel vm, TransactionImageService transactionImageService)
     {
         InitializeComponent();
         _vm = vm;
+        _transactionImageService = transactionImageService;
         BindingContext = vm;
         FormCalendarDatePicker.CalendarOpened += OnCalendarOpened;
         FormCalendarDatePicker.CalendarCompleted += OnCalendarCompleted;
@@ -50,26 +53,49 @@ public partial class TransactionFormPage : ContentPage
 
     private async void OnCaptureAttachmentClicked(object? sender, EventArgs e)
     {
-        await Task.CompletedTask;
+        if (!MediaPicker.Default.IsCaptureSupported)
+        {
+            return;
+        }
+
+        var photo = await MediaPicker.Default.CapturePhotoAsync();
+        await StageImportedAttachmentAsync(photo);
     }
 
     private async void OnPickAttachmentFromLibraryClicked(object? sender, EventArgs e)
     {
-        await Task.CompletedTask;
+        var photo = await MediaPicker.Default.PickPhotoAsync();
+        await StageImportedAttachmentAsync(photo);
     }
 
     private async void OnViewAttachmentClicked(object? sender, EventArgs e)
     {
-        await Task.CompletedTask;
+        if (string.IsNullOrWhiteSpace(_vm.AttachmentImageRelativePath))
+        {
+            return;
+        }
+
+        await Shell.Current.GoToAsync(nameof(TransactionImageViewerPage), new Dictionary<string, object> { ["path"] = _vm.AttachmentImageRelativePath });
     }
 
     private async void OnReplaceAttachmentClicked(object? sender, EventArgs e)
     {
-        await Task.CompletedTask;
+        await OnPickAttachmentFromLibraryClicked(sender, e);
     }
 
     private void OnRemoveAttachmentClicked(object? sender, EventArgs e)
     {
         _vm.RemoveAttachmentImage();
+    }
+
+    private async Task StageImportedAttachmentAsync(FileResult? photo)
+    {
+        if (photo is null || string.IsNullOrWhiteSpace(photo.FullPath))
+        {
+            return;
+        }
+
+        var relativePath = await _transactionImageService.ImportAsync(photo.FullPath);
+        _vm.StageAttachmentImage(relativePath);
     }
 }

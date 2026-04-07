@@ -138,6 +138,36 @@ public class TransactionFormLayoutTests
         Assert.Contains("private void OnRemoveAttachmentClicked", code);
     }
 
+    [Fact]
+    public void TransactionForm_registers_image_viewer_route_and_uses_media_picker_flow()
+    {
+        var shellCode = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/AppShell.xaml.cs")));
+        var mauiProgramCode = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/MauiProgram.cs")));
+        var formCode = ReadTransactionFormCodeBehind();
+        var viewerXaml = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/TransactionImageViewerPage.xaml")));
+        var viewerCode = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/Views/TransactionImageViewerPage.xaml.cs")));
+
+        Assert.Contains("TransactionImageViewerPage", shellCode);
+        Assert.Contains("AddTransient<TransactionImageViewerPage>();", mauiProgramCode);
+        Assert.Contains("MediaPicker.Default.CapturePhotoAsync", formCode);
+        Assert.Contains("MediaPicker.Default.PickPhotoAsync", formCode);
+        Assert.Contains("StageAttachmentImage", formCode);
+        Assert.Contains("OnViewAttachmentClicked", formCode);
+        Assert.Contains("Shell.Current.GoToAsync(nameof(TransactionImageViewerPage)", formCode);
+        Assert.Contains("x:Class=\"AccountingApp.Views.TransactionImageViewerPage\"", viewerXaml);
+        Assert.Contains("Image", viewerXaml);
+        Assert.Contains("QueryProperty", viewerCode);
+        Assert.Contains("ImageSource.FromFile", viewerCode);
+    }
+
     private static string ReadTransactionFormXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

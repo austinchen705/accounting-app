@@ -29,6 +29,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<CurrencyService>();
         builder.Services.AddSingleton<CategoryService>();
+        builder.Services.AddSingleton<TransactionImageService>();
         builder.Services.AddSingleton<TransactionService>();
         builder.Services.AddSingleton<DataRefreshService>();
         builder.Services.AddSingleton<BudgetService>();
@@ -64,6 +65,7 @@ public static class MauiProgram
 
         // Navigation pages
         builder.Services.AddTransient<TransactionFormPage>();
+        builder.Services.AddTransient<TransactionImageViewerPage>();
         builder.Services.AddTransient<CategoryListPage>();
         builder.Services.AddTransient<CategoryFormPage>();
         builder.Services.AddTransient<CategoryReportTransactionDetailPage>();

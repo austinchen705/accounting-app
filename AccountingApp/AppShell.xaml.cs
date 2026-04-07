@@ -17,6 +17,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("CategoryListPage", typeof(CategoryListPage));
         Routing.RegisterRoute("CategoryFormPage", typeof(CategoryFormPage));
         Routing.RegisterRoute("AssetTrendPage", typeof(AssetTrendPage));
+        Routing.RegisterRoute(nameof(TransactionImageViewerPage), typeof(TransactionImageViewerPage));
         Routing.RegisterRoute(nameof(CategoryReportTransactionDetailPage), typeof(CategoryReportTransactionDetailPage));
     }
 
