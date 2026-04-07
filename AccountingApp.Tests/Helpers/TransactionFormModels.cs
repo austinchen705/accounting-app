@@ -18,5 +18,6 @@ public class Transaction : IFrequentCategorySourceTransaction
     public int CategoryId { get; set; }
     public DateTime Date { get; set; } = DateTime.Today;
     public string Note { get; set; } = string.Empty;
+    public string? ImageRelativePath { get; set; }
     public string Type { get; set; } = "expense";
 }

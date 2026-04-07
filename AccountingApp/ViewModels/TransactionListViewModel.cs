@@ -33,6 +33,7 @@ public class TransactionListViewModel : BindableObject
         public string Note => Transaction.Note;
         public string Type => Transaction.Type;
         public string CategoryName { get; init; } = string.Empty;
+        public bool HasAttachmentImage => !string.IsNullOrWhiteSpace(Transaction.ImageRelativePath);
         public string AmountDisplayText => $"{Transaction.Amount:N0} {Transaction.Currency}";
         public bool HasExchangeInfo => !string.Equals(Transaction.Currency, BaseCurrency, StringComparison.OrdinalIgnoreCase)
                                        && ConvertedAmount is not null

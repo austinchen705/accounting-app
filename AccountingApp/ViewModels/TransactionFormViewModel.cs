@@ -12,6 +12,7 @@ namespace AccountingApp.ViewModels;
 public class TransactionFormViewModel : BindableObject
 {
     private readonly TransactionService _transactionService;
+    private readonly TransactionImageService _transactionImageService;
     private readonly CategoryService _categoryService;
     private readonly BudgetService _budgetService;
     private readonly ILocalizationService _localizationService;
@@ -26,6 +27,9 @@ public class TransactionFormViewModel : BindableObject
     private bool _hasError;
     private bool _isEdit;
     private int _categoryLoadVersion;
+    private string? _persistedAttachmentImageRelativePath;
+    private string? _stagedAttachmentImageRelativePath;
+    private bool _removeAttachmentImage;
     private readonly TransactionFormFrequentCategoryState<Category, Transaction> _frequentCategoryState = new();
 
     public int TransactionId
@@ -93,6 +97,11 @@ public class TransactionFormViewModel : BindableObject
         set { _errorMessage = value; OnPropertyChanged(); }
     }
 
+    public string? AttachmentImageRelativePath =>
+        _removeAttachmentImage ? null : _stagedAttachmentImageRelativePath ?? _persistedAttachmentImageRelativePath;
+
+    public bool HasAttachmentImage => !string.IsNullOrWhiteSpace(AttachmentImageRelativePath);
+
     public bool HasError
     {
         get => _hasError;
@@ -117,11 +126,13 @@ public class TransactionFormViewModel : BindableObject
 
     public TransactionFormViewModel(
         TransactionService transactionService,
+        TransactionImageService transactionImageService,
         CategoryService categoryService,
         BudgetService budgetService,
         ILocalizationService localizationService)
     {
         _transactionService = transactionService;
+        _transactionImageService = transactionImageService;
         _categoryService = categoryService;
         _budgetService = budgetService;
         _localizationService = localizationService;
@@ -174,6 +185,27 @@ public class TransactionFormViewModel : BindableObject
         }
 
         await LoadCategoriesForTypeAsync(txn.CategoryId);
+        _persistedAttachmentImageRelativePath = txn.ImageRelativePath;
+        _stagedAttachmentImageRelativePath = null;
+        _removeAttachmentImage = false;
+        OnPropertyChanged(nameof(AttachmentImageRelativePath));
+        OnPropertyChanged(nameof(HasAttachmentImage));
+    }
+
+    public void StageAttachmentImage(string relativePath)
+    {
+        _stagedAttachmentImageRelativePath = relativePath;
+        _removeAttachmentImage = false;
+        OnPropertyChanged(nameof(AttachmentImageRelativePath));
+        OnPropertyChanged(nameof(HasAttachmentImage));
+    }
+
+    public void RemoveAttachmentImage()
+    {
+        _stagedAttachmentImageRelativePath = null;
+        _removeAttachmentImage = !string.IsNullOrWhiteSpace(_persistedAttachmentImageRelativePath);
+        OnPropertyChanged(nameof(AttachmentImageRelativePath));
+        OnPropertyChanged(nameof(HasAttachmentImage));
     }
 
     private async Task SaveAsync()
@@ -193,8 +225,13 @@ public class TransactionFormViewModel : BindableObject
             CategoryId = SelectedCategory?.Id ?? 0,
             Date = Date,
             Note = Note,
+            ImageRelativePath = _removeAttachmentImage
+                ? null
+                : _stagedAttachmentImageRelativePath ?? _persistedAttachmentImageRelativePath,
             Type = Type
         };
+
+        var oldAttachmentImageRelativePath = _persistedAttachmentImageRelativePath;
 
         if (_isEdit)
         {
@@ -208,6 +245,11 @@ public class TransactionFormViewModel : BindableObject
 
         if (txn.Type == "expense" && txn.CategoryId > 0)
             await _budgetService.CheckAndNotifyAsync(txn.CategoryId, txn.Date.ToString("yyyy-MM"));
+
+        if (!string.Equals(oldAttachmentImageRelativePath, txn.ImageRelativePath, StringComparison.Ordinal))
+        {
+            await _transactionImageService.DeleteAsync(oldAttachmentImageRelativePath);
+        }
 
         await Shell.Current.GoToAsync("..");
     }

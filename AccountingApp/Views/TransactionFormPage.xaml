@@ -127,6 +127,44 @@
                                ReturnType="Done" />
                     </Frame>
 
+                    <Label Text="{markup:Translate TransactionFormAttachmentLabel}" Style="{StaticResource CaptionStyle}" />
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout x:Name="AttachmentAddActions" Spacing="10">
+                            <HorizontalStackLayout.Triggers>
+                                <DataTrigger TargetType="HorizontalStackLayout"
+                                             Binding="{Binding HasAttachmentImage}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </HorizontalStackLayout.Triggers>
+                            <Button Text="{markup:Translate TransactionFormAttachmentCameraButton}"
+                                    Clicked="OnCaptureAttachmentClicked" />
+                            <Button Text="{markup:Translate TransactionFormAttachmentPhotoLibraryButton}"
+                                    Clicked="OnPickAttachmentFromLibraryClicked" />
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout x:Name="AttachmentExistingActions" Spacing="10" IsVisible="False">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout"
+                                             Binding="{Binding HasAttachmentImage}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </DataTrigger>
+                            </VerticalStackLayout.Triggers>
+
+                            <Label Text="{Binding AttachmentImageRelativePath}"
+                                   Style="{StaticResource CaptionStyle}" />
+                            <HorizontalStackLayout Spacing="10">
+                                <Button Text="{markup:Translate TransactionFormAttachmentViewButton}"
+                                        Clicked="OnViewAttachmentClicked" />
+                                <Button Text="{markup:Translate TransactionFormAttachmentReplaceButton}"
+                                        Clicked="OnReplaceAttachmentClicked" />
+                                <Button Text="{markup:Translate TransactionFormAttachmentRemoveButton}"
+                                        Clicked="OnRemoveAttachmentClicked" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
                     <Label Text="{markup:Translate TransactionFormCurrencyLabel}" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
                         <Picker ItemsSource="{Binding Currencies}" SelectedItem="{Binding Currency}" />

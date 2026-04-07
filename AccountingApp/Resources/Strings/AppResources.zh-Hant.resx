@@ -168,6 +168,24 @@
   <data name="TransactionFormCurrencyLabel" xml:space="preserve">
     <value>幣別</value>
   </data>
+  <data name="TransactionFormAttachmentLabel" xml:space="preserve">
+    <value>附件照片</value>
+  </data>
+  <data name="TransactionFormAttachmentCameraButton" xml:space="preserve">
+    <value>拍照</value>
+  </data>
+  <data name="TransactionFormAttachmentPhotoLibraryButton" xml:space="preserve">
+    <value>從相簿選擇</value>
+  </data>
+  <data name="TransactionFormAttachmentViewButton" xml:space="preserve">
+    <value>檢視</value>
+  </data>
+  <data name="TransactionFormAttachmentReplaceButton" xml:space="preserve">
+    <value>更換</value>
+  </data>
+  <data name="TransactionFormAttachmentRemoveButton" xml:space="preserve">
+    <value>移除</value>
+  </data>
   <data name="TransactionFormSaveButton" xml:space="preserve">
     <value>儲存記錄</value>
   </data>
