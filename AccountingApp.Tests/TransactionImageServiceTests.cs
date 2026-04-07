@@ -29,6 +29,24 @@ public class TransactionImageServiceTests : IDisposable
         Assert.False(File.Exists(storedPath));
     }
 
+    [Fact]
+    public async Task ImportAsync_from_stream_copies_file_into_app_storage()
+    {
+        Directory.CreateDirectory(_rootPath);
+        var service = new TransactionImageService(
+            _rootPath,
+            () => new DateTime(2026, 4, 7, 10, 30, 0, DateTimeKind.Utc),
+            _ => "picked.png");
+        await using var sourceStream = new MemoryStream("picked-image"u8.ToArray());
+
+        var relativePath = await service.ImportAsync(sourceStream, "picked.png");
+        var storedPath = Path.Combine(_rootPath, relativePath.Replace('/', Path.DirectorySeparatorChar));
+
+        Assert.Equal("receipts/2026/04/picked.png", relativePath);
+        Assert.True(File.Exists(storedPath));
+        Assert.Equal("picked-image", await File.ReadAllTextAsync(storedPath));
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_rootPath))

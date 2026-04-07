@@ -160,6 +160,10 @@ public class TransactionFormLayoutTests
         Assert.Contains("MediaPicker.Default.CapturePhotoAsync", formCode);
         Assert.Contains("MediaPicker.Default.PickPhotoAsync", formCode);
         Assert.Contains("StageAttachmentImage", formCode);
+        Assert.Contains("private async Task PickAttachmentFromLibraryAsync()", formCode);
+        Assert.Contains("await PickAttachmentFromLibraryAsync();", formCode);
+        Assert.Contains("await photo.OpenReadAsync()", formCode);
+        Assert.Contains("ImportAsync(sourceStream, photo.FileName)", formCode);
         Assert.Contains("OnViewAttachmentClicked", formCode);
         Assert.Contains("Shell.Current.GoToAsync(nameof(TransactionImageViewerPage)", formCode);
         Assert.Contains("x:Class=\"AccountingApp.Views.TransactionImageViewerPage\"", viewerXaml);

@@ -88,19 +88,29 @@
                                                    Style="{StaticResource CaptionStyle}"
                                                    IsVisible="{Binding HasExchangeInfo}" />
                                         </VerticalStackLayout>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding AmountDisplayText}"
-                                               Style="{StaticResource ValueStyle}"
-                                               VerticalOptions="Center">
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="expense">
-                                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
-                                                </DataTrigger>
-                                                <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="income">
-                                                    <Setter Property="TextColor" Value="{StaticResource Success}" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Spacing="4"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Center">
+                                            <Label Text="📷"
+                                                   FontSize="12"
+                                                   HorizontalOptions="End"
+                                                   Opacity="0.9"
+                                                   IsVisible="{Binding HasAttachmentImage}" />
+                                            <Label Text="{Binding AmountDisplayText}"
+                                                   Style="{StaticResource ValueStyle}"
+                                                   VerticalOptions="Center"
+                                                   HorizontalTextAlignment="End">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="expense">
+                                                        <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="income">
+                                                        <Setter Property="TextColor" Value="{StaticResource Success}" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </VerticalStackLayout>
                                     </Grid>
                                     <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
                                         <Button Text="{markup:Translate EditButtonText}"

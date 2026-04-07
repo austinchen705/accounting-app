@@ -64,8 +64,7 @@ public partial class TransactionFormPage : ContentPage
 
     private async void OnPickAttachmentFromLibraryClicked(object? sender, EventArgs e)
     {
-        var photo = await MediaPicker.Default.PickPhotoAsync();
-        await StageImportedAttachmentAsync(photo);
+        await PickAttachmentFromLibraryAsync();
     }
 
     private async void OnViewAttachmentClicked(object? sender, EventArgs e)
@@ -80,7 +79,7 @@ public partial class TransactionFormPage : ContentPage
 
     private async void OnReplaceAttachmentClicked(object? sender, EventArgs e)
     {
-        await OnPickAttachmentFromLibraryClicked(sender, e);
+        await PickAttachmentFromLibraryAsync();
     }
 
     private void OnRemoveAttachmentClicked(object? sender, EventArgs e)
@@ -88,14 +87,21 @@ public partial class TransactionFormPage : ContentPage
         _vm.RemoveAttachmentImage();
     }
 
+    private async Task PickAttachmentFromLibraryAsync()
+    {
+        var photo = await MediaPicker.Default.PickPhotoAsync();
+        await StageImportedAttachmentAsync(photo);
+    }
+
     private async Task StageImportedAttachmentAsync(FileResult? photo)
     {
-        if (photo is null || string.IsNullOrWhiteSpace(photo.FullPath))
+        if (photo is null)
         {
             return;
         }
 
-        var relativePath = await _transactionImageService.ImportAsync(photo.FullPath);
+        await using var sourceStream = await photo.OpenReadAsync();
+        var relativePath = await _transactionImageService.ImportAsync(sourceStream, photo.FileName);
         _vm.StageAttachmentImage(relativePath);
     }
 }

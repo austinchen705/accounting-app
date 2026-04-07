@@ -45,6 +45,19 @@ public class TransactionListLayoutTests
         Assert.Contains("Text=\"{Binding CategoryName}\"", xaml);
     }
 
+    [Fact]
+    public void TransactionList_shows_attachment_icon_for_transactions_with_images()
+    {
+        var xaml = ReadTransactionListXaml();
+        var code = File.ReadAllText(Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/TransactionListViewModel.cs")));
+
+        Assert.Contains("Text=\"📷\"", xaml);
+        Assert.Contains("IsVisible=\"{Binding HasAttachmentImage}\"", xaml);
+        Assert.Contains("public bool HasAttachmentImage => !string.IsNullOrWhiteSpace(Transaction.ImageRelativePath);", code);
+    }
+
     private static string ReadTransactionListXaml()
     {
         var path = Path.GetFullPath(Path.Combine(

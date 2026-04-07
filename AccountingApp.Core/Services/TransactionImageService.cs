@@ -23,8 +23,16 @@ public class TransactionImageService
             throw new ArgumentException("Source path is required.", nameof(sourcePath));
         }
 
+        await using var sourceStream = File.OpenRead(sourcePath);
+        return await ImportAsync(sourceStream, Path.GetFileName(sourcePath), cancellationToken);
+    }
+
+    public async Task<string> ImportAsync(Stream sourceStream, string? sourceFileName, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sourceStream);
+
         var now = _utcNow();
-        var fileName = _fileNameFactory(sourcePath);
+        var fileName = _fileNameFactory(sourceFileName ?? "attachment");
         var relativePath = Path.Combine("receipts", now.ToString("yyyy"), now.ToString("MM"), fileName)
             .Replace(Path.DirectorySeparatorChar, '/');
         var destinationPath = GetAbsolutePath(relativePath);
@@ -34,7 +42,6 @@ public class TransactionImageService
             Directory.CreateDirectory(destinationDirectory);
         }
 
-        await using var sourceStream = File.OpenRead(sourcePath);
         await using var destinationStream = File.Create(destinationPath);
         await sourceStream.CopyToAsync(destinationStream, cancellationToken);
 

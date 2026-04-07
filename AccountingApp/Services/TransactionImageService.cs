@@ -14,6 +14,9 @@ public class TransactionImageService
     public Task<string> ImportAsync(string sourcePath, CancellationToken cancellationToken = default) =>
         _inner.ImportAsync(sourcePath, cancellationToken);
 
+    public Task<string> ImportAsync(Stream sourceStream, string? sourceFileName, CancellationToken cancellationToken = default) =>
+        _inner.ImportAsync(sourceStream, sourceFileName, cancellationToken);
+
     public Task DeleteAsync(string? relativePath, CancellationToken cancellationToken = default) =>
         _inner.DeleteAsync(relativePath, cancellationToken);
 }
