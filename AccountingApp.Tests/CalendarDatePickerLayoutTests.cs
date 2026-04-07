@@ -21,6 +21,8 @@ public class CalendarDatePickerLayoutTests
         Assert.Contains("OpenCalendarCommand", code);
         Assert.Contains("CloseCalendarCommand", code);
         Assert.Contains("SelectCalendarDateCommand", code);
+        Assert.Contains("public event EventHandler? CalendarOpened;", code);
+        Assert.Contains("public event EventHandler? CalendarCompleted;", code);
         Assert.Contains("LineBreakMode=\"WordWrap\"", xaml);
         Assert.Contains("MaxLines=\"2\"", xaml);
         Assert.Contains("\\n{DateTime.Today:MM}", code);

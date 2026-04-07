@@ -36,7 +36,7 @@ public partial class CalendarDatePicker : ContentView
     public CalendarDatePicker()
     {
         OpenCalendarCommand = new Command(OpenCalendar);
-        CloseCalendarCommand = new Command(() => IsCalendarVisible = false);
+        CloseCalendarCommand = new Command(CloseCalendar);
         PreviousCalendarYearCommand = new Command(() => ChangeCalendarMonth(-12));
         PreviousCalendarMonthCommand = new Command(() => ChangeCalendarMonth(-1));
         NextCalendarMonthCommand = new Command(() => ChangeCalendarMonth(1));
@@ -100,6 +100,8 @@ public partial class CalendarDatePicker : ContentView
     public ICommand NextCalendarMonthCommand { get; }
     public ICommand NextCalendarYearCommand { get; }
     public ICommand SelectCalendarDateCommand { get; }
+    public event EventHandler? CalendarOpened;
+    public event EventHandler? CalendarCompleted;
 
     private static void OnDatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -114,6 +116,13 @@ public partial class CalendarDatePicker : ContentView
         SyncCalendarMonth(Date);
         RefreshCalendarDays();
         IsCalendarVisible = true;
+        CalendarOpened?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void CloseCalendar()
+    {
+        IsCalendarVisible = false;
+        CalendarCompleted?.Invoke(this, EventArgs.Empty);
     }
 
     private void ChangeCalendarMonth(int offset)
@@ -131,7 +140,7 @@ public partial class CalendarDatePicker : ContentView
         }
 
         Date = day.Date;
-        IsCalendarVisible = false;
+        CloseCalendar();
     }
 
     private void SyncCalendarMonth(DateTime date)
