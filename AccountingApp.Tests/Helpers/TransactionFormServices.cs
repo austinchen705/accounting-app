@@ -35,6 +35,11 @@ public sealed class TransactionService
 
     public Task UpdateAsync(AccountingApp.Models.Transaction transaction)
     {
+        if (_store.UpdateException is not null)
+        {
+            throw _store.UpdateException;
+        }
+
         var index = _store.Transactions.FindIndex(item => item.Id == transaction.Id);
         if (index >= 0)
         {
@@ -43,6 +48,26 @@ public sealed class TransactionService
         else
         {
             _store.Transactions.Add(transaction);
+        }
+
+        return Task.CompletedTask;
+    }
+}
+
+public sealed class TransactionImageService
+{
+    private readonly TransactionFormTestStore _store;
+
+    public TransactionImageService(TransactionFormTestStore store)
+    {
+        _store = store;
+    }
+
+    public Task DeleteAsync(string? relativePath)
+    {
+        if (!string.IsNullOrWhiteSpace(relativePath))
+        {
+            _store.DeletedImagePaths.Add(relativePath);
         }
 
         return Task.CompletedTask;

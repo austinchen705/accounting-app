@@ -24,6 +24,7 @@ public class DatabaseService
         await _db.CreateTableAsync<Category>();
         await _db.CreateTableAsync<Budget>();
         await _db.CreateTableAsync<ExchangeRateCache>();
+        await EnsureTransactionSchemaAsync();
         await EnsureIndexesAsync();
         await NormalizeLegacyTypeValuesAsync();
 
@@ -46,6 +47,15 @@ public class DatabaseService
         await _db.ExecuteAsync("UPDATE Categories SET Type = 'income' WHERE Type IN ('收入', 'Income', 'INCOME');");
         await _db.ExecuteAsync("UPDATE Transactions SET Type = 'expense' WHERE Type IN ('支出', 'Expense', 'EXPENSE');");
         await _db.ExecuteAsync("UPDATE Transactions SET Type = 'income' WHERE Type IN ('收入', 'Income', 'INCOME');");
+    }
+
+    private async Task EnsureTransactionSchemaAsync()
+    {
+        var columns = await _db!.GetTableInfoAsync("Transactions");
+        if (columns.All(column => !string.Equals(column.Name, "ImageRelativePath", StringComparison.Ordinal)))
+        {
+            await _db.ExecuteAsync("ALTER TABLE Transactions ADD COLUMN ImageRelativePath TEXT NULL;");
+        }
     }
 
     private async Task EnsureIndexesAsync()
