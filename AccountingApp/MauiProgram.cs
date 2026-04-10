@@ -32,6 +32,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<TransactionImageService>();
         builder.Services.AddSingleton<TransactionService>();
         builder.Services.AddSingleton<DataRefreshService>();
+        builder.Services.AddSingleton<IAppInstallInfoService, AppInstallInfoService>();
         builder.Services.AddSingleton<BudgetService>();
         builder.Services.AddSingleton<StatisticsService>();
         builder.Services.AddSingleton<AssetSnapshotService>();

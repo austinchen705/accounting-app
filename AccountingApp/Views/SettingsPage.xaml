@@ -43,6 +43,30 @@
             </Frame>
 
             <Frame Style="{StaticResource CardFrameStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{markup:Translate SettingsAppInfoSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+                        <Label Text="{markup:Translate SettingsAppVersionLabel}"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{Binding AppVersionText}"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{markup:Translate SettingsAppExpirationLabel}"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Style="{StaticResource CaptionStyle}" />
+                        <Label Text="{Binding AppExpirationDateText}"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               Style="{StaticResource CaptionStyle}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="資料匯出" Style="{StaticResource SectionTitleStyle}" />
                     <Button Text="匯出 CSV" Command="{Binding ExportCsvCommand}" />

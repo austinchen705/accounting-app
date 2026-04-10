@@ -29,4 +29,16 @@ public class SettingsLanguageRefreshTests
         Assert.Contains("shell.GoToAsync(\"//HomePage\")", code);
         Assert.DoesNotContain("shell.GoToAsync(\"//SettingsPage\")", code);
     }
+
+    [Fact]
+    public void SettingsViewModel_exposes_app_version_and_expiration_strings()
+    {
+        var path = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../AccountingApp/ViewModels/SettingsViewModel.cs"));
+        var code = File.ReadAllText(path);
+
+        Assert.Contains("AppVersionText", code);
+        Assert.Contains("AppExpirationDateText", code);
+    }
 }

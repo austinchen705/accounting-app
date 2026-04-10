@@ -7,6 +7,7 @@ namespace AccountingApp.ViewModels;
 
 public class SettingsViewModel : BindableObject
 {
+    private readonly IAppInstallInfoService _appInstallInfoService;
     private readonly ExportService _exportService;
     private readonly GoogleDriveService _googleDriveService;
     private readonly JsonImportService _jsonImportService;
@@ -52,6 +53,8 @@ public class SettingsViewModel : BindableObject
     }
 
     public bool IsGoogleDriveIdle => !IsGoogleDriveBusy;
+    public string AppVersionText => _appInstallInfoService.GetVersionText();
+    public string AppExpirationDateText => _appInstallInfoService.GetExpirationDateText();
 
     public ICommand ExportCsvCommand { get; }
     public ICommand ExportExcelCommand { get; }
@@ -65,12 +68,14 @@ public class SettingsViewModel : BindableObject
     public ICommand SetEnglishCommand { get; }
 
     public SettingsViewModel(
+        IAppInstallInfoService appInstallInfoService,
         ExportService exportService,
         GoogleDriveService googleDriveService,
         JsonImportService jsonImportService,
         ILocalizationService localizationService,
         DataRefreshService refreshService)
     {
+        _appInstallInfoService = appInstallInfoService;
         _exportService = exportService;
         _googleDriveService = googleDriveService;
         _jsonImportService = jsonImportService;

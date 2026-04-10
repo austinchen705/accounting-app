@@ -48,6 +48,15 @@
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SettingsAppInfoSectionTitle" xml:space="preserve">
+    <value>App Info</value>
+  </data>
+  <data name="SettingsAppVersionLabel" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="SettingsAppExpirationLabel" xml:space="preserve">
+    <value>Valid Until</value>
+  </data>
   <data name="SettingsCurrencySectionTitle" xml:space="preserve">
     <value>Base Currency</value>
   </data>

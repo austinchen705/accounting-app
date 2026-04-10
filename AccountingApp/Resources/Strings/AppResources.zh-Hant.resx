@@ -48,6 +48,15 @@
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>設定</value>
   </data>
+  <data name="SettingsAppInfoSectionTitle" xml:space="preserve">
+    <value>App 資訊</value>
+  </data>
+  <data name="SettingsAppVersionLabel" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="SettingsAppExpirationLabel" xml:space="preserve">
+    <value>有效至</value>
+  </data>
   <data name="SettingsCurrencySectionTitle" xml:space="preserve">
     <value>主幣別</value>
   </data>

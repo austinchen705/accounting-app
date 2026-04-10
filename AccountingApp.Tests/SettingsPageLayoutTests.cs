@@ -17,6 +17,18 @@ public class SettingsPageLayoutTests
         Assert.Contains("SetEnglishCommand", xaml);
     }
 
+    [Fact]
+    public void SettingsPage_includes_app_info_section_with_version_and_expiration_bindings()
+    {
+        var xaml = ReadSettingsXaml();
+
+        Assert.Contains("SettingsAppInfoSectionTitle", xaml);
+        Assert.Contains("SettingsAppVersionLabel", xaml);
+        Assert.Contains("SettingsAppExpirationLabel", xaml);
+        Assert.Contains("Text=\"{Binding AppVersionText}\"", xaml);
+        Assert.Contains("Text=\"{Binding AppExpirationDateText}\"", xaml);
+    }
+
     private static string ReadSettingsXaml()
     {
         var path = Path.GetFullPath(Path.Combine(
