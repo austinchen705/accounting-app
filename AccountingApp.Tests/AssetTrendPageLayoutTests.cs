@@ -17,8 +17,7 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("FirstTrade", pageXaml);
         Assert.Contains("LatestTotalCaptionText", pageXaml);
         Assert.Contains("LatestTotalAmountText", pageXaml);
-        Assert.Contains("OpenFullscreenChartCommand", pageXaml);
-        Assert.Contains("AssetTrendFullscreenChartButton", pageXaml);
+        Assert.Contains("InputTransparent=\"True\"", pageXaml);
         Assert.Contains("CalendarDatePicker", pageXaml);
         Assert.Contains("InputContainerStyle", pageXaml);
         Assert.Contains("ColumnDefinitions=\"*,Auto\"", pageXaml);
@@ -58,10 +57,9 @@ public class AssetTrendPageLayoutTests
         var pageXaml = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml");
         var codeBehind = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml.cs");
 
-        Assert.Contains("OpenFullscreenChartCommand", pageXaml);
-        Assert.Contains("FullscreenChartRequested", codeBehind);
-        Assert.Contains("GoToAsync", codeBehind);
-        Assert.Contains("AssetTrendChartPage", codeBehind);
+        Assert.DoesNotContain("AssetTrendFullscreenChartButton", pageXaml);
+        Assert.DoesNotContain("OnFullscreenChartButtonClicked", pageXaml);
+        Assert.DoesNotContain("SwitchToAssetTrendChartTab", codeBehind);
     }
 
     private static string ReadFile(string relativePath)

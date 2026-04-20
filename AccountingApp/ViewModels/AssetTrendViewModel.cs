@@ -34,8 +34,6 @@ public class AssetTrendViewModel : BindableObject
     private int? _editingSnapshotId;
 
     public event EventHandler? EditRequested;
-    public event EventHandler? FullscreenChartRequested;
-
     public AssetTrendViewModel(AssetSnapshotService assetSnapshotService, ILocalizationService localizationService)
     {
         _assetSnapshotService = assetSnapshotService;
@@ -46,7 +44,6 @@ public class AssetTrendViewModel : BindableObject
         UpdateSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await UpdateSnapshotAsync(snapshot));
         DeleteSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await DeleteSnapshotAsync(snapshot));
         ImportCsvCommand = new Command(async () => await ImportCsvAsync());
-        OpenFullscreenChartCommand = new Command(() => FullscreenChartRequested?.Invoke(this, EventArgs.Empty));
     }
 
     public DateTime SnapshotDate
@@ -218,8 +215,6 @@ public class AssetTrendViewModel : BindableObject
     public ICommand UpdateSnapshotCommand { get; }
     public ICommand DeleteSnapshotCommand { get; }
     public ICommand ImportCsvCommand { get; }
-    public ICommand OpenFullscreenChartCommand { get; }
-
     public async Task LoadAsync()
     {
         var snapshots = await _assetSnapshotService.GetAllAsync();
@@ -392,11 +387,10 @@ public class AssetTrendViewModel : BindableObject
     private void RefreshChart(IReadOnlyList<AssetSnapshot> snapshots)
     {
         var trend = _assetSnapshotService.BuildTrendSeries(snapshots);
-        var series = BuildTrendSeries(trend);
         ApplyLatestTotalSummary(snapshots, trend.Totals);
 
-        SummaryTrendSeries = series;
-        DetailTrendSeries = series;
+        SummaryTrendSeries = BuildTrendSeries(trend, "#111827");
+        DetailTrendSeries = BuildTrendSeries(trend, "#F9FAFB");
         SummaryTrendXAxes = CreateXAxis(BuildCondensedDateLabels(trend.Labels));
         DetailTrendXAxes = CreateXAxis(trend.Labels.Select(ShortenDateLabel).ToArray());
 
@@ -456,7 +450,7 @@ public class AssetTrendViewModel : BindableObject
             : label;
     }
 
-    private ISeries[] BuildTrendSeries(AccountingApp.Core.Services.AssetTrendSeriesResult trend) =>
+    private ISeries[] BuildTrendSeries(AccountingApp.Core.Services.AssetTrendSeriesResult trend, string totalLineColor) =>
     [
         BuildStackedColumnSeries("Stock", trend.StockValues, "#2563EB"),
         BuildStackedColumnSeries("Cash", trend.CashValues, "#16A34A"),
@@ -469,9 +463,9 @@ public class AssetTrendViewModel : BindableObject
             Fill = null,
             GeometrySize = 8,
             LineSmoothness = 0,
-            Stroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 },
-            GeometryFill = new SolidColorPaint(SKColors.Black),
-            GeometryStroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 }
+            Stroke = new SolidColorPaint(SKColor.Parse(totalLineColor)) { StrokeThickness = 3 },
+            GeometryFill = new SolidColorPaint(SKColor.Parse(totalLineColor)),
+            GeometryStroke = new SolidColorPaint(SKColor.Parse(totalLineColor)) { StrokeThickness = 3 }
         }
     ];
 

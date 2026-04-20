@@ -22,8 +22,6 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("EditingSnapshotDisplayText", vmCode);
         Assert.Contains("AssetTrendPropertySeriesName", vmCode);
         Assert.Contains("EditRequested", vmCode);
-        Assert.Contains("OpenFullscreenChartCommand", vmCode);
-        Assert.Contains("FullscreenChartRequested", vmCode);
         Assert.Contains("ImportErrorDetails", vmCode);
         Assert.Contains("ReplaceImportCsvAsync", vmCode);
         Assert.Contains("AssetTrendImportConfirmTitle", vmCode);
@@ -38,6 +36,8 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("DetailTrendSeries", vmCode);
         Assert.Contains("DetailTrendXAxes", vmCode);
         Assert.Contains("DetailTrendYAxes", vmCode);
+        Assert.Contains("BuildTrendSeries(trend, \"#111827\")", vmCode);
+        Assert.Contains("BuildTrendSeries(trend, \"#F9FAFB\")", vmCode);
         Assert.Contains("AssetTrendChartAxisHelper", vmCode);
         Assert.DoesNotContain("ImportFromGoogleDriveCommand", vmCode);
         Assert.DoesNotContain("Drive debug", vmCode);

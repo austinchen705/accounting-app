@@ -95,16 +95,7 @@
 
             <Frame Style="{StaticResource CardFrameStyle}">
                 <VerticalStackLayout Spacing="10">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="12">
-                        <Label Text="{markup:Translate AssetTrendChartSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
-                        <Button Grid.Column="1"
-                                Text="{markup:Translate AssetTrendFullscreenChartButton}"
-                                Command="{Binding OpenFullscreenChartCommand}"
-                                Padding="12,6"
-                                FontSize="12"
-                                VerticalOptions="Center" />
-                    </Grid>
+                    <Label Text="{markup:Translate AssetTrendChartSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <VerticalStackLayout Spacing="2"
                                          IsVisible="{Binding HasSnapshots}">
                         <Label Text="{Binding LatestTotalCaptionText}"
@@ -118,6 +109,7 @@
                                         YAxes="{Binding TrendYAxes}"
                                         LegendPosition="Bottom"
                                         HeightRequest="280"
+                                        InputTransparent="True"
                                         IsVisible="{Binding HasSnapshots}" />
                     <Label Text="{markup:Translate AssetTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"

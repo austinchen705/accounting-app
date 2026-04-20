@@ -32,6 +32,11 @@
                       Icon="tab_chart.png"
                       ContentTemplate="{DataTemplate views:AssetTrendPage}"
                       Route="AssetTrendPage" />
+        <ShellContent x:Name="AssetTrendChartTab"
+                      Title="{markup:Translate AssetTrendChartPageTitle}"
+                      Icon="tab_chart.png"
+                      ContentTemplate="{DataTemplate views:AssetTrendChartPage}"
+                      Route="AssetTrendChartPageTab" />
         <ShellContent x:Name="CategoryManagementTab"
                       Title="{markup:Translate CategoryManagementTabTitle}"
                       Icon="tab_list.png"
