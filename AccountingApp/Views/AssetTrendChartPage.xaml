@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:markup="clr-namespace:AccountingApp.Markup"
+             x:Class="AccountingApp.Views.AssetTrendChartPage"
+             Title="{markup:Translate AssetTrendChartPageTitle}">
+
+    <Grid Padding="16">
+        <lvc:CartesianChart Series="{Binding DetailTrendSeries}"
+                            XAxes="{Binding DetailTrendXAxes}"
+                            YAxes="{Binding DetailTrendYAxes}"
+                            LegendPosition="Bottom"
+                            HeightRequest="480"
+                            IsVisible="{Binding HasSnapshots}" />
+        <Label Text="{markup:Translate AssetTrendEmptyStateText}"
+               Style="{StaticResource CaptionStyle}"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               IsVisible="{Binding HasSnapshots, Converter={StaticResource InverseBoolConverter}}" />
+    </Grid>
+</ContentPage>

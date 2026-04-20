@@ -61,6 +61,7 @@ public static class MauiProgram
         builder.Services.AddTransient<StatisticsPage>();
         builder.Services.AddTransient<CategoryReportPage>();
         builder.Services.AddTransient<AssetTrendPage>();
+        builder.Services.AddTransient<AssetTrendChartPage>();
         builder.Services.AddTransient<BudgetPage>();
         builder.Services.AddTransient<SettingsPage>();
 

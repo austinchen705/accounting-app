@@ -30,9 +30,15 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("LatestTotalCaptionText", vmCode);
         Assert.Contains("LatestTotalAmountText", vmCode);
         Assert.Contains("ApplyLatestTotalSummary", vmCode);
-        Assert.Contains("MinStep = 2_500_000", vmCode);
-        Assert.Contains("ForceStepToMin = true", vmCode);
-        Assert.Contains("Labeler = FormatYAxisValue", vmCode);
+        Assert.Contains("SummaryTrendSeries", vmCode);
+        Assert.Contains("SummaryTrendXAxes", vmCode);
+        Assert.Contains("SummaryTrendYAxes", vmCode);
+        Assert.Contains("DetailTrendSeries", vmCode);
+        Assert.Contains("DetailTrendXAxes", vmCode);
+        Assert.Contains("DetailTrendYAxes", vmCode);
+        Assert.Contains("BuildTrendSeries(trend, \"#111827\")", vmCode);
+        Assert.Contains("BuildTrendSeries(trend, \"#F9FAFB\")", vmCode);
+        Assert.Contains("AssetTrendChartAxisHelper", vmCode);
         Assert.DoesNotContain("ImportFromGoogleDriveCommand", vmCode);
         Assert.DoesNotContain("Drive debug", vmCode);
         Assert.DoesNotContain("ListBackupFolderFilesAsync()", vmCode);

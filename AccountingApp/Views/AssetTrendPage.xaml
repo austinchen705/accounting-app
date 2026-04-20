@@ -109,6 +109,7 @@
                                         YAxes="{Binding TrendYAxes}"
                                         LegendPosition="Bottom"
                                         HeightRequest="280"
+                                        InputTransparent="True"
                                         IsVisible="{Binding HasSnapshots}" />
                     <Label Text="{markup:Translate AssetTrendEmptyStateText}"
                            Style="{StaticResource CaptionStyle}"

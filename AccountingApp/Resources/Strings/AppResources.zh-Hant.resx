@@ -399,6 +399,12 @@
   <data name="AssetTrendChartSectionTitle" xml:space="preserve">
     <value>資產走勢圖</value>
   </data>
+  <data name="AssetTrendFullscreenChartButton" xml:space="preserve">
+    <value>全螢幕</value>
+  </data>
+  <data name="AssetTrendChartPageTitle" xml:space="preserve">
+    <value>資產走勢圖表</value>
+  </data>
   <data name="AssetTrendEmptyStateText" xml:space="preserve">
     <value>尚無資產快照資料</value>
   </data>
