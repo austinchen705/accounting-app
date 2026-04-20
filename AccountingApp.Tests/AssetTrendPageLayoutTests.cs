@@ -6,15 +6,19 @@ public class AssetTrendPageLayoutTests
     public void AssetTrendPage_is_registered_in_shell_and_contains_trend_chart_inputs()
     {
         var shellXaml = ReadFile("../../../../AccountingApp/AppShell.xaml");
+        var shellCode = ReadFile("../../../../AccountingApp/AppShell.xaml.cs");
         var pageXaml = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml");
 
         Assert.Contains("AssetTrendPage", shellXaml);
+        Assert.Contains("AssetTrendChartPage", shellCode);
         Assert.Contains("<lvc:CartesianChart", pageXaml);
         Assert.Contains("markup:Translate", pageXaml);
         Assert.Contains("AssetTrendStockLabel", pageXaml);
         Assert.Contains("FirstTrade", pageXaml);
         Assert.Contains("LatestTotalCaptionText", pageXaml);
         Assert.Contains("LatestTotalAmountText", pageXaml);
+        Assert.Contains("OpenFullscreenChartCommand", pageXaml);
+        Assert.Contains("AssetTrendFullscreenChartButton", pageXaml);
         Assert.Contains("CalendarDatePicker", pageXaml);
         Assert.Contains("InputContainerStyle", pageXaml);
         Assert.Contains("ColumnDefinitions=\"*,Auto\"", pageXaml);
@@ -46,6 +50,18 @@ public class AssetTrendPageLayoutTests
         Assert.Contains("AssetTrendPropertyLabel", pageXaml);
         Assert.DoesNotContain("Fund3", pageXaml);
         Assert.Contains("ScrollToAsync", codeBehind);
+    }
+
+    [Fact]
+    public void AssetTrendPage_wires_fullscreen_chart_navigation()
+    {
+        var pageXaml = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml");
+        var codeBehind = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml.cs");
+
+        Assert.Contains("OpenFullscreenChartCommand", pageXaml);
+        Assert.Contains("FullscreenChartRequested", codeBehind);
+        Assert.Contains("GoToAsync", codeBehind);
+        Assert.Contains("AssetTrendChartPage", codeBehind);
     }
 
     private static string ReadFile(string relativePath)

@@ -12,6 +12,7 @@ public partial class AssetTrendPage : ContentPage
         _vm = vm;
         BindingContext = vm;
         _vm.EditRequested += OnEditRequested;
+        _vm.FullscreenChartRequested += OnFullscreenChartRequested;
     }
 
     protected override async void OnAppearing()
@@ -23,5 +24,10 @@ public partial class AssetTrendPage : ContentPage
     private async void OnEditRequested(object? sender, EventArgs e)
     {
         await PageScrollView.ScrollToAsync(SnapshotFormFrame, ScrollToPosition.Start, true);
+    }
+
+    private async void OnFullscreenChartRequested(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("AssetTrendChartPage");
     }
 }

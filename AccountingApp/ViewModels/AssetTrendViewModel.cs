@@ -18,9 +18,12 @@ public class AssetTrendViewModel : BindableObject
     private decimal _cash;
     private decimal _firstTrade;
     private decimal _property;
-    private ISeries[] _trendSeries = Array.Empty<ISeries>();
-    private Axis[] _trendXAxes = Array.Empty<Axis>();
-    private Axis[] _trendYAxes = Array.Empty<Axis>();
+    private ISeries[] _summaryTrendSeries = Array.Empty<ISeries>();
+    private Axis[] _summaryTrendXAxes = Array.Empty<Axis>();
+    private Axis[] _summaryTrendYAxes = Array.Empty<Axis>();
+    private ISeries[] _detailTrendSeries = Array.Empty<ISeries>();
+    private Axis[] _detailTrendXAxes = Array.Empty<Axis>();
+    private Axis[] _detailTrendYAxes = Array.Empty<Axis>();
     private string _errorMessage = string.Empty;
     private bool _hasError;
     private bool _hasSnapshots;
@@ -31,6 +34,7 @@ public class AssetTrendViewModel : BindableObject
     private int? _editingSnapshotId;
 
     public event EventHandler? EditRequested;
+    public event EventHandler? FullscreenChartRequested;
 
     public AssetTrendViewModel(AssetSnapshotService assetSnapshotService, ILocalizationService localizationService)
     {
@@ -42,6 +46,7 @@ public class AssetTrendViewModel : BindableObject
         UpdateSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await UpdateSnapshotAsync(snapshot));
         DeleteSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await DeleteSnapshotAsync(snapshot));
         ImportCsvCommand = new Command(async () => await ImportCsvAsync());
+        OpenFullscreenChartCommand = new Command(() => FullscreenChartRequested?.Invoke(this, EventArgs.Empty));
     }
 
     public DateTime SnapshotDate
@@ -152,23 +157,60 @@ public class AssetTrendViewModel : BindableObject
     public ObservableCollection<AssetSnapshot> Snapshots { get; } = new();
     public ObservableCollection<string> ImportErrorDetails { get; } = new();
 
-    public ISeries[] TrendSeries
+    public ISeries[] SummaryTrendSeries
     {
-        get => _trendSeries;
-        set { _trendSeries = value; OnPropertyChanged(); }
+        get => _summaryTrendSeries;
+        set
+        {
+            _summaryTrendSeries = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TrendSeries));
+        }
     }
 
-    public Axis[] TrendXAxes
+    public Axis[] SummaryTrendXAxes
     {
-        get => _trendXAxes;
-        set { _trendXAxes = value; OnPropertyChanged(); }
+        get => _summaryTrendXAxes;
+        set
+        {
+            _summaryTrendXAxes = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TrendXAxes));
+        }
     }
 
-    public Axis[] TrendYAxes
+    public Axis[] SummaryTrendYAxes
     {
-        get => _trendYAxes;
-        set { _trendYAxes = value; OnPropertyChanged(); }
+        get => _summaryTrendYAxes;
+        set
+        {
+            _summaryTrendYAxes = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TrendYAxes));
+        }
     }
+
+    public ISeries[] DetailTrendSeries
+    {
+        get => _detailTrendSeries;
+        set { _detailTrendSeries = value; OnPropertyChanged(); }
+    }
+
+    public Axis[] DetailTrendXAxes
+    {
+        get => _detailTrendXAxes;
+        set { _detailTrendXAxes = value; OnPropertyChanged(); }
+    }
+
+    public Axis[] DetailTrendYAxes
+    {
+        get => _detailTrendYAxes;
+        set { _detailTrendYAxes = value; OnPropertyChanged(); }
+    }
+
+    public ISeries[] TrendSeries => SummaryTrendSeries;
+    public Axis[] TrendXAxes => SummaryTrendXAxes;
+    public Axis[] TrendYAxes => SummaryTrendYAxes;
 
     public ICommand AddSnapshotCommand { get; }
     public ICommand EditSnapshotCommand { get; }
@@ -176,6 +218,7 @@ public class AssetTrendViewModel : BindableObject
     public ICommand UpdateSnapshotCommand { get; }
     public ICommand DeleteSnapshotCommand { get; }
     public ICommand ImportCsvCommand { get; }
+    public ICommand OpenFullscreenChartCommand { get; }
 
     public async Task LoadAsync()
     {
@@ -349,49 +392,21 @@ public class AssetTrendViewModel : BindableObject
     private void RefreshChart(IReadOnlyList<AssetSnapshot> snapshots)
     {
         var trend = _assetSnapshotService.BuildTrendSeries(snapshots);
-        var condensedLabels = BuildCondensedDateLabels(trend.Labels);
+        var series = BuildTrendSeries(trend);
         ApplyLatestTotalSummary(snapshots, trend.Totals);
 
-        TrendSeries =
-        [
-            BuildStackedColumnSeries("Stock", trend.StockValues, "#2563EB"),
-            BuildStackedColumnSeries("Cash", trend.CashValues, "#16A34A"),
-            BuildStackedColumnSeries("FirstTrade", trend.FirstTradeValues, "#EA580C"),
-            BuildStackedColumnSeries(_localizationService.GetString("AssetTrendPropertySeriesName"), trend.PropertyValues, "#7C3AED"),
-            new LineSeries<double>
-            {
-                Name = _localizationService.GetString("AssetTrendTotalSeriesName"),
-                Values = trend.Totals.Select(value => (double)value).ToArray(),
-                Fill = null,
-                GeometrySize = 8,
-                LineSmoothness = 0,
-                Stroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 },
-                GeometryFill = new SolidColorPaint(SKColors.Black),
-                GeometryStroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 }
-            }
-        ];
+        SummaryTrendSeries = series;
+        DetailTrendSeries = series;
+        SummaryTrendXAxes = CreateXAxis(BuildCondensedDateLabels(trend.Labels));
+        DetailTrendXAxes = CreateXAxis(trend.Labels.Select(ShortenDateLabel).ToArray());
 
-        TrendXAxes =
-        [
-            new Axis
-            {
-                Labels = condensedLabels,
-                TextSize = 12
-            }
-        ];
-
-        TrendYAxes =
-        [
-            new Axis
-            {
-                MinLimit = 0,
-                MinStep = 2_500_000,
-                ForceStepToMin = true,
-                TextSize = 12,
-                Labeler = FormatYAxisValue,
-                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
-            }
-        ];
+        var numericTotals = trend.Totals.Select(value => (double)value).ToArray();
+        SummaryTrendYAxes = CreateYAxis(
+            AccountingApp.Core.Services.AssetTrendChartAxisHelper.CalculateSummaryStep(numericTotals),
+            AccountingApp.Core.Services.AssetTrendChartAxisHelper.FormatSummaryValue);
+        DetailTrendYAxes = CreateYAxis(
+            AccountingApp.Core.Services.AssetTrendChartAxisHelper.CalculateDetailStep(numericTotals),
+            AccountingApp.Core.Services.AssetTrendChartAxisHelper.FormatDetailValue);
     }
 
     private void ApplyLatestTotalSummary(IReadOnlyList<AssetSnapshot> snapshots, IReadOnlyList<decimal> totals)
@@ -441,20 +456,46 @@ public class AssetTrendViewModel : BindableObject
             : label;
     }
 
-    private static string FormatYAxisValue(double value)
-    {
-        if (value >= 1_000_000d)
+    private ISeries[] BuildTrendSeries(AccountingApp.Core.Services.AssetTrendSeriesResult trend) =>
+    [
+        BuildStackedColumnSeries("Stock", trend.StockValues, "#2563EB"),
+        BuildStackedColumnSeries("Cash", trend.CashValues, "#16A34A"),
+        BuildStackedColumnSeries("FirstTrade", trend.FirstTradeValues, "#EA580C"),
+        BuildStackedColumnSeries(_localizationService.GetString("AssetTrendPropertySeriesName"), trend.PropertyValues, "#7C3AED"),
+        new LineSeries<double>
         {
-            return $"{value / 1_000_000d:0.#}M";
+            Name = _localizationService.GetString("AssetTrendTotalSeriesName"),
+            Values = trend.Totals.Select(value => (double)value).ToArray(),
+            Fill = null,
+            GeometrySize = 8,
+            LineSmoothness = 0,
+            Stroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 },
+            GeometryFill = new SolidColorPaint(SKColors.Black),
+            GeometryStroke = new SolidColorPaint(SKColors.Black) { StrokeThickness = 3 }
         }
+    ];
 
-        if (value >= 1_000d)
+    private static Axis[] CreateXAxis(string[] labels) =>
+    [
+        new Axis
         {
-            return $"{value / 1_000d:0.#}K";
+            Labels = labels,
+            TextSize = 12
         }
+    ];
 
-        return value.ToString("0");
-    }
+    private static Axis[] CreateYAxis(double minStep, Func<double, string> labeler) =>
+    [
+        new Axis
+        {
+            MinLimit = 0,
+            MinStep = minStep,
+            ForceStepToMin = true,
+            TextSize = 12,
+            Labeler = labeler,
+            SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
+        }
+    ];
 
     private static StackedColumnSeries<double> BuildStackedColumnSeries(string name, decimal[] values, string color) =>
         new()

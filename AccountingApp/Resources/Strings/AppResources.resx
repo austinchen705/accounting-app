@@ -399,6 +399,12 @@
   <data name="AssetTrendChartSectionTitle" xml:space="preserve">
     <value>Asset Trend Chart</value>
   </data>
+  <data name="AssetTrendFullscreenChartButton" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
+  <data name="AssetTrendChartPageTitle" xml:space="preserve">
+    <value>Asset Trend Chart</value>
+  </data>
   <data name="AssetTrendEmptyStateText" xml:space="preserve">
     <value>No asset snapshots yet</value>
   </data>
