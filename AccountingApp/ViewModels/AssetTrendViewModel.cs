@@ -392,7 +392,7 @@ public class AssetTrendViewModel : BindableObject
         SummaryTrendSeries = BuildTrendSeries(trend, "#111827");
         DetailTrendSeries = BuildTrendSeries(trend, "#F9FAFB");
         SummaryTrendXAxes = CreateXAxis(BuildCondensedDateLabels(trend.Labels));
-        DetailTrendXAxes = CreateXAxis(trend.Labels.Select(ShortenDateLabel).ToArray());
+        DetailTrendXAxes = CreateXAxis(BuildFullDateLabels(trend.Labels));
 
         var numericTotals = trend.Totals.Select(value => (double)value).ToArray();
         SummaryTrendYAxes = CreateYAxis(
@@ -443,10 +443,24 @@ public class AssetTrendViewModel : BindableObject
             .ToArray();
     }
 
+    private static string[] BuildFullDateLabels(string[] labels)
+    {
+        return labels
+            .Select(FormatFullDateLabel)
+            .ToArray();
+    }
+
     private static string ShortenDateLabel(string label)
     {
         return DateTime.TryParse(label, out var date)
             ? date.ToString("MM/dd")
+            : label;
+    }
+
+    private static string FormatFullDateLabel(string label)
+    {
+        return DateTime.TryParse(label, out var date)
+            ? date.ToString("yyyy/MM/dd")
             : label;
     }
 

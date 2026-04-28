@@ -36,6 +36,10 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("DetailTrendSeries", vmCode);
         Assert.Contains("DetailTrendXAxes", vmCode);
         Assert.Contains("DetailTrendYAxes", vmCode);
+        Assert.Contains("SummaryTrendXAxes = CreateXAxis(BuildCondensedDateLabels(trend.Labels))", vmCode);
+        Assert.Contains("DetailTrendXAxes = CreateXAxis(BuildFullDateLabels(trend.Labels))", vmCode);
+        Assert.Contains("date.ToString(\"yyyy/MM/dd\")", vmCode);
+        Assert.Contains("date.ToString(\"MM/dd\")", vmCode);
         Assert.Contains("BuildTrendSeries(trend, \"#111827\")", vmCode);
         Assert.Contains("BuildTrendSeries(trend, \"#F9FAFB\")", vmCode);
         Assert.Contains("AssetTrendChartAxisHelper", vmCode);
