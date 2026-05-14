@@ -219,7 +219,7 @@ public class AssetTrendViewModel : BindableObject
     {
         var snapshots = await _assetSnapshotService.GetAllAsync();
         Snapshots.Clear();
-        foreach (var snapshot in snapshots)
+        foreach (var snapshot in snapshots.OrderByDescending(s => s.Date))
         {
             Snapshots.Add(snapshot);
         }
