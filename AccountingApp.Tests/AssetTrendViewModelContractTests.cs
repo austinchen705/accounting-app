@@ -20,6 +20,9 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("IsEditing", vmCode);
         Assert.Contains("FormTitleText", vmCode);
         Assert.Contains("EditingSnapshotDisplayText", vmCode);
+        Assert.Contains("PrefillLatestSnapshotCommand", vmCode);
+        Assert.Contains("CanPrefillLatestSnapshot", vmCode);
+        Assert.Contains("PrefillLatestSnapshot", vmCode);
         Assert.Contains("AssetTrendPropertySeriesName", vmCode);
         Assert.Contains("EditRequested", vmCode);
         Assert.Contains("ImportErrorDetails", vmCode);

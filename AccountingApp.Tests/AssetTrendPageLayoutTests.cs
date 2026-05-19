@@ -52,6 +52,20 @@ public class AssetTrendPageLayoutTests
     }
 
     [Fact]
+    public void AssetTrendPage_wires_prefill_latest_snapshot_action()
+    {
+        var pageXaml = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml");
+        var englishResources = ReadFile("../../../../AccountingApp/Resources/Strings/AppResources.resx");
+        var zhHantResources = ReadFile("../../../../AccountingApp/Resources/Strings/AppResources.zh-Hant.resx");
+
+        Assert.Contains("PrefillLatestSnapshotCommand", pageXaml);
+        Assert.Contains("CanPrefillLatestSnapshot", pageXaml);
+        Assert.Contains("AssetTrendPrefillLatestButton", pageXaml);
+        Assert.Contains("AssetTrendPrefillLatestButton", englishResources);
+        Assert.Contains("AssetTrendPrefillLatestButton", zhHantResources);
+    }
+
+    [Fact]
     public void AssetTrendPage_wires_fullscreen_chart_navigation()
     {
         var pageXaml = ReadFile("../../../../AccountingApp/Views/AssetTrendPage.xaml");

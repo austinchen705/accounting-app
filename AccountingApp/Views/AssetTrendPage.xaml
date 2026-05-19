@@ -75,6 +75,9 @@
                                                  Date="{Binding SnapshotDate}"
                                                  ShowTrigger="False" />
 
+                    <Button Text="{markup:Translate AssetTrendPrefillLatestButton}"
+                            Command="{Binding PrefillLatestSnapshotCommand}"
+                            IsVisible="{Binding CanPrefillLatestSnapshot}" />
                     <Button Text="{markup:Translate AssetTrendImportCsvButton}" Command="{Binding ImportCsvCommand}" />
                     <Label Text="{Binding ImportSummaryText}"
                            Style="{StaticResource CaptionStyle}"
