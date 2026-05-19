@@ -43,6 +43,7 @@ public class AssetTrendViewModel : BindableObject
         CancelEditCommand = new Command(CancelEdit);
         UpdateSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await UpdateSnapshotAsync(snapshot));
         DeleteSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await DeleteSnapshotAsync(snapshot));
+        PrefillLatestSnapshotCommand = new Command(PrefillLatestSnapshot);
         ImportCsvCommand = new Command(async () => await ImportCsvAsync());
     }
 
@@ -151,6 +152,8 @@ public class AssetTrendViewModel : BindableObject
         ? _localizationService.GetString("AssetTrendUpdateButton")
         : _localizationService.GetString("AssetTrendCreateButton");
 
+    public bool CanPrefillLatestSnapshot => !IsEditing && Snapshots.Count > 0;
+
     public ObservableCollection<AssetSnapshot> Snapshots { get; } = new();
     public ObservableCollection<string> ImportErrorDetails { get; } = new();
 
@@ -214,6 +217,7 @@ public class AssetTrendViewModel : BindableObject
     public ICommand CancelEditCommand { get; }
     public ICommand UpdateSnapshotCommand { get; }
     public ICommand DeleteSnapshotCommand { get; }
+    public ICommand PrefillLatestSnapshotCommand { get; }
     public ICommand ImportCsvCommand { get; }
     public async Task LoadAsync()
     {
@@ -225,6 +229,7 @@ public class AssetTrendViewModel : BindableObject
         }
 
         HasSnapshots = snapshots.Count > 0;
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
         RefreshChart(snapshots);
     }
 
@@ -367,6 +372,7 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(FormTitleText));
         OnPropertyChanged(nameof(EditingSnapshotDisplayText));
         OnPropertyChanged(nameof(SubmitButtonText));
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
         EditRequested?.Invoke(this, EventArgs.Empty);
     }
 
@@ -382,6 +388,28 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(FormTitleText));
         OnPropertyChanged(nameof(EditingSnapshotDisplayText));
         OnPropertyChanged(nameof(SubmitButtonText));
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
+    }
+
+    private void PrefillLatestSnapshot()
+    {
+        if (!CanPrefillLatestSnapshot)
+        {
+            return;
+        }
+
+        var latestSnapshot = Snapshots.FirstOrDefault();
+        if (latestSnapshot is null)
+        {
+            return;
+        }
+
+        Stock = latestSnapshot.Stock;
+        Cash = latestSnapshot.Cash;
+        FirstTrade = latestSnapshot.FirstTrade;
+        Property = latestSnapshot.Property;
+        HasError = false;
+        ErrorMessage = string.Empty;
     }
 
     private void RefreshChart(IReadOnlyList<AssetSnapshot> snapshots)
