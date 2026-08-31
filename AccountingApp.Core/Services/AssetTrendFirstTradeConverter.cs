@@ -14,4 +14,9 @@ public static class AssetTrendFirstTradeConverter
 
     public static decimal ConvertToBaseCurrency(bool isEditing, decimal firstTradeAmount, double exchangeRate) =>
         isEditing ? firstTradeAmount : Math.Round(firstTradeAmount * (decimal)exchangeRate, 2);
+
+    // Inverse of ConvertToBaseCurrency's new-record path: used to prefill the (raw-currency)
+    // input box from a previously stored (base-currency) amount without double-converting it.
+    public static decimal ConvertBaseCurrencyToInputAmount(decimal baseCurrencyAmount, double exchangeRate) =>
+        Math.Round(baseCurrencyAmount / (decimal)exchangeRate, 2);
 }

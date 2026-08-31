@@ -49,6 +49,7 @@ public class AssetTrendViewModel : BindableObject
         CancelEditCommand = new Command(CancelEdit);
         UpdateSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await UpdateSnapshotAsync(snapshot));
         DeleteSnapshotCommand = new Command<AssetSnapshot>(async snapshot => await DeleteSnapshotAsync(snapshot));
+        PrefillLatestSnapshotCommand = new Command(PrefillLatestSnapshot);
         ImportCsvCommand = new Command(async () => await ImportCsvAsync());
     }
 
@@ -179,6 +180,8 @@ public class AssetTrendViewModel : BindableObject
         ? _localizationService.GetString("AssetTrendUpdateButton")
         : _localizationService.GetString("AssetTrendCreateButton");
 
+    public bool CanPrefillLatestSnapshot => !IsEditing && Snapshots.Count > 0;
+
     public ObservableCollection<AssetSnapshot> Snapshots { get; } = new();
     public ObservableCollection<string> ImportErrorDetails { get; } = new();
 
@@ -242,6 +245,7 @@ public class AssetTrendViewModel : BindableObject
     public ICommand CancelEditCommand { get; }
     public ICommand UpdateSnapshotCommand { get; }
     public ICommand DeleteSnapshotCommand { get; }
+    public ICommand PrefillLatestSnapshotCommand { get; }
     public ICommand ImportCsvCommand { get; }
     public async Task LoadAsync()
     {
@@ -253,6 +257,7 @@ public class AssetTrendViewModel : BindableObject
         }
 
         HasSnapshots = snapshots.Count > 0;
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
         RefreshChart(snapshots);
         await RefreshFirstTradeExchangeRateAsync();
     }
@@ -417,6 +422,7 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(ShowFirstTradePreview));
         OnPropertyChanged(nameof(FirstTradePreviewText));
         OnPropertyChanged(nameof(ShowFirstTradeRateError));
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
         EditRequested?.Invoke(this, EventArgs.Empty);
     }
 
@@ -435,6 +441,32 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(ShowFirstTradePreview));
         OnPropertyChanged(nameof(FirstTradePreviewText));
         OnPropertyChanged(nameof(ShowFirstTradeRateError));
+        OnPropertyChanged(nameof(CanPrefillLatestSnapshot));
+    }
+
+    private void PrefillLatestSnapshot()
+    {
+        if (!CanPrefillLatestSnapshot)
+        {
+            return;
+        }
+
+        var latestSnapshot = Snapshots.FirstOrDefault();
+        if (latestSnapshot is null)
+        {
+            return;
+        }
+
+        Stock = latestSnapshot.Stock;
+        Cash = latestSnapshot.Cash;
+        // latestSnapshot.FirstTrade is already-converted TWD; the FirstTrade box for a new
+        // record is treated as raw USD input, so back it out using today's rate to avoid
+        // double-converting it on submit.
+        FirstTrade = AccountingApp.Core.Services.AssetTrendFirstTradeConverter.ConvertBaseCurrencyToInputAmount(
+            latestSnapshot.FirstTrade, _firstTradeExchangeRate);
+        Property = latestSnapshot.Property;
+        HasError = false;
+        ErrorMessage = string.Empty;
     }
 
     private void RefreshChart(IReadOnlyList<AssetSnapshot> snapshots)

@@ -399,6 +399,9 @@
   <data name="AssetTrendImportCsvButton" xml:space="preserve">
     <value>匯入 CSV</value>
   </data>
+  <data name="AssetTrendPrefillLatestButton" xml:space="preserve">
+    <value>帶入最新資料</value>
+  </data>
   <data name="AssetTrendCancelEditButton" xml:space="preserve">
     <value>取消編輯</value>
   </data>

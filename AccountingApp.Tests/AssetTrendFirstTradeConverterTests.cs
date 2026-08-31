@@ -70,6 +70,23 @@ public class AssetTrendFirstTradeConverterTests
     }
 
     [Fact]
+    public void ConvertBaseCurrencyToInputAmount_divides_by_rate_and_rounds()
+    {
+        var result = AssetTrendFirstTradeConverter.ConvertBaseCurrencyToInputAmount(baseCurrencyAmount: 31500m, exchangeRate: 31.5);
+
+        Assert.Equal(1000.00m, result);
+    }
+
+    [Fact]
+    public void ConvertBaseCurrencyToInputAmount_round_trips_with_ConvertToBaseCurrency()
+    {
+        var converted = AssetTrendFirstTradeConverter.ConvertToBaseCurrency(isEditing: false, firstTradeAmount: 1000m, exchangeRate: 31.5);
+        var roundTripped = AssetTrendFirstTradeConverter.ConvertBaseCurrencyToInputAmount(converted, exchangeRate: 31.5);
+
+        Assert.Equal(1000.00m, roundTripped);
+    }
+
+    [Fact]
     public void ShowPreview_true_only_for_new_record_with_amount_and_available_rate()
     {
         var result = AssetTrendFirstTradeConverter.ShowPreview(isEditing: false, firstTradeAmount: 100m, exchangeRate: 31.5);
