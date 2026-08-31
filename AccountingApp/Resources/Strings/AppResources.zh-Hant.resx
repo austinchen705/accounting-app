@@ -387,6 +387,12 @@
   <data name="AssetTrendFirstTradeLabel" xml:space="preserve">
     <value>FirstTrade</value>
   </data>
+  <data name="AssetTrendFirstTradePreviewFormat" xml:space="preserve">
+    <value>≈ NT$ {0:N0}（匯率 {1:N2}）</value>
+  </data>
+  <data name="AssetTrendFirstTradeRateErrorText" xml:space="preserve">
+    <value>無法取得即時匯率，請確認網路連線後再新增</value>
+  </data>
   <data name="AssetTrendPropertyLabel" xml:space="preserve">
     <value>Property(房產)</value>
   </data>

@@ -43,6 +43,15 @@ public class AssetTrendViewModelContractTests
         Assert.Contains("BuildTrendSeries(trend, \"#111827\")", vmCode);
         Assert.Contains("BuildTrendSeries(trend, \"#F9FAFB\")", vmCode);
         Assert.Contains("AssetTrendChartAxisHelper", vmCode);
+        Assert.Contains("CurrencyService", vmCode);
+        Assert.Contains("FirstTradePreviewText", vmCode);
+        Assert.Contains("ShowFirstTradePreview", vmCode);
+        Assert.Contains("FirstTradeRateErrorText", vmCode);
+        Assert.Contains("ShowFirstTradeRateError", vmCode);
+        Assert.Contains("RefreshFirstTradeExchangeRateAsync", vmCode);
+        Assert.Contains("AssetTrendFirstTradeConverter.ConvertToBaseCurrency", vmCode);
+        Assert.Contains("AssetTrendFirstTradeConverter.ShouldBlockSubmission", vmCode);
+        Assert.Contains("AssetTrendFirstTradeConverter.ShowPreview", vmCode);
         Assert.DoesNotContain("ImportFromGoogleDriveCommand", vmCode);
         Assert.DoesNotContain("Drive debug", vmCode);
         Assert.DoesNotContain("ListBackupFolderFilesAsync()", vmCode);

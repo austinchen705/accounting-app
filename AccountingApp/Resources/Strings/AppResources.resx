@@ -387,6 +387,12 @@
   <data name="AssetTrendFirstTradeLabel" xml:space="preserve">
     <value>FirstTrade</value>
   </data>
+  <data name="AssetTrendFirstTradePreviewFormat" xml:space="preserve">
+    <value>≈ NT$ {0:N0} (rate {1:N2})</value>
+  </data>
+  <data name="AssetTrendFirstTradeRateErrorText" xml:space="preserve">
+    <value>Unable to fetch the live exchange rate. Check your connection and try again.</value>
+  </data>
   <data name="AssetTrendPropertyLabel" xml:space="preserve">
     <value>Property</value>
   </data>

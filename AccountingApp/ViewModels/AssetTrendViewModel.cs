@@ -11,13 +11,18 @@ namespace AccountingApp.ViewModels;
 
 public class AssetTrendViewModel : BindableObject
 {
+    private const string FirstTradeCurrency = "USD";
+    private const string BaseCurrency = "TWD";
+
     private readonly AssetSnapshotService _assetSnapshotService;
     private readonly ILocalizationService _localizationService;
+    private readonly CurrencyService _currencyService;
     private DateTime _snapshotDate = DateTime.Today;
     private decimal _stock;
     private decimal _cash;
     private decimal _firstTrade;
     private decimal _property;
+    private double _firstTradeExchangeRate = 1.0;
     private ISeries[] _summaryTrendSeries = Array.Empty<ISeries>();
     private Axis[] _summaryTrendXAxes = Array.Empty<Axis>();
     private Axis[] _summaryTrendYAxes = Array.Empty<Axis>();
@@ -34,10 +39,11 @@ public class AssetTrendViewModel : BindableObject
     private int? _editingSnapshotId;
 
     public event EventHandler? EditRequested;
-    public AssetTrendViewModel(AssetSnapshotService assetSnapshotService, ILocalizationService localizationService)
+    public AssetTrendViewModel(AssetSnapshotService assetSnapshotService, ILocalizationService localizationService, CurrencyService currencyService)
     {
         _assetSnapshotService = assetSnapshotService;
         _localizationService = localizationService;
+        _currencyService = currencyService;
         AddSnapshotCommand = new Command(async () => await AddSnapshotAsync());
         EditSnapshotCommand = new Command<AssetSnapshot>(BeginEditSnapshot);
         CancelEditCommand = new Command(CancelEdit);
@@ -72,8 +78,30 @@ public class AssetTrendViewModel : BindableObject
     public decimal FirstTrade
     {
         get => _firstTrade;
-        set { _firstTrade = value; OnPropertyChanged(); }
+        set
+        {
+            _firstTrade = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowFirstTradePreview));
+            OnPropertyChanged(nameof(FirstTradePreviewText));
+            OnPropertyChanged(nameof(ShowFirstTradeRateError));
+        }
     }
+
+    public bool ShowFirstTradePreview =>
+        AccountingApp.Core.Services.AssetTrendFirstTradeConverter.ShowPreview(IsEditing, FirstTrade, _firstTradeExchangeRate);
+
+    public bool ShowFirstTradeRateError =>
+        AccountingApp.Core.Services.AssetTrendFirstTradeConverter.ShouldBlockSubmission(IsEditing, FirstTrade, _firstTradeExchangeRate);
+
+    public string FirstTradePreviewText => ShowFirstTradePreview
+        ? string.Format(
+            _localizationService.GetString("AssetTrendFirstTradePreviewFormat"),
+            AccountingApp.Core.Services.AssetTrendFirstTradeConverter.ConvertToBaseCurrency(IsEditing, FirstTrade, _firstTradeExchangeRate),
+            _firstTradeExchangeRate)
+        : string.Empty;
+
+    public string FirstTradeRateErrorText => _localizationService.GetString("AssetTrendFirstTradeRateErrorText");
 
     public decimal Property
     {
@@ -226,19 +254,38 @@ public class AssetTrendViewModel : BindableObject
 
         HasSnapshots = snapshots.Count > 0;
         RefreshChart(snapshots);
+        await RefreshFirstTradeExchangeRateAsync();
+    }
+
+    private async Task RefreshFirstTradeExchangeRateAsync()
+    {
+        _firstTradeExchangeRate = await _currencyService.GetRateAsync(FirstTradeCurrency, BaseCurrency);
+        OnPropertyChanged(nameof(ShowFirstTradePreview));
+        OnPropertyChanged(nameof(FirstTradePreviewText));
+        OnPropertyChanged(nameof(ShowFirstTradeRateError));
     }
 
     private async Task AddSnapshotAsync()
     {
         try
         {
+            if (ShowFirstTradeRateError)
+            {
+                ErrorMessage = FirstTradeRateErrorText;
+                HasError = true;
+                return;
+            }
+
+            var firstTradeInBaseCurrency = AccountingApp.Core.Services.AssetTrendFirstTradeConverter.ConvertToBaseCurrency(
+                IsEditing, FirstTrade, _firstTradeExchangeRate);
+
             var snapshot = new AssetSnapshot
             {
                 Id = _editingSnapshotId ?? 0,
                 Date = SnapshotDate,
                 Stock = Stock,
                 Cash = Cash,
-                FirstTrade = FirstTrade,
+                FirstTrade = firstTradeInBaseCurrency,
                 Property = Property
             };
 
@@ -367,6 +414,9 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(FormTitleText));
         OnPropertyChanged(nameof(EditingSnapshotDisplayText));
         OnPropertyChanged(nameof(SubmitButtonText));
+        OnPropertyChanged(nameof(ShowFirstTradePreview));
+        OnPropertyChanged(nameof(FirstTradePreviewText));
+        OnPropertyChanged(nameof(ShowFirstTradeRateError));
         EditRequested?.Invoke(this, EventArgs.Empty);
     }
 
@@ -382,6 +432,9 @@ public class AssetTrendViewModel : BindableObject
         OnPropertyChanged(nameof(FormTitleText));
         OnPropertyChanged(nameof(EditingSnapshotDisplayText));
         OnPropertyChanged(nameof(SubmitButtonText));
+        OnPropertyChanged(nameof(ShowFirstTradePreview));
+        OnPropertyChanged(nameof(FirstTradePreviewText));
+        OnPropertyChanged(nameof(ShowFirstTradeRateError));
     }
 
     private void RefreshChart(IReadOnlyList<AssetSnapshot> snapshots)

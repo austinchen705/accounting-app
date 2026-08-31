@@ -63,6 +63,13 @@
                                    Placeholder="0" />
                         </Frame>
                     </Grid>
+                    <Label Text="{Binding FirstTradePreviewText}"
+                           Style="{StaticResource CaptionStyle}"
+                           IsVisible="{Binding ShowFirstTradePreview}" />
+                    <Label Text="{Binding FirstTradeRateErrorText}"
+                           Style="{StaticResource CaptionStyle}"
+                           TextColor="#B91C1C"
+                           IsVisible="{Binding ShowFirstTradeRateError}" />
 
                     <Label Text="{markup:Translate AssetTrendPropertyLabel}" Style="{StaticResource CaptionStyle}" />
                     <Frame Style="{StaticResource InputContainerStyle}">
