@@ -57,6 +57,18 @@
   <data name="SettingsAppExpirationLabel" xml:space="preserve">
     <value>有效至</value>
   </data>
+  <data name="SettingsAutoBackupNever" xml:space="preserve">
+    <value>自動備份：尚未成功備份過</value>
+  </data>
+  <data name="SettingsAutoBackupLastSuccess" xml:space="preserve">
+    <value>自動備份：上次成功 {0}</value>
+  </data>
+  <data name="SettingsAutoBackupFailed" xml:space="preserve">
+    <value>自動備份失敗：{0}</value>
+  </data>
+  <data name="AutoBackupFailureNotificationTitle" xml:space="preserve">
+    <value>自動備份失敗</value>
+  </data>
   <data name="SettingsCurrencySectionTitle" xml:space="preserve">
     <value>主幣別</value>
   </data>

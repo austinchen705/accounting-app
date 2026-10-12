@@ -83,6 +83,14 @@
                     <Label Text="Google Drive 備份" Style="{StaticResource SectionTitleStyle}" />
                     <Label Text="{Binding SelectedGoogleDriveFolder, StringFormat='目前資料夾：{0}'}"
                            Style="{StaticResource CaptionStyle}" />
+                    <Label Text="{Binding AutoBackupStatusText}"
+                           Style="{StaticResource CaptionStyle}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding HasAutoBackupFailure}" Value="True">
+                                <Setter Property="TextColor" Value="Red" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                     <Button Text="選擇或建立 Google Drive 資料夾"
                             Command="{Binding SelectGoogleDriveFolderCommand}"
                             IsEnabled="{Binding IsGoogleDriveIdle}"

@@ -1,4 +1,5 @@
 using AccountingApp.Services;
+using AutoBackupCoordinator = AccountingApp.Core.Services.AutoBackupCoordinator;
 
 namespace AccountingApp;
 
@@ -6,12 +7,14 @@ public partial class App : Application
 {
     private readonly DatabaseService _database;
     private readonly ILocalizationService _localizationService;
+    private readonly AutoBackupCoordinator _autoBackup;
 
-    public App(DatabaseService database, ILocalizationService localizationService)
+    public App(DatabaseService database, ILocalizationService localizationService, AutoBackupCoordinator autoBackup)
     {
         InitializeComponent();
         _database = database;
         _localizationService = localizationService;
+        _autoBackup = autoBackup;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -24,6 +27,13 @@ public partial class App : Application
         base.OnStart();
         await _database.InitializeAsync();
         await NotificationService.RequestPermissionAsync();
+        await _autoBackup.RunIfDueAsync();
+    }
+
+    protected override async void OnResume()
+    {
+        base.OnResume();
+        await _autoBackup.RunIfDueAsync();
     }
 
     public async Task ResetShellForLanguageChangeAsync()

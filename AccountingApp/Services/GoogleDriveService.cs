@@ -9,7 +9,7 @@ using Microsoft.Maui.Authentication;
 
 namespace AccountingApp.Services;
 
-public class GoogleDriveService : IGoogleDriveFileApi
+public class GoogleDriveService : IGoogleDriveFileApi, IAutoBackupTarget
 {
     private const string DefaultBackupFolderName = "personaccount_backup";
     private const string FolderIdKey = "google_drive_folder_id";
@@ -51,6 +51,19 @@ public class GoogleDriveService : IGoogleDriveFileApi
         await AuthorizeAsync();
 
         await EnsureDefaultBackupFolderSelectedAsync();
+    }
+
+    public async Task<string?> GetBlockingIssueAsync()
+    {
+        EnsureScopeConsistency();
+
+        if (string.IsNullOrWhiteSpace(FolderId))
+            return "尚未設定 Google Drive 備份資料夾，請先到設定頁選擇或建立資料夾。";
+
+        if (!await HasValidAccessTokenAsync())
+            return "Google Drive 授權已失效，請到設定頁重新授權。";
+
+        return null;
     }
 
     public async Task UploadAsync()

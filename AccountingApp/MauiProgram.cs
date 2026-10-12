@@ -39,6 +39,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<ExportService>();
         builder.Services.AddSingleton<JsonImportService>();
         builder.Services.AddSingleton<GoogleDriveService>();
+        builder.Services.AddSingleton<AccountingApp.Core.Abstractions.IPreferenceStore, MauiPreferenceStore>();
+        builder.Services.AddSingleton(sp => new AccountingApp.Core.Services.AutoBackupCoordinator(
+            sp.GetRequiredService<AccountingApp.Core.Abstractions.IPreferenceStore>(),
+            sp.GetRequiredService<GoogleDriveService>(),
+            () => sp.GetRequiredService<IAppInstallInfoService>().GetExpirationDate(),
+            message => NotificationService.SendAsync(
+                sp.GetRequiredService<ILocalizationService>().GetString("AutoBackupFailureNotificationTitle"),
+                message)));
         builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
         builder.Services.AddSingleton<ILocalizedFormattingService, LocalizedFormattingService>();
 

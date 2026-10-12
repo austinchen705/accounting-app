@@ -57,6 +57,18 @@
   <data name="SettingsAppExpirationLabel" xml:space="preserve">
     <value>Valid Until</value>
   </data>
+  <data name="SettingsAutoBackupNever" xml:space="preserve">
+    <value>Auto backup: no successful backup yet</value>
+  </data>
+  <data name="SettingsAutoBackupLastSuccess" xml:space="preserve">
+    <value>Auto backup: last success {0}</value>
+  </data>
+  <data name="SettingsAutoBackupFailed" xml:space="preserve">
+    <value>Auto backup failed: {0}</value>
+  </data>
+  <data name="AutoBackupFailureNotificationTitle" xml:space="preserve">
+    <value>Auto backup failed</value>
+  </data>
   <data name="SettingsCurrencySectionTitle" xml:space="preserve">
     <value>Base Currency</value>
   </data>

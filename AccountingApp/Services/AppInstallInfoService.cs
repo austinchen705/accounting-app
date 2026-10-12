@@ -6,6 +6,7 @@ public interface IAppInstallInfoService
 {
     string GetVersionText();
     string GetExpirationDateText();
+    DateTimeOffset? GetExpirationDate();
 }
 
 public class AppInstallInfoService : IAppInstallInfoService
@@ -21,11 +22,13 @@ public class AppInstallInfoService : IAppInstallInfoService
 
     public string GetExpirationDateText()
     {
-        var expirationDate = TryGetProvisionExpirationDate();
+        var expirationDate = GetExpirationDate();
         return expirationDate is null
             ? UnknownExpiration
             : AppProvisionInfoService.FormatExpirationDateText(expirationDate.Value);
     }
+
+    public DateTimeOffset? GetExpirationDate() => TryGetProvisionExpirationDate();
 
     private static DateTimeOffset? TryGetProvisionExpirationDate()
     {
