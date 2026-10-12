@@ -2,11 +2,13 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using AccountingApp.Services;
 using AccountingApp.Views;
+using AutoBackupCoordinator = AccountingApp.Core.Services.AutoBackupCoordinator;
 
 namespace AccountingApp.ViewModels;
 
 public class SettingsViewModel : BindableObject
 {
+    private readonly AutoBackupCoordinator _autoBackup;
     private readonly IAppInstallInfoService _appInstallInfoService;
     private readonly ExportService _exportService;
     private readonly GoogleDriveService _googleDriveService;
@@ -53,6 +55,25 @@ public class SettingsViewModel : BindableObject
     }
 
     public bool IsGoogleDriveIdle => !IsGoogleDriveBusy;
+
+    public bool HasAutoBackupFailure => _autoBackup.GetStatus().FailureMessage is not null;
+
+    public string AutoBackupStatusText
+    {
+        get
+        {
+            var status = _autoBackup.GetStatus();
+            if (status.FailureMessage is not null)
+                return string.Format(_localizationService.GetString("SettingsAutoBackupFailed"), status.FailureMessage);
+
+            return status.LastSuccess is { } lastSuccess
+                ? string.Format(
+                    _localizationService.GetString("SettingsAutoBackupLastSuccess"),
+                    lastSuccess.ToLocalTime().ToString("yyyy/MM/dd HH:mm"))
+                : _localizationService.GetString("SettingsAutoBackupNever");
+        }
+    }
+
     public string AppVersionText => _appInstallInfoService.GetVersionText();
     public string AppExpirationDateText => _appInstallInfoService.GetExpirationDateText();
 
@@ -73,8 +94,10 @@ public class SettingsViewModel : BindableObject
         GoogleDriveService googleDriveService,
         JsonImportService jsonImportService,
         ILocalizationService localizationService,
-        DataRefreshService refreshService)
+        DataRefreshService refreshService,
+        AutoBackupCoordinator autoBackup)
     {
+        _autoBackup = autoBackup;
         _appInstallInfoService = appInstallInfoService;
         _exportService = exportService;
         _googleDriveService = googleDriveService;
@@ -114,6 +137,12 @@ public class SettingsViewModel : BindableObject
         await ExportService.ShareFileAsync(path);
     }
 
+    public void RefreshAutoBackupStatus()
+    {
+        OnPropertyChanged(nameof(AutoBackupStatusText));
+        OnPropertyChanged(nameof(HasAutoBackupFailure));
+    }
+
     private async Task BackupAsync()
     {
         if (IsGoogleDriveBusy) return;
@@ -121,6 +150,8 @@ public class SettingsViewModel : BindableObject
         try
         {
             await _googleDriveService.UploadAsync();
+            _autoBackup.RecordSuccess();
+            RefreshAutoBackupStatus();
             await Application.Current!.Windows[0].Page!
                 .DisplayAlert("成功", "已備份至 Google Drive", "確定");
         }
