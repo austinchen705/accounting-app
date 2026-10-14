@@ -8,6 +8,7 @@ public partial class App : Application
     private readonly DatabaseService _database;
     private readonly ILocalizationService _localizationService;
     private readonly AutoBackupCoordinator _autoBackup;
+    private bool _startupCompleted;
 
     public App(DatabaseService database, ILocalizationService localizationService, AutoBackupCoordinator autoBackup)
     {
@@ -19,13 +20,22 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(CreateShell());
+        var window = new Window(CreateShell());
+        window.Activated += async (_, _) =>
+        {
+            if (_startupCompleted)
+            {
+                await _autoBackup.RunIfDueAsync();
+            }
+        };
+        return window;
     }
 
     protected override async void OnStart()
     {
         base.OnStart();
         await _database.InitializeAsync();
+        _startupCompleted = true;
         await NotificationService.RequestPermissionAsync();
         await _autoBackup.RunIfDueAsync();
     }
